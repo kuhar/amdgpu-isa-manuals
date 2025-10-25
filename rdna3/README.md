@@ -1,10 +1,10 @@
-![](_page_0_Picture_0.jpeg)
+![](assets/_page_0_Picture_0.jpeg)
 
 # "RDNA3" Instruction Set Architecture **Reference Guide**
 
 15-August-2023
 
-![](_page_1_Picture_1.jpeg)
+![](assets/_page_1_Picture_1.jpeg)
 
 ### **Specification Agreement**
 
@@ -19,7 +19,7 @@ This Specification Agreement (this "Agreement") is a legal agreement between Adv
 - 7. If You are a part of the U.S. Government, then the Specification is provided with "RESTRICTED RIGHTS" as set forth in subparagraphs (c) (1) and (2) of the Commercial Computer Software-Restricted Rights clause at FAR 52.227-14 or subparagraph (c) (1)(ii) of the Rights in Technical Data and Computer Software clause at DFARS 252.277-7013, as applicable.
 - 8. This Agreement is governed by the laws of the State of California without regard to its choice of law principles. Any dispute involving it must be brought in a court having jurisdiction of such dispute in Santa Clara County, California, and You waive any defenses and rights
 
-![](_page_2_Picture_1.jpeg)
+![](assets/_page_2_Picture_1.jpeg)
 
 allowing the dispute to be litigated elsewhere. If any part of this agreement is unenforceable, it will be considered modified to the extent necessary to make it enforceable, and the remainder shall continue in effect. The failure of AMD to enforce any rights granted hereunder or to take action against You in the event of any breach hereunder shall not be deemed a waiver by AMD as to subsequent enforcement of rights or subsequent actions in the event of future breaches. This Agreement is the entire agreement between You and AMD concerning the Specification; it may be changed only by a written document signed by both You and an authorized representative of AMD.
 
@@ -31,13 +31,13 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 
 © 2018-2022 Advanced Micro Devices, Inc. All rights reserved.
 
-![](_page_2_Picture_7.jpeg)
+![](assets/_page_2_Picture_7.jpeg)
 
 **Advanced Micro Devices, Inc.**
 
 2485 Augustine Drive Santa Clara, CA, 95054 www.amd.com
 
-![](_page_3_Picture_1.jpeg)
+![](assets/_page_3_Picture_1.jpeg)
 
 # **Contents**
 
@@ -82,7 +82,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | 3.4.7. FLAT_SCRATCH                               | 24 |
 | 3.4.8. Hardware Internal Registers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | 3.4.8. Hardware Internal Registers                | 25 |
 
-![](_page_4_Picture_1.jpeg)
+![](assets/_page_4_Picture_1.jpeg)
 
 | 3.4.9. Trap and Exception registers              | 25 |
 |--------------------------------------------------|----|
@@ -128,7 +128,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 | 7.2.8. PERMLANE Specific Rules                   | 62 |
 |                                                  |    |
 
-![](_page_5_Picture_1.jpeg)
+![](assets/_page_5_Picture_1.jpeg)
 
 | 7.3. Instructions                                               | 63  |
 |-----------------------------------------------------------------|-----|
@@ -173,7 +173,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 | 10.4. VGPR Usage                                                | 101 |
 | 10.4.1. Data format in VGPRs                                    | 103 |
 
-![](_page_6_Picture_1.jpeg)
+![](assets/_page_6_Picture_1.jpeg)
 
 | 10.5. Image Resource                              | 103 |
 |---------------------------------------------------|-----|
@@ -218,7 +218,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 | 13.4.1. GWS and Ordered Count Programming Rule    | 134 |
 | 13.4.2. EXEC Handling                             | 134 |
 
-![](_page_7_Picture_1.jpeg)
+![](assets/_page_7_Picture_1.jpeg)
 
 | 13.4.3. Ordered Count                                 | 134 |
 |-------------------------------------------------------|-----|
@@ -263,7 +263,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 | 15.9.3. SCRATCH                                       | 185 |
 | 15.10. Export Format                                  | 186 |
 
-![](_page_8_Picture_1.jpeg)
+![](assets/_page_8_Picture_1.jpeg)
 
 | 15.10.1. EXP                                           |  |
 |--------------------------------------------------------|--|
@@ -298,7 +298,7 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 | 16.20.2. Scratch Instructions                          |  |
 | 16.20.3. Global Instructions                           |  |
 
-![](_page_9_Picture_1.jpeg)
+![](assets/_page_9_Picture_1.jpeg)
 
 # <span id="page-9-0"></span>**Preface**
 
@@ -336,7 +336,7 @@ This document begins with an overview of the AMD RDNA3 processors' hardware and 
 
 About This Document 1 of 600
 
-![](_page_10_Picture_1.jpeg)
+![](assets/_page_10_Picture_1.jpeg)
 
 # <span id="page-10-0"></span>**Related Documents**
 
@@ -354,7 +354,7 @@ For more information on AMD GPU architectures please visit <https://GPUOpen.com>
 
 Related Documents 2 of 600
 
-![](_page_11_Picture_1.jpeg)
+![](assets/_page_11_Picture_1.jpeg)
 
 # <span id="page-11-0"></span>**Chapter 1. Introduction**
 
@@ -402,7 +402,7 @@ Table 2. **Basic Terms**
 
 1.1. Terminology 3 of 600
 
-![](_page_12_Picture_1.jpeg)
+![](assets/_page_12_Picture_1.jpeg)
 
 | Term                          | Description                                                                                                                                    |  |  |  |
 |-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|--|--|--|
@@ -451,7 +451,7 @@ Table 2. **Basic Terms**
 
 1.1. Terminology 4 of 600
 
-![](_page_13_Picture_1.jpeg)
+![](assets/_page_13_Picture_1.jpeg)
 
 | Format | Meaning                                  |  |
 |--------|------------------------------------------|--|
@@ -480,13 +480,13 @@ Note: .u or .i specifies to interpret the argument as an unsigned or signed inte
 
 The figure below shows a block diagram of the AMD RDNA3 Generation series processors:
 
-![](_page_13_Figure_14.jpeg)
+![](assets/_page_13_Figure_14.jpeg)
 
 Figure 1. AMD RDNA3 Generation Series Block Diagram
 
 1.2. Hardware Overview 5 of 600
 
-![](_page_14_Picture_1.jpeg)
+![](assets/_page_14_Picture_1.jpeg)
 
 The RDNA3 device includes a data-parallel processor array, a command processor, a memory controller, and other logic (not shown). The command processor reads commands that the host has written to memorymapped registers in the system-memory address space. The command processor sends hardware-generated interrupts to the host when the command is completed. The memory controller has direct access to all device memory and the host-specified areas of system memory. To satisfy read and write requests, the memory controller performs the functions of a direct-memory access (DMA) controller, including computing memoryaddress offsets based on the format of the requested data in memory.
 
@@ -518,9 +518,9 @@ The processors may share data between different work-items. Data sharing can boo
 
 1.2. Hardware Overview 6 of 600
 
-![](_page_15_Picture_1.jpeg)
+![](assets/_page_15_Picture_1.jpeg)
 
-![](_page_15_Figure_2.jpeg)
+![](assets/_page_15_Figure_2.jpeg)
 
 Figure 2. Shared Memory Hierarchy
 
@@ -538,7 +538,7 @@ The AMD RDNA3 devices offer several methods for access to off-chip memory from t
 
 1.2. Hardware Overview 7 of 600
 
-![](_page_16_Picture_1.jpeg)
+![](assets/_page_16_Picture_1.jpeg)
 
 (PE) within each WGP. On the primary read path, the device consists of multiple channels of L2 cache that provides data to read-only L1 caches, and finally to L0 caches per WGP. Specific cache-less load instructions can force data to be retrieved from device memory during an execution of a load clause. Load requests that overlap within the clause are cached with respect to each other. The output cache is formed by two levels of cache: the first for write-combining cache (collect scatter and store operations and combine them to provide good access patterns to memory); the second is a read/write cache with atomic units that lets each processing element complete unordered atomic accesses that return the initial value. Each processing element provides the destination address on which the atomic operation acts, the data to be used in the atomic operation, and a return address for the read/write atomic unit to store the pre-op value in memory. Each store or atomic operation can be set up to return an acknowledgment to the requesting PE upon write confirmation of the return value (pre-atomic op value at destination) being stored to device memory.
 
@@ -551,7 +551,7 @@ Each scatter write from a given PE to a given memory channel maintains order. Th
 
 1.2. Hardware Overview 8 of 600
 
-![](_page_17_Picture_1.jpeg)
+![](assets/_page_17_Picture_1.jpeg)
 
 # <span id="page-17-0"></span>**Chapter 2. Shader Concepts**
 
@@ -586,7 +586,7 @@ Hardware may choose to skip either half if the EXEC mask for that half is all ze
 
 2.1. Wave32 and Wave64 9 of 600
 
-![](_page_18_Picture_1.jpeg)
+![](assets/_page_18_Picture_1.jpeg)
 
 there are no outstanding VMEM instructions from this wave. It also does not skip either half of a VALU instruction which writes an SGPR. See [Instruction Skipping: EXEC==0](#page-23-0) for details on instruction skipping rules.
 
@@ -619,9 +619,9 @@ Rendering modes (launch behavior):
 
 2.2. Shader Types 10 of 600
 
-![](_page_19_Picture_1.jpeg)
+![](assets/_page_19_Picture_1.jpeg)
 
-![](_page_19_Figure_2.jpeg)
+![](assets/_page_19_Figure_2.jpeg)
 
 The amplification shader decides how many mesh shader groups to launch. The mesh shader processes vertices and then primitives.
 
@@ -639,7 +639,7 @@ In this mode, the LDS is effectively split into a separate upper and lower LDS, 
 
 2.3. Work-groups 11 of 600
 
-![](_page_20_Picture_1.jpeg)
+![](assets/_page_20_Picture_1.jpeg)
 
 #### **WGP mode**
 
@@ -655,7 +655,7 @@ Due to aggressive instruction prefetching used in some graphics devices, the use
 
 The amount of shader padding required is related to how far the shader may prefetch ahead. The shader can be set to prefetch 1, 2 or 3 cachelines (64 bytes) ahead of the current program counter. This is controlled via a wave-launch state register, or by the shader program itself with S\_SET\_INST\_PREFETCH\_DISTANCE.
 
-![](_page_21_Picture_1.jpeg)
+![](assets/_page_21_Picture_1.jpeg)
 
 # <span id="page-21-0"></span>**Chapter 3. Wave State**
 
@@ -688,7 +688,7 @@ Table 4. Readable and Writable Hardware States
 
 3.1. State Overview 13 of 600
 
-![](_page_22_Picture_1.jpeg)
+![](assets/_page_22_Picture_1.jpeg)
 
 | Abbrev.      | Name                                     | Size<br>(bits) | Description                                                                                                                      |
 |--------------|------------------------------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------|
@@ -718,7 +718,7 @@ Wave64 uses all 64 bits of the exec mask. Wave32 waves use only bits 31:0 and ha
 
 There is a summary bit (EXECZ) that indicates that the entire execute mask is zero. It can be used as a condition for branches to skip code when EXEC is zero. For wave32, this reflects the state of EXEC[31:0].
 
-![](_page_23_Picture_1.jpeg)
+![](assets/_page_23_Picture_1.jpeg)
 
 ### <span id="page-23-0"></span>**3.2.3. Instruction Skipping: EXEC==0**
 
@@ -759,7 +759,7 @@ Every wave is allocated a fixed number of SGPRs:
 
 The Vector Condition Code (VCC) can be written by V\_CMP and integer vector ADD/SUB instructions. VCC is implicitly read by V\_ADD\_CI, V\_SUB\_CI, V\_CNDMASK and V\_DIV\_FMAS. VCC is a named SGPR-pair and is subject to the same dependency checks as any other SGPR.
 
-![](_page_24_Picture_1.jpeg)
+![](assets/_page_24_Picture_1.jpeg)
 
 ### **3.3.1.3. SGPR Alignment**
 
@@ -850,7 +850,7 @@ V\_MOVREL indexed operand out of range if either:
 
 • Index > 255
 
-![](_page_26_Picture_1.jpeg)
+![](assets/_page_26_Picture_1.jpeg)
 
 - (Vs + M0) >= VGPR\_SIZE
 - (Ve + M0) >= VGPR\_SIZE
@@ -893,7 +893,7 @@ Formatted ops such as BUFFER\_LOAD\_FORMAT\_\* must be aligned as follows:
 - 2-byte formats require 2-byte alignment
 - 4-byte and larger formats require 4-byte alignment
 
-![](_page_27_Picture_1.jpeg)
+![](assets/_page_27_Picture_1.jpeg)
 
 Atomics must be aligned to the data size, or triggers a MEMVIOL.
 
@@ -935,7 +935,7 @@ B32: 4 byte aligned B64: 8 byte aligned
 
 B128 and B96: 16 byte aligned
 
-![](_page_28_Picture_1.jpeg)
+![](assets/_page_28_Picture_1.jpeg)
 
 If the alignment mode is set to "unaligned", the LDS disables its auto-alignment and doesn't report error for misaligned reads & writes.
 
@@ -983,7 +983,7 @@ Table 5. Status Register Fields
 
 3.4. Wave State Registers 20 of 600
 
-![](_page_29_Picture_1.jpeg)
+![](assets/_page_29_Picture_1.jpeg)
 
 | Field         | Bit<br>Pos | Write<br>when<br>Priv? | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |---------------|------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1009,7 +1009,7 @@ Table 5. Status Register Fields
 
 3.4. Wave State Registers 21 of 600
 
-![](_page_30_Picture_1.jpeg)
+![](assets/_page_30_Picture_1.jpeg)
 
 ### <span id="page-30-0"></span>**3.4.2. Mode register**
 
@@ -1029,7 +1029,7 @@ Table 6. Mode Register Fields
 
 3.4. Wave State Registers 22 of 600
 
-![](_page_31_Picture_1.jpeg)
+![](assets/_page_31_Picture_1.jpeg)
 
 | Field        | Bit<br>Pos | Description                                                                                                                                                                                                           |
 |--------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1075,7 +1075,7 @@ Compare operations: 1 = true
 
 3.4. Wave State Registers 23 of 600
 
-![](_page_32_Picture_1.jpeg)
+![](assets/_page_32_Picture_1.jpeg)
 
 ```
 Arithmetic operations: 1 = carry out
@@ -1101,7 +1101,7 @@ V_CMP_EQ_B32 VCC, V0, V0 // compare (V0 == V0) and write result to VCC (all bits
 updated)
 ```
 
-![](_page_32_Picture_10.jpeg)
+![](assets/_page_32_Picture_10.jpeg)
 
 VCC physically resides in the SGPR register file in a specific pair of SGPRs, so when an instruction sources VCC, that counts against the limit on the total number of SGPRs that can be sourced for a given instruction.
 
@@ -1117,7 +1117,7 @@ scratch\_base = scratch\_base[63:0] + spi\_scratch\_offset[31:0]
 
 3.4. Wave State Registers 24 of 600
 
-![](_page_33_Picture_1.jpeg)
+![](assets/_page_33_Picture_1.jpeg)
 
 FLAT\_SCRATCH\_LO = scratch\_base [31:0] FLAT\_SCRATCH\_HI = scratch\_base [63:32]
 
@@ -1166,7 +1166,7 @@ Trap temporary SGPRs (TTMP\*) are privileged for writes - they can be written on
 
 3.4. Wave State Registers 25 of 600
 
-![](_page_34_Picture_1.jpeg)
+![](assets/_page_34_Picture_1.jpeg)
 
 (STATUS.PRIV = 1). TTMPs cannot be read by the user shader (returns zero).
 
@@ -1210,7 +1210,7 @@ TRAPSTS contains information about traps and exceptions, and may be written by u
 
 3.4. Wave State Registers 26 of 600
 
-![](_page_35_Picture_1.jpeg)
+![](assets/_page_35_Picture_1.jpeg)
 
 | Field           | Bit<br>Pos | Description                                                                                                                                                                                                                                                        |  |                        |  |
 |-----------------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|------------------------|--|
@@ -1247,7 +1247,7 @@ For measuring time between different waves or SIMDs, or to reference a clock tha
 
 3.4. Wave State Registers 27 of 600
 
-![](_page_36_Picture_1.jpeg)
+![](assets/_page_36_Picture_1.jpeg)
 
 ```
   S_SENDMSG_RTN_B64 S[2:3] REALTIME
@@ -1290,7 +1290,7 @@ Table 8. **PS SGPR Load**
 
 3.5. Initial Wave State 28 of 600
 
-![](_page_37_Picture_1.jpeg)
+![](assets/_page_37_Picture_1.jpeg)
 
 | SGPR Order | Description                               | Enable                    |  |  |
 |------------|-------------------------------------------|---------------------------|--|--|
@@ -1332,7 +1332,7 @@ Table 9. **GS SGPR Load**
 
 3.5. Initial Wave State 29 of 600
 
-![](_page_38_Picture_1.jpeg)
+![](assets/_page_38_Picture_1.jpeg)
 
 | SGPR #            | GS with FAST_LAUNCH != 2            | GS with FAST_LAUNCH == 2         | Enable                            |  |  |
 |-------------------|-------------------------------------|----------------------------------|-----------------------------------|--|--|
@@ -1371,7 +1371,7 @@ Table 11. **CS SGPR Load**
 
 3.5. Initial Wave State 30 of 600
 
-![](_page_39_Picture_1.jpeg)
+![](assets/_page_39_Picture_1.jpeg)
 
 ### <span id="page-39-0"></span>**3.5.4. Which VGPRs Get Initialized**
 
@@ -1408,7 +1408,7 @@ The two Pixel Staging Register (PSR) control registers contain an identical set 
 
 3.5. Initial Wave State 31 of 600
 
-![](_page_40_Picture_1.jpeg)
+![](assets/_page_40_Picture_1.jpeg)
 
 | Field Name           | IJ / VGPR Terms                                                                                           | BITS | VGPR Dest with Full<br>Load |
 |----------------------|-----------------------------------------------------------------------------------------------------------|------|-----------------------------|
@@ -1457,7 +1457,7 @@ The above table shows VGPR destinations for PS when all possible terms are enabl
 
 3.5. Initial Wave State 32 of 600
 
-![](_page_41_Picture_1.jpeg)
+![](assets/_page_41_Picture_1.jpeg)
 
 | Field Name           | ENA | ADDR | IJ / VGPR Terms         | VGPR Dest |
 |----------------------|-----|------|-------------------------|-----------|
@@ -1539,7 +1539,7 @@ Integer constants used with 32-bit or smaller operands are treated as 32-bit sig
 
 When used in a 64-bit signed integer operation, it is sign-extended to 64 bits. For unsigned 64-bit integer ops (and 64-bit binary ops) it is zero extended. When used in a double-float operation, the 32-bit literal is the most-significant bits, and the LSBs are zero. Other operations (32 bits or less, or packed math) treat it as 32-bit data.
 
-![](_page_43_Picture_1.jpeg)
+![](assets/_page_43_Picture_1.jpeg)
 
 |                                                  |                            |                     | Code         | Meaning                                                                                          |                                                             |
 |--------------------------------------------------|----------------------------|---------------------|--------------|--------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
@@ -1586,7 +1586,7 @@ Scalar and vector memory instructions contain bits that control cache behavior. 
 
 **GLC** controls the graphics first-level cache
 
-![](_page_44_Picture_1.jpeg)
+![](assets/_page_44_Picture_1.jpeg)
 
 **SLC** controls the graphics L2 cache
 
@@ -1641,7 +1641,7 @@ Typically loads use GLC=0 (except for load-acquire). GLC=1 forces a miss in the 
   - 0 : CU (work-group) scope
   - 1 : DEVICE scope
 
-![](_page_45_Picture_1.jpeg)
+![](assets/_page_45_Picture_1.jpeg)
 
 - All stores/atomic ops are device scope (GLC has non-perf related functionality)
 - ISA.SLC ⇒ Temporal Hint for graphic client caches
@@ -1656,7 +1656,7 @@ Typically loads use GLC=0 (except for load-acquire). GLC=1 forces a miss in the 
 - 0: return nothing
 - 1: return pre-operation value from memory to VGPR
 
-![](_page_46_Picture_1.jpeg)
+![](assets/_page_46_Picture_1.jpeg)
 
 # <span id="page-46-0"></span>**Chapter 5. Program Flow Control**
 
@@ -1694,7 +1694,7 @@ Table 13. Dependency, Delay and Scheduling Instructions
 
 5.1. Program Control 38 of 600
 
-![](_page_47_Picture_1.jpeg)
+![](assets/_page_47_Picture_1.jpeg)
 
 | Instructions | Description                                                                                                                                                                                                                                                                                                             |
 |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1735,7 +1735,7 @@ Clauses are defined and started using the S\_CLAUSE instruction, and must contai
 
 5.2. Instruction Clauses 39 of 600
 
-![](_page_48_Picture_1.jpeg)
+![](assets/_page_48_Picture_1.jpeg)
 
 - SMEM
 - VALU
@@ -1779,7 +1779,7 @@ The following conditions can break a clause:
 
 5.2. Instruction Clauses 40 of 600
 
-![](_page_49_Picture_1.jpeg)
+![](assets/_page_49_Picture_1.jpeg)
 
 commands, the GPRs could not be read from waves other than the one currently in a clause. If a wave halts or is kill, its clauses are ended.
 
@@ -1819,7 +1819,7 @@ Table 16. S\_SENDMSG\_RTN Messages
 
 5.3. Send Message Types 41 of 600
 
-![](_page_50_Picture_1.jpeg)
+![](assets/_page_50_Picture_1.jpeg)
 
 | Message          | SSRC0 | Payload                                                                                                                                                                                |  |  |  |
 |------------------|-------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|--|
@@ -1855,7 +1855,7 @@ Work-groups are collections of waves running on the same work-group processor th
 
 5.4. Branching 42 of 600
 
-![](_page_51_Picture_1.jpeg)
+![](assets/_page_51_Picture_1.jpeg)
 
 barrier instructions as S\_NOP.
 
@@ -1928,7 +1928,7 @@ The S\_DELAY\_ALU instruction says: wait for the VALU-Inst N ago to have complet
 
 S\_DELAY\_ALU may be executed in zero cycles - it may be executed in parallel with the instruction before it. This avoids extra delay if no delay is needed.
 
-![](_page_53_Picture_1.jpeg)
+![](assets/_page_53_Picture_1.jpeg)
 
 #### **S\_DELAY\_ALU InstID1[4], Skip[3], InstID0[4] // packed into SIMM16**
 
@@ -1968,7 +1968,7 @@ Scalar ALU (SALU) instructions operate on values that are common to all work-ite
 
 SALU instructions are encoded in one of five microcode formats, shown below:
 
-![](_page_54_Figure_6.jpeg)
+![](assets/_page_54_Figure_6.jpeg)
 
 | Name | Size   | Function                                            |
 |------|--------|-----------------------------------------------------|
@@ -1994,7 +1994,7 @@ The lists of similar instructions sometimes use a condensed form using curly bra
 
 Valid operands of SALU instructions are:
 
-![](_page_55_Picture_1.jpeg)
+![](assets/_page_55_Picture_1.jpeg)
 
 - SGPRs, including trap temporary SGPRs
 - Mode register
@@ -2014,7 +2014,7 @@ Table 20. Scalar Operands
 
 6.2. Scalar ALU Operands 47 of 600
 
-![](_page_56_Picture_1.jpeg)
+![](assets/_page_56_Picture_1.jpeg)
 
 |                    |                              | Code    | Meaning          |                                                                                                  |  |
 |--------------------|------------------------------|---------|------------------|--------------------------------------------------------------------------------------------------|--|
@@ -2105,7 +2105,7 @@ This section describes the arithmetic operations supplied by the SALU. The table
 
 Table 21. Integer Arithmetic Instructions
 
-![](_page_58_Picture_1.jpeg)
+![](assets/_page_58_Picture_1.jpeg)
 
 | Instruction       | Encoding | Sets SCC? | Operation                    |
 |-------------------|----------|-----------|------------------------------|
@@ -2154,7 +2154,7 @@ Table 24. Bit-Wise Instructions
 | S_ASHR_{I32,I64}                 | SOP2     | D!=0 | D = sext(S0 >> S1[4:0]) ([5:0] for I64).                                                  |
 | S_BFM_{B32,B64}                  | SOP2     | No   | Bit field mask<br>D = ( (1 << S0[4:0]) -1) << S1[4:0]<br>(uses [5:0] for the B64 version) |
 
-![](_page_59_Picture_1.jpeg)
+![](assets/_page_59_Picture_1.jpeg)
 
 | Instruction                                                       | Encoding |      | Sets SCC? Operation                                                                                                                                                                                                                                                                                                                                                                     |
 |-------------------------------------------------------------------|----------|------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2175,7 +2175,7 @@ Table 24. Bit-Wise Instructions
 
 6.7. Bit-Wise Instructions 51 of 600
 
-![](_page_60_Picture_1.jpeg)
+![](assets/_page_60_Picture_1.jpeg)
 
 | Instruction                                                                                     | Encoding |      | Sets SCC? Operation                                                                                                                                                                             |
 |-------------------------------------------------------------------------------------------------|----------|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2215,7 +2215,7 @@ These values originate from the SH\_MEM\_BASES register ("SMB"), and are used pr
 
 6.8. Access Instructions 52 of 600
 
-![](_page_61_Picture_1.jpeg)
+![](assets/_page_61_Picture_1.jpeg)
 
 used by SALU and VALU ops, and are 64-bit unsigned integers:
 
@@ -2223,7 +2223,7 @@ SHARED\_BASE = ptr32 ? {32'h0, SMB.shared\_base[15:0], 16'h0000} : {SMB.shared\_
 
 "Hole" = (addr[63:47] != all zeros or all ones) and is the illegal address section of memory
 
-![](_page_62_Picture_1.jpeg)
+![](assets/_page_62_Picture_1.jpeg)
 
 # <span id="page-62-0"></span>**Chapter 7. Vector ALU Operations**
 
@@ -2237,7 +2237,7 @@ Vector ALU (VALU) instructions control the SIMD32's math unit and operate on 32 
 
 VALU instructions are encoded in one of these ways:
 
-![](_page_62_Figure_8.jpeg)
+![](assets/_page_62_Figure_8.jpeg)
 
 | Name   | Size   | Function                                           | Modifiers             |
 |--------|--------|----------------------------------------------------|-----------------------|
@@ -2251,7 +2251,7 @@ VALU instructions are encoded in one of these ways:
 
 Many VALU instructions are available in two encodings: VOP3 that uses 64-bits of instruction, and one of three 32-bit encodings that offer a restricted set of capabilities but smaller code size. Some instructions are only available in the VOP3 encoding. When an instruction is available in two microcode formats, it is up to the user to decide which to use. It is recommended to use the 32-bit encoding whenever possible. VOP2 can also be used
 
-![](_page_63_Picture_1.jpeg)
+![](assets/_page_63_Picture_1.jpeg)
 
 for "ACCUM" type ops where the third input is implied to be the same as the dest.
 
@@ -2293,7 +2293,7 @@ Any of the VALU microcode formats may use a 32-bit literal constant, as well VOP
 | NEG   | 3      | negate the input (invert sign bit). float inputs only.<br>bit 0 is for src0, bit 1 is for src1 and bit 2 is for src2.                                                                                                                          |  |  |  |
 | ABS   | 3      | apply absolute value on input. float inputs only. applied before 'neg'.<br>bit 0 is for src0, bit 1 is for src1 and bit 2 is for src2.                                                                                                         |  |  |  |
 
-![](_page_64_Picture_1.jpeg)
+![](assets/_page_64_Picture_1.jpeg)
 
 | Field | Size | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |-------|------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2310,7 +2310,7 @@ Table 26. VALU Instruction Operands
 
 7.2. Operands 56 of 600
 
-![](_page_65_Picture_1.jpeg)
+![](assets/_page_65_Picture_1.jpeg)
 
 |                            |                            |                     | Code      | Meaning          |                                                                                                  |  |
 |----------------------------|----------------------------|---------------------|-----------|------------------|--------------------------------------------------------------------------------------------------|--|
@@ -2357,7 +2357,7 @@ A few instructions use the operand fields in non-standard ways:
 
 7.2. Operands 57 of 600
 
-![](_page_66_Picture_1.jpeg)
+![](assets/_page_66_Picture_1.jpeg)
 
 | Opcode                           | Encoding | VDST                          | SDST      | VSRC0               | VSRC1                         | VSRC2                     |
 |----------------------------------|----------|-------------------------------|-----------|---------------------|-------------------------------|---------------------------|
@@ -2401,7 +2401,7 @@ The **input modifiers** ABS and NEG apply to floating point inputs and are undef
 
 7.2. Operands 58 of 600
 
-![](_page_67_Picture_1.jpeg)
+![](assets/_page_67_Picture_1.jpeg)
 
 • QSAD
 
@@ -2448,7 +2448,7 @@ Table 27. Opcodes usable with OPSEL
 
 7.2. Operands 59 of 600
 
-![](_page_68_Picture_1.jpeg)
+![](assets/_page_68_Picture_1.jpeg)
 
 | V_MUL_LO_U16             | V_MAD_U32_U16           | V_MAD_I32_I16        |
 |--------------------------|-------------------------|----------------------|
@@ -2493,7 +2493,7 @@ The **clamp** bit has multiple uses. For V\_CMP instructions, setting the clamp 
 
 7.2. Operands 60 of 600
 
-![](_page_69_Picture_1.jpeg)
+![](assets/_page_69_Picture_1.jpeg)
 
 The clamp bit is not supported for (ignored):
 
@@ -2529,7 +2529,7 @@ DOT2\_F16\_F16 and DOT2\_BF16\_BF16 support round-to-nearest-even rounding. DOT2
 
 7.2. Operands 61 of 600
 
-![](_page_70_Picture_1.jpeg)
+![](assets/_page_70_Picture_1.jpeg)
 
 ### <span id="page-70-0"></span>**7.2.5. Instructions using SGPRs as Mask or Carry**
 
@@ -2571,7 +2571,7 @@ V\_PERMLANE may not occur immediately after a V\_CMPX. To prevent this, any othe
 
 7.2. Operands 62 of 600
 
-![](_page_71_Picture_1.jpeg)
+![](assets/_page_71_Picture_1.jpeg)
 
 # <span id="page-71-0"></span>**7.3. Instructions**
 
@@ -2630,7 +2630,7 @@ The table below lists the complete VALU instruction set by microcode encoding, e
 
 7.3. Instructions 63 of 600
 
-![](_page_72_Picture_1.jpeg)
+![](assets/_page_72_Picture_1.jpeg)
 
 | VOP3              | VOP3 - 2 operands | VOP2 | VOP1                |
 |-------------------|-------------------|------|---------------------|
@@ -2686,7 +2686,7 @@ The table below lists the complete VALU instruction set by microcode encoding, e
 
 7.3. Instructions 64 of 600
 
-![](_page_73_Picture_1.jpeg)
+![](assets/_page_73_Picture_1.jpeg)
 
 # <span id="page-73-0"></span>**7.4. 16-bit Math and VGPRs**
 
@@ -2714,7 +2714,7 @@ The packing shown below allows reading or writing in one cycle:
 - 64 lanes of one 16-bit VGPR: V0.L
 - 32 lanes of two 16-bit VGPRs (a pair, as used by packed math): V0.L and V0.H
 
-![](_page_73_Figure_16.jpeg)
+![](assets/_page_73_Figure_16.jpeg)
 
 # <span id="page-73-1"></span>**7.5. Packed Math**
 
@@ -2732,7 +2732,7 @@ Table 29. Packed Math Opcodes:
 
 7.4. 16-bit Math and VGPRs 65 of 600
 
-![](_page_74_Picture_1.jpeg)
+![](assets/_page_74_Picture_1.jpeg)
 
 | Packed Math ops           |                 |                 |                  |
 |---------------------------|-----------------|-----------------|------------------|
@@ -2747,13 +2747,13 @@ Table 29. Packed Math Opcodes:
 | V_WMMA_I32_16X16X16_IU8   |                 | V_DOT8_I32_IU4  |                  |
 | V_WMMA_I32_16X16X16_IU4   |                 | V_DOT8_U32_U4   |                  |
 
-![](_page_74_Picture_3.jpeg)
+![](assets/_page_74_Picture_3.jpeg)
 
 V\_FMA\_MIX\_\* and WMMA instructions are not packed math, but perform a single MAD operation on a mixture of 16- and 32-bit inputs. They are listed here because they use the VOP3P encoding.
 
 #### **VOP3P Instruction Fields**
 
-![](_page_74_Figure_6.jpeg)
+![](assets/_page_74_Figure_6.jpeg)
 
 | Field            | Size | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |  |
 |------------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -2768,7 +2768,7 @@ V\_FMA\_MIX\_\* and WMMA instructions are not packed math, but perform a single 
 
 7.5. Packed Math 66 of 600
 
-![](_page_75_Picture_1.jpeg)
+![](assets/_page_75_Picture_1.jpeg)
 
 | Field                      | Size | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 |----------------------------|------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2811,7 +2811,7 @@ Any packed math instructions that use data sizes less than 16 bits do not work w
 
 7.5. Packed Math 67 of 600
 
-![](_page_76_Picture_1.jpeg)
+![](assets/_page_76_Picture_1.jpeg)
 
 | Opcode           | inline                                                | OPSEL                    |
 |------------------|-------------------------------------------------------|--------------------------|
@@ -2857,11 +2857,11 @@ The two instructions in the VOPD are executed at the same time, so there are no 
 
 7.6. Dual Issue VALU 68 of 600
 
-![](_page_77_Picture_1.jpeg)
+![](assets/_page_77_Picture_1.jpeg)
 
 #### **VOPD Instruction Fields**
 
-![](_page_77_Picture_3.jpeg)
+![](assets/_page_77_Picture_3.jpeg)
 
 | Field  | Size | Description                                                                                                                                                                        |  |
 |--------|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -2896,7 +2896,7 @@ DPP may be used only with: VOP1, VOP2, VOPC, VOP3 and VOP3P (but not "packed mat
 
 Table 30. Which instructions support DPP
 
-![](_page_78_Picture_1.jpeg)
+![](assets/_page_78_Picture_1.jpeg)
 
 | Encoding | Opcodes                                                                              | * Rule*   | Encoding | Opcodes            | Rule      |
 |----------|--------------------------------------------------------------------------------------|-----------|----------|--------------------|-----------|
@@ -2939,7 +2939,7 @@ Both VOP3/VOP3P and DPP16 have ABS and NEG fields:
 |          |       | 29==0: lanes[31:16] are disabled                                                                                                                                                     |
 |          |       | 28==0: lanes[15:0] are disabled                                                                                                                                                      |
 
-![](_page_79_Picture_1.jpeg)
+![](assets/_page_79_Picture_1.jpeg)
 
 | Field     | BITS  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |           |  |  |  |
 |-----------|-------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|--|--|--|
@@ -2970,7 +2970,7 @@ Table 31. BC and FI Behavior
 | 0  | 1  | Src0 = 0                    | Normal                               | Normal                             |
 | 1  | 1  | Normal                      | Normal                               | Normal                             |
 
-![](_page_80_Picture_1.jpeg)
+![](assets/_page_80_Picture_1.jpeg)
 
 Where "out of range" means the lane offset goes outside a group of 16 lanes (e.g. 0..15, or 16..31).
 
@@ -3056,19 +3056,19 @@ Back-to-back dependent WMMA instructions require one V\_NOP (or independent VALU
 
 Simplified example of matrix multiplication on 4x4 matrices:
 
-![](_page_82_Picture_2.jpeg)
+![](assets/_page_82_Picture_2.jpeg)
 
 This diagram below shows the A, B, C and D matrices in the traditional point of view: one row is a horizontal strip of entries, and columns are a vertical strip. This is the linear algebra view, regardless of layout in memory or in VGPRs. The matrix operation is defined as: D = A \* B + C. Each entry in D is the result of multiplication of a row from A with a column from B, added to the C value for that entry.
 
-![](_page_82_Figure_4.jpeg)
+![](assets/_page_82_Figure_4.jpeg)
 
 This diagram below shows how the matrices are laid out in VGPRs when M = N = K = 16. Note that the A matrix is column-major while the others are in row-major order.
 
-![](_page_83_Picture_1.jpeg)
+![](assets/_page_83_Picture_1.jpeg)
 
-![](_page_83_Figure_2.jpeg)
+![](assets/_page_83_Figure_2.jpeg)
 
-![](_page_84_Picture_1.jpeg)
+![](assets/_page_84_Picture_1.jpeg)
 
 # <span id="page-84-0"></span>**Chapter 8. Scalar Memory Operations**
 
@@ -3082,7 +3082,7 @@ Loads come in two forms: one that simply takes a base-address pointer, and the o
 
 Scalar memory load instructions are encoded using the SMEM microcode format.
 
-![](_page_84_Figure_8.jpeg)
+![](assets/_page_84_Figure_8.jpeg)
 
 The fields are described in the table below:
 
@@ -3111,7 +3111,7 @@ Table 35. SMEM Instructions
 
 8.1. Microcode Encoding 76 of 600
 
-![](_page_85_Picture_1.jpeg)
+![](assets/_page_85_Picture_1.jpeg)
 
 These instructions load 1-16 DWORDs from memory. The data in SGPRs is specified in SDATA, and the address is composed of the SBASE, OFFSET, and SOFFSET fields.
 
@@ -3158,7 +3158,7 @@ This instruction invalidates the entire scalar cache or L1 cache. It does not re
 
 8.1. Microcode Encoding 77 of 600
 
-![](_page_86_Picture_1.jpeg)
+![](assets/_page_86_Picture_1.jpeg)
 
 S\_GL1\_INV and S\_DCACHE\_INV do not have any address or data arguments.
 
@@ -3198,7 +3198,7 @@ The value of SBASE must be even for S\_BUFFER\_LOAD (specifying the address of a
 
 The value of OFFSET has no alignment restrictions.
 
-![](_page_87_Picture_1.jpeg)
+![](assets/_page_87_Picture_1.jpeg)
 
 ### <span id="page-87-0"></span>**8.4.1. Address and GPR Range Checking**
 
@@ -3220,7 +3220,7 @@ completely), the value 'zero' is used instead.
 
 written back to SGPRs for this instruction.
 
-![](_page_88_Picture_1.jpeg)
+![](assets/_page_88_Picture_1.jpeg)
 
 # <span id="page-88-0"></span>**Chapter 9. Vector Memory Buffer Instructions**
 
@@ -3258,7 +3258,7 @@ Buffer instructions (MTBUF and MUBUF) allow the shader program to load from, and
 
 9.1. Buffer Instructions 80 of 600
 
-![](_page_89_Picture_1.jpeg)
+![](assets/_page_89_Picture_1.jpeg)
 
 The D16 instruction variants of buffer ops convert the results to and from packed 16-bit values. For example, BUFFER\_LOAD\_D16\_FORMAT\_XYZW stores two VGPRs with 4 16-bit values.
 
@@ -3277,7 +3277,7 @@ Table 36. Buffer Instructions
 | BUFFER_ATOMIC_ <op></op>                                                                                                                                                                                                                                                                             | Buffer object atomic operation. Automatically globally coherent.<br>Operates on 32bit or 64bit values.      |
 | BUFFER_GL{0,1}_INV                                                                                                                                                                                                                                                                                   | Cache invalidate: either L0 or L1 cache for the CU (L0) and Shader<br>Array (L1) associated with this wave. |
 
-![](_page_89_Figure_6.jpeg)
+![](assets/_page_89_Figure_6.jpeg)
 
 Table 37. Microcode Formats
 
@@ -3299,7 +3299,7 @@ Table 37. Microcode Formats
 
 9.1. Buffer Instructions 81 of 600
 
-![](_page_90_Picture_1.jpeg)
+![](assets/_page_90_Picture_1.jpeg)
 
 | Field | Bit Size Description |                                                                                                                                                                    |
 |-------|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3356,7 +3356,7 @@ Table 37. Microcode Formats
 
 9.1. Buffer Instructions 82 of 600
 
-![](_page_91_Picture_1.jpeg)
+![](assets/_page_91_Picture_1.jpeg)
 
 | Description - all address components for buffer ops are uint                                                                                 |
 |----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3451,7 +3451,7 @@ Table 41. **Data format in VGPRs and Memory**
 
 9.2. VGPR Usage 84 of 600
 
-![](_page_93_Picture_1.jpeg)
+![](assets/_page_93_Picture_1.jpeg)
 
 | Instruction                 | Memory Format | VGPR Format                                                                                 | Notes                                   |
 |-----------------------------|---------------|---------------------------------------------------------------------------------------------|-----------------------------------------|
@@ -3483,7 +3483,7 @@ Where "V0" is the VDATA VGPR; V1 is the VDATA+1 VGPR, etc.
 
 9.2. VGPR Usage 85 of 600
 
-![](_page_94_Picture_1.jpeg)
+![](assets/_page_94_Picture_1.jpeg)
 
 | Instruction                  | VGPR Format                                                                    | Memory<br>Format | Notes                                   |
 |------------------------------|--------------------------------------------------------------------------------|------------------|-----------------------------------------|
@@ -3518,7 +3518,7 @@ Table 42. Buffer Instructions
 
 **Data format derived** : The data format is derived from the opcode and ignores the resource definition. For example, BUFFER\_LOAD\_U8 sets the data-format to uint-8.
 
-![](_page_94_Picture_11.jpeg)
+![](assets/_page_94_Picture_11.jpeg)
 
 The resource's data format must not be INVALID; that format has specific meaning (unbound resource), and for that case the data format is not replaced by the instruction's implied data format.
 
@@ -3526,7 +3526,7 @@ The resource's data format must not be INVALID; that format has specific meaning
 
 9.3. Buffer Data 86 of 600
 
-![](_page_95_Picture_1.jpeg)
+![](assets/_page_95_Picture_1.jpeg)
 
 ### <span id="page-95-0"></span>**9.3.1. D16 Instructions**
 
@@ -3564,7 +3564,7 @@ The "element size" for a buffer instruction is the amount of data the instructio
 
 9.4. Buffer Addressing 87 of 600
 
-![](_page_96_Picture_1.jpeg)
+![](assets/_page_96_Picture_1.jpeg)
 
 Table 44. Buffer Resource Constant Fields for Addressing
 
@@ -3593,7 +3593,7 @@ The final buffer memory address is composed of three parts:
 
 Address Calculation for a Linear Buffer
 
-![](_page_96_Figure_12.jpeg)
+![](assets/_page_96_Figure_12.jpeg)
 
 ## <span id="page-96-0"></span>**9.4.1. Range Checking**
 
@@ -3601,7 +3601,7 @@ Buffer addresses are checked against the size of the memory buffer. Loads that a
 
 9.4. Buffer Addressing 88 of 600
 
-![](_page_97_Picture_1.jpeg)
+![](assets/_page_97_Picture_1.jpeg)
 
 a 2-bit field in the buffer resource: OOB\_SELECT (Out of Bounds select).
 
@@ -3645,7 +3645,7 @@ NumRecords for raw buffer is in units of bytes. This is an exact range check, me
 
 9.4. Buffer Addressing 89 of 600
 
-![](_page_98_Picture_1.jpeg)
+![](assets/_page_98_Picture_1.jpeg)
 
 ### **9.4.1.3. Scratch Buffer**
 
@@ -3696,13 +3696,13 @@ Final Address = const_base + sgpr_offset + buffer_offset
 
 9.4. Buffer Addressing 90 of 600
 
-![](_page_99_Picture_1.jpeg)
+![](assets/_page_99_Picture_1.jpeg)
 
 #### Example of Buffer Swizzling
 
-![](_page_99_Figure_9.jpeg)
+![](assets/_page_99_Figure_9.jpeg)
 
-![](_page_99_Figure_11.jpeg)
+![](assets/_page_99_Figure_11.jpeg)
 
 # <span id="page-99-0"></span>**9.5. Alignment**
 
@@ -3720,7 +3720,7 @@ Options are:
 
 9.5. Alignment 91 of 600
 
-![](_page_100_Picture_1.jpeg)
+![](assets/_page_100_Picture_1.jpeg)
 
 - 0. : DWORD hardware automatically aligns request to the smaller of: element-size or DWORD. For DWORD or larger loads or stores of non-formatted ops (such as BUFFER\_LOAD\_DWORD), the two LSBs of the byte-address are ignored, thus forcing DWORD alignment.
 - 1. : DWORD\_STRICT must be aligned to the smaller of: element-size or DWORD.
@@ -3762,13 +3762,13 @@ Setting the resource constant to all zeros has the effect of forcing any loads t
 
 9.6. Buffer Resource 92 of 600
 
-![](_page_101_Picture_1.jpeg)
+![](assets/_page_101_Picture_1.jpeg)
 
 If the resource type and instruction mismatch (e.g. a buffer constant with an image instruction, or an image resource with a buffer instruction), the instruction is ignored (loads return nothing and stores do not alter memory).
 
 9.6. Buffer Resource 93 of 600
 
-![](_page_102_Picture_1.jpeg)
+![](assets/_page_102_Picture_1.jpeg)
 
 # <span id="page-102-0"></span>**Chapter 10. Vector Memory Image Instructions**
 
@@ -3797,7 +3797,7 @@ This section describes the image instruction set, and the microcode fields avail
 
 10.1. Image Instructions 94 of 600
 
-![](_page_103_Picture_1.jpeg)
+![](assets/_page_103_Picture_1.jpeg)
 
 | MIMG Instructions                                                                             |                                                                                                                                                                                                                                                                      |
 |-----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3805,7 +3805,7 @@ This section describes the image instruction set, and the microcode fields avail
 | IMAGE_GET_RESINFO                                                                             | Return resource info into 4 VGPRs for the MIP level specified. These are 32bit<br>integer values:<br>VDATA3-0 = { #mipLevels, depth, height, width }<br>For cubemaps, depth = 6 * Number_of_array_faces.<br>(DX expects the # of cubes, but gets # of faces instead) |
 | IMAGE_GET_LOD                                                                                 | Return the calculated LOD. Treated as a Sample instruction.<br>Returns the "raw" LOD and the "clamped" LOD into VDATA as two 32 bit floats:<br>First VGPR = clampLOD<br>Second VGPR = rawLOD                                                                         |
 
-![](_page_103_Figure_3.jpeg)
+![](assets/_page_103_Figure_3.jpeg)
 
 Table 48. Instruction Fields
 
@@ -3828,7 +3828,7 @@ Table 48. Instruction Fields
 
 10.1. Image Instructions 95 of 600
 
-![](_page_104_Picture_1.jpeg)
+![](assets/_page_104_Picture_1.jpeg)
 
 | Instruction Fields<br>DMASK<br>4 | Data VGPR enable mask: 1 4 consecutive VGPRs<br>Loads: defines which components are returned: 0=red,1=green,2=blue,3=alpha<br>Stores: defines which components are written with data from VGPRs (missing components get 0).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3850,7 +3850,7 @@ When either of these bits are set in the instruction, any texture fetch may retu
 
 10.1. Image Instructions 96 of 600
 
-![](_page_105_Picture_1.jpeg)
+![](assets/_page_105_Picture_1.jpeg)
 
 The data returned is: TEXEL\_FAIL | (LOD\_WARNING << 1) | (LOD << 16)
 
@@ -3884,7 +3884,7 @@ To avoid having many V\_MOV instructions to pack image address VGPRs together, M
 
 10.1. Image Instructions 97 of 600
 
-![](_page_106_Picture_1.jpeg)
+![](assets/_page_106_Picture_1.jpeg)
 
 NSA allows an image instruction to specify up to 5 unique address VGPRs. These are the rules for how instructions requiring more than 5 addresses are handled with NSA. It is permissible to use non-NSA mode where all addresses are in sequential VGPRs.
 
@@ -3914,7 +3914,7 @@ The table below shows the contents of address VGPRs for the various image opcode
 |             | 1           | 2D MSAA       | 2    | t, s            | -, fragid     |               |               |
 |             |             | 2D Array MSAA | 3    | t, s            | fragid, slice |               |               |
 
-![](_page_107_Picture_1.jpeg)
+![](assets/_page_107_Picture_1.jpeg)
 
 | Opcode                                         | a16[0] type |                   | acnt | VGPRn<br>[31:0] | VGPRn+1[31:0] | VGPRn+2[31:0] | VGPRn+3[31:0] |
 |------------------------------------------------|-------------|-------------------|------|-----------------|---------------|---------------|---------------|
@@ -4016,7 +4016,7 @@ Certain sample and gather opcodes require additional values from VGPRs beyond wh
 |                  |                  | 2 | 1D Array    | slice, s        | -, clamp      |               |               |
 |                  |                  | 3 | 2D Array    | t, s            | clamp, slice  |               |               |
 
-![](_page_109_Picture_1.jpeg)
+![](assets/_page_109_Picture_1.jpeg)
 
 | Opcode       | a16[0] acnt type |   |             | VGPRn<br>[31:0] | VGPRn+1[31:0] | VGPRn+2[31:0] | VGPRn+3[31:0] |
 |--------------|------------------|---|-------------|-----------------|---------------|---------------|---------------|
@@ -4059,7 +4059,7 @@ These are all packed into consecutive VGPRs, (may be non-consecutive if "NSA" is
 
 10.4. VGPR Usage 101 of 600
 
-![](_page_110_Picture_1.jpeg)
+![](assets/_page_110_Picture_1.jpeg)
 
 The number of components in "body" is the value of the ACNT field in the table, plus one.
 
@@ -4103,7 +4103,7 @@ Load and store instructions also come in a "d16" variant. For stores, each 32bit
 
 10.4. VGPR Usage 102 of 600
 
-![](_page_111_Picture_1.jpeg)
+![](assets/_page_111_Picture_1.jpeg)
 
 #### **Atomics**
 
@@ -4150,7 +4150,7 @@ Table 50. Image Resource Definition
 
 10.5. Image Resource 103 of 600
 
-![](_page_112_Picture_1.jpeg)
+![](assets/_page_112_Picture_1.jpeg)
 
 | 91:78<br>14<br>height<br>height-1 of mip 0 in texels<br>98:96<br>3<br>dst_sel_x<br>0 = 0, 1 = 1, 4 = R, 5 = G, 6 = B, 7 = A.<br>101:99<br>3<br>dst_sel_y<br>104:102<br>3<br>dst_sel_z<br>107:105<br>3<br>dst_sel_w<br>111:108<br>4<br>base level<br>115:112<br>4<br>last level<br>samples).<br>123:121<br>3<br>BC Swizzle<br>dst_sel_*s. Internal xyzw channels get the following border color<br>5=yxwz<br>127:124<br>4<br>type<br>2d-msaa, 15 = 2d-msaa-array. 1-7 are reserved.<br>256-bit Resource: 1d-array, 2d-array, 3d, cubemap, MSAA<br>140:128<br>13<br>depth<br>pitch > width.<br>141<br>1<br>Pitch[13]<br>(pitch-1)[13] of mip0 for 1D, 2D and 2D-MSAA.<br>156:144<br>13<br>base array<br>First slice in array of the resource view.<br>163:160<br>4<br>array pitch<br>For 3D, bit 0 indicates SRV or UAV:<br>0: SRV (base_array ignored, depth w.r.t. base map)<br>mip level specified)<br>179:168<br>12<br>min lod warn<br>feedback trigger for LOD, u4.8 format<br>183<br>1<br>corner samples mod<br>1 = corner sampled.<br>198:187<br>12<br>min_lod<br>smallest LOD allowed for PRTs, U4.8 format<br>198:187<br>12<br>min LOD<br>smallest LOD allowed for PRTs, u4.8 format.<br>202<br>1<br>Iterate 256<br>every 256B of the tile. Applies only to MSAA depth surfaces.<br>211<br>1<br>Meta Pipe Aligned<br>Maintains pipe alignment in metadata addressing (DCC and tiling)<br>213<br>1<br>Compression Enable<br>enable delta color compression (DCC)<br>214<br>1<br>Alpha is on MSB<br>Set to 1 if the surface's component swap is not reversed (DCC) | Bits | Size | Name            | Comments                                                                                                                                           |  |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -4189,7 +4189,7 @@ Table 51. Image Sampler Definition
 
 10.6. Image Sampler 104 of 600
 
-![](_page_113_Picture_1.jpeg)
+![](assets/_page_113_Picture_1.jpeg)
 
 | Bits   | Size | Name               | Description                                                                             |  |
 |--------|------|--------------------|-----------------------------------------------------------------------------------------|--|
@@ -4239,7 +4239,7 @@ Table 51. Image Sampler Definition
 
 10.6. Image Sampler 105 of 600
 
-![](_page_114_Picture_1.jpeg)
+![](assets/_page_114_Picture_1.jpeg)
 
 | Bits    | Size | Name              | Description                                                      |
 |---------|------|-------------------|------------------------------------------------------------------|
@@ -4340,7 +4340,7 @@ image_bvh64_intersect_ray vgpr_d[4], vgpr_a[12], sgpr_r[4]
 image_bvh64_intersect_ray vgpr_d[4], vgpr_a[9], sgpr_r[4] A16=1
 ```
 
-![](_page_116_Picture_1.jpeg)
+![](assets/_page_116_Picture_1.jpeg)
 
 Table 53. Ray Tracing VGPR Contents
 
@@ -4388,7 +4388,7 @@ When using the BVH instruction with Non-Sequential Address, the BVH components f
 
 10.9. Ray Tracing 108 of 600
 
-![](_page_117_Picture_1.jpeg)
+![](assets/_page_117_Picture_1.jpeg)
 
 #### NSA and A16:
 
@@ -4461,14 +4461,14 @@ The instruction specifies which VGPR supplies the address (per work-item), and t
 
 #### **Instruction Fields**
 
-![](_page_119_Figure_15.jpeg)
+![](assets/_page_119_Figure_15.jpeg)
 
 | Field | Size | Description                                                                                                                                                                                                                                                                                                                                                             |
 |-------|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | OP    | 8    | Opcode: see next table                                                                                                                                                                                                                                                                                                                                                  |
 | ADDR  | 8    | VGPR that holds address or offset. For 64-bit addresses, ADDR has the LSB's and ADDR+1 has the MSBs.<br>For offset a single VGPR has a 32 bit unsigned offset.<br>For FLAT_*: specifies an address.<br>For GLOBAL_* when SADDR is NULL: specifies an address.<br>For GLOBAL_* when SADDR is not NULL: specifies an offset.<br>For SCRATCH, specifies an offset if SVE=1 |
 
-![](_page_120_Picture_1.jpeg)
+![](assets/_page_120_Picture_1.jpeg)
 
 | Field  | Size | Description                                                                                                                                                                                                                                                                                                                       |  |  |
 |--------|------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|
@@ -4513,7 +4513,7 @@ Table 56. Instructions
 | FLAT_ATOMIC_SWAP_B32    | GLOBAL_ATOMIC_SWAP_B32    | none                     |
 | FLAT_ATOMIC_CMPSWAP_B32 | GLOBAL_ATOMIC_CMPSWAP_B32 | none                     |
 
-![](_page_121_Picture_1.jpeg)
+![](assets/_page_121_Picture_1.jpeg)
 
 | Flat                    | GLOBAL                                           | Scratch |
 |-------------------------|--------------------------------------------------|---------|
@@ -4561,7 +4561,7 @@ When the address from a Flat instruction falls into scratch (private) space, a d
 
 11.1. Instructions 113 of 600
 
-![](_page_122_Picture_1.jpeg)
+![](assets/_page_122_Picture_1.jpeg)
 
 used. The address from the VGPR points to the memory space for a specific DWORD of scratch data owned by this thread. The hardware maps this address to the actual memory address that holds data for all of the threads in the wave. Flat atomics which map into scratch: 4-byte atomics are supported, and 8-byte atomics return MEMVIOL.
 
@@ -4597,7 +4597,7 @@ Scratch instructions are similar to global but they access a private (per-thread
 
 11.1. Instructions 114 of 600
 
-![](_page_123_Picture_1.jpeg)
+![](assets/_page_123_Picture_1.jpeg)
 
 Since these instructions do not access LDS, only VMcnt (or VScnt) is used, not LGKMcnt. It is not possible for a scratch instruction to access LDS, and so no error checking is done (and no aperture check is performed).
 
@@ -4662,7 +4662,7 @@ Swizzle for **Scratch** is hard-coded to: elem\_size=4bytes, const\_index\_strid
 
 11.2. Addressing 115 of 600
 
-![](_page_124_Picture_1.jpeg)
+![](assets/_page_124_Picture_1.jpeg)
 
 Addr = SCRATCH\_BASE + (offset / 4) \* 4 \* const\_index\_stride + (offset % 4) + TID\*4 where "offset" = either "INST\_OFFSET + SGPR\_offset" or "INST\_OFFSET + VGPR\_offset".
 
@@ -4712,7 +4712,7 @@ Both Texture and LDS can report that an error occurred due to a bad address. Thi
 - Invalid address (outside any aperture)
 - Write to read-only global memory address
 
-![](_page_125_Picture_1.jpeg)
+![](assets/_page_125_Picture_1.jpeg)
 
 - Misaligned data (scratch accesses may be misaligned)
 - Out-of-range address:
@@ -4730,7 +4730,7 @@ FLAT instructions can use from zero to four consecutive DWORDs of data in VGPRs 
 
 11.4. Data 117 of 600
 
-![](_page_126_Picture_1.jpeg)
+![](assets/_page_126_Picture_1.jpeg)
 
 # <span id="page-126-0"></span>**Chapter 12. Data Share Operations**
 
@@ -4744,7 +4744,7 @@ LDS space is allocated per work-group or wave (when work-groups not used) and re
 
 The figure below shows how the LDS fits into the memory hierarchy of the GPU.
 
-![](_page_126_Figure_8.jpeg)
+![](assets/_page_126_Figure_8.jpeg)
 
 Figure 3. High-Level Memory Configuration
 
@@ -4754,7 +4754,7 @@ The high bandwidth of the LDS memory is achieved not only through its proximity 
 
 12.1. Overview 118 of 600
 
-![](_page_127_Picture_1.jpeg)
+![](assets/_page_127_Picture_1.jpeg)
 
 however, more than one access attempt is made to the same bank at the same time, a bank conflict occurs. In this case, for indexed and atomic operations, the hardware is designed to prevent the attempted concurrent accesses to the same bank by turning them into serial accesses. This can decrease the effective bandwidth of the LDS. For increased throughput (optimal efficiency), therefore, it is important to avoid bank conflicts. A knowledge of request scheduling and address mapping can be key to help achieving this.
 
@@ -4762,7 +4762,7 @@ however, more than one access attempt is made to the same bank at the same time,
 
 The figure below is a conceptual diagram of the dataflow within the memory structure.
 
-![](_page_127_Figure_5.jpeg)
+![](assets/_page_127_Figure_5.jpeg)
 
 Data can be loaded into LDS either by transferring it from VGPRs to LDS using "DS" instructions, or by loading in from memory. When loading from memory, the data may be loaded into VGPRs first or for some types of loads it may be loaded directly into LDS from memory. To store data from LDS to global memory, data is read from LDS and placed into the work-item's VGPRs, then written out to global memory. To help make effective use of the LDS, a shader program must perform many operations on what is transferred between global memory and LDS.
 
@@ -4820,7 +4820,7 @@ Parameter Loads are only available in LDS, not in GDS, and only in CU mode (not 
 
 LDS\_PARAM\_LOAD reads three parameters (P0, P10, P20) of one 32-bit attribute or of two 16-bit attributes from LDS into VGPRs. The are 3 parameters (P0, P10 and P20) are the same for the 4 pixels within a quad. These values are spread out across VGPR lanes 0, 1 and 2 of each quad. Interpolation is then performed using FMA with DPP so each lane uses its I or J value with the quad's shared P0, P10 and P20 values.
 
-![](_page_129_Picture_2.jpeg)
+![](assets/_page_129_Picture_2.jpeg)
 
 Table 57. LDSDIR Instruction Fields
 
@@ -4845,7 +4845,7 @@ The parameter offset indicates the starting address of the parameters in LDS. Sp
 
 **Example LDS\_PARAM\_LOAD** (new\_prim\_mask[3:0] = 0110)
 
-![](_page_129_Figure_11.jpeg)
+![](assets/_page_129_Figure_11.jpeg)
 
 **LDS\_ADDR = lds\_base + param\_offset + attr#\*numPrimsInVector\*12DWORDs + prim#\*12 + attr\_offset**
 
@@ -4900,7 +4900,7 @@ This parameter interpolation is realized using a pair of instructions:
   V_INTERP_P20_F32 V5, V3[2], V2, V4 // dst = J*P20 + tmp uses DPP8=2,2,2,2,6,6,6,6
 ```
 
-![](_page_131_Figure_7.jpeg)
+![](assets/_page_131_Figure_7.jpeg)
 
 Table 58. Parameter Interpolation Instruction Fields
 
@@ -4930,7 +4930,7 @@ Table 58. Parameter Interpolation Instruction Fields
 
 The VINTERP instructions include a builtin "s\_waitcnt EXPcnt" to easily allow data hazard resolution for data produced by LDS\_PARAM\_LOAD.
 
-![](_page_132_Picture_1.jpeg)
+![](assets/_page_132_Picture_1.jpeg)
 
 Instructions Restrictions and Limitations:
 
@@ -5024,11 +5024,11 @@ LDS Indexed and atomic instructions use LGKMcnt to track when they have complete
 
 The table below lists and briefly describes the LDS instruction fields.
 
-![](_page_133_Figure_14.jpeg)
+![](assets/_page_133_Figure_14.jpeg)
 
 Table 59. LDS Instruction Fields
 
-![](_page_134_Picture_1.jpeg)
+![](assets/_page_134_Picture_1.jpeg)
 
 | Field     |    | Size Description                                                                                                                                                                                                             |  |
 |-----------|----|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -5078,7 +5078,7 @@ LDS_Addr1 = LDS_BASE + VGPR[ADDR] + InstOffset1*ADJ +
   Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
 ```
 
-![](_page_135_Picture_1.jpeg)
+![](assets/_page_135_Picture_1.jpeg)
 
 The double address instructions are: LOAD\_2ADDR\*, STORE\_2ADDR\*, and STOREXCHG\_2ADDR\_\*. The address comes from VGPR, and both VGPR[ADDR] and InstOffset are byte addresses. At the time of wave creation, LDS\_BASE is assigned to the physical LDS region owned by this wave or work-group.
 
@@ -5166,7 +5166,7 @@ The EXEC mask is honored for both reading the source and writing the destination
 
 In the instruction word: VDST is the dest VGPR, ADDR is the index VGPR, and DATA0 is the source data VGPR. Note that index values are in bytes (so multiply by 4), and have the 'offset0' field added to them before use.
 
-![](_page_137_Figure_6.jpeg)
+![](assets/_page_137_Figure_6.jpeg)
 
 ## <span id="page-137-0"></span>**12.5.3. DS Stack Operations for Ray Tracing**
 
@@ -5184,7 +5184,7 @@ This "short stack" has a limited size beyond that the stack wraps around and ove
 | OFFSET1 | 8    | bits[5:4] carry StackSize (8, 16, 32, 64)                                                     |  |
 | VDST    | 8    | Destination VGPR for resulting address (e.g. X or top of stack)<br>Returns the next "LV addr" |  |
 
-![](_page_138_Picture_1.jpeg)
+![](assets/_page_138_Picture_1.jpeg)
 
 | Field | Size | Description                                                                                                                                                                                                                                                                                                                                                                            |  |
 |-------|------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -5231,7 +5231,7 @@ Table 62. DS\_ADD\_GS\_REG\_RTN\* and DS\_SUB\_GS\_REG\_RTN:
 
 12.6. Global Data Share 130 of 600
 
-![](_page_139_Picture_1.jpeg)
+![](assets/_page_139_Picture_1.jpeg)
 
 | Field | Size | Description                                                                                |
 |-------|------|--------------------------------------------------------------------------------------------|
@@ -5264,7 +5264,7 @@ LDS Alignment modes (config-reg controlled, in SH\_MEM\_CONFIG):
 | 2 | Indexed<br>Atomic          | DS ops<br>FLAT ops   | LDS_CONFIG.ADDR_OUT_<br>OF_RANGE_REPORTING | Out of range atomic operations report memviol if<br>ADDR_OUT_OF_RANGE_REPORTING is true.                                                                          |
 | 3 | Indexed Non<br>Atomic      | DS ops<br>FLAT ops   | LDS_CONFIG.ADDR_OUT_<br>OF_RANGE_REPORTING | the LSBs are ignored to force alignment. No memviol<br>is generated.<br>Out of range indexed operations report memviol if<br>ADDR_OUT_OF_RANGE_REPORTING is true. |
 
-![](_page_140_Picture_1.jpeg)
+![](assets/_page_140_Picture_1.jpeg)
 
 # <span id="page-140-0"></span>**Chapter 13. Float Memory Atomics**
 
@@ -5306,7 +5306,7 @@ Note that MIN and MAX when flushing denormals only do it for the comparison, but
 
 13.1. Rounding 132 of 600
 
-![](_page_141_Picture_1.jpeg)
+![](assets/_page_141_Picture_1.jpeg)
 
 The floating point atomic instructions (ds\_{min,max,cmpst}\_f32) have the option of passing denormal values through, or flushing them to zero. This is controlled with the MODE.fp\_denorm bits that also control VALU denormal behavior. There is no separate input and output denormal control: only bit 0 of sp\_denorm or bit 0 of dp\_denorm is considered. The rest of the denormal rules are identical to LDS.
 
@@ -5477,7 +5477,7 @@ Table 63. **GWS Instructions**
 |                         | GWS_RESOURCE[rid].flag = 0                                                                            |  |
 |                         | return //release calling wave immediately                                                             |  |
 
-![](_page_145_Picture_1.jpeg)
+![](assets/_page_145_Picture_1.jpeg)
 
 | Opcode                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 |------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -5489,7 +5489,7 @@ Table 63. **GWS Instructions**
 | (u8 offset0 )                            | Queues this wave until the global wave sync resource specified by the virtualized resource id<br>OFFSET0[5:0] indicates that it should be released, which may be immediately if another wave has<br>already issued a ds_gws_sema_v or ds_gws_sema_br instruction to the resource. Sets the resource<br>to semaphore type.<br>Operation:<br>//Queue this wave until released:<br>rid = (M0[21:16] + OFFSET0[5:0]) % 64<br>GWS_RESOURCE[rid].type = SEMAPHORE<br>while (GWS_RESOURCE[rid].counter <= 0)<br>WAIT_IN_QUEUE<br>GWS_RESOURCE[rid].counter<br>return //release calling wave               |
 | GWS_SEMA_<br>RELEASE_ALL<br>(u8 offset0) | Semaphore release all waves waiting at a semaphore<br>Operation:<br>//Release waves queued by ds_gws_sema_p instructions:<br>rid = (M0[21:16] + OFFSET0[5:0]) % 64<br>release_count = the number of waves currently enqueued at the semaphore<br>GWS_RESOURCE[rid].counter += release_count<br>GWS_RESOURCE[rid].type = SEMAPHORE<br>return //release calling wave immediately<br>This is typically used via the GRBM.                                                                                                                                                                             |
 
-![](_page_146_Picture_1.jpeg)
+![](assets/_page_146_Picture_1.jpeg)
 
 | Opcode                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |  |  |
 |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|
@@ -5514,7 +5514,7 @@ Table 63. **GWS Instructions**
 |                         | The description of "flag" above is a bit simplistic. Basically, every wave which enters is tagged with the                                                                                                                                                                                                                                                                                                                                                                                      |  |  |
 |                         | current GWS_RESOURCE.flag value. When the barrier condition is met, all waves with that flag value are<br>released, and GWS_RESOURCE.flag is inverted so any incoming waves are tagged with the opposite value<br>of flag.                                                                                                                                                                                                                                                                      |  |  |
 
-![](_page_147_Picture_1.jpeg)
+![](assets/_page_147_Picture_1.jpeg)
 
 # <span id="page-147-0"></span>**Chapter 14. Export: Position, Color/MRT**
 
@@ -5524,7 +5524,7 @@ Exports can transfer 32-bit or 16-bit data per element. 16-bit exports occurs in
 
 #### **Instruction Fields**
 
-![](_page_147_Figure_6.jpeg)
+![](assets/_page_147_Figure_6.jpeg)
 
 | Field  | Size | Description                                                                                                                                                                                                                                                 |                                             |  |
 |--------|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------|--|
@@ -5592,7 +5592,7 @@ Every vertex shader must output at least one position vector (x, y, z; w is opti
 
 Export instructions are executed by the hardware in two phases. First, the instruction is selected to be executed, and EXPCNT is incremented by 1. At this time, the wave has made a request to export data, but the
 
-![](_page_149_Picture_1.jpeg)
+![](assets/_page_149_Picture_1.jpeg)
 
 data has not been exported yet. Later, when the export actually occurs the EXEC mask and VGPR data is read and the data is exported, and finally EXPcnt is decremented.
 
@@ -5600,7 +5600,7 @@ Use S\_WAITCNT on EXPcnt to prevent the shader program from overwriting EXEC or 
 
 Multiple export instructions can be outstanding at one time. Exports of the same type (for example: position) are completed in order, but exports of different types can be completed out of order. If the STATUS register's SKIP\_EXPORT bit is set to one, the hardware treats all EXPORT instructions as if they were NOPs.
 
-![](_page_150_Picture_1.jpeg)
+![](assets/_page_150_Picture_1.jpeg)
 
 # <span id="page-150-0"></span>**Chapter 15. Microcode Formats**
 
@@ -5645,7 +5645,7 @@ Table 64. Summary of Microcode Formats
 | MUBUF                                 | MUBUF     | 64           |  |
 | Vector Memory Image Format            |           |              |  |
 
-![](_page_151_Picture_1.jpeg)
+![](assets/_page_151_Picture_1.jpeg)
 
 | Microcode Formats | Reference | Width (bits) |  |  |
 |-------------------|-----------|--------------|--|--|
@@ -5657,7 +5657,7 @@ Table 64. Summary of Microcode Formats
 | GLOBAL            | GLOBAL    | 64           |  |  |
 | SCRATCH           | SCRATCH   | 64           |  |  |
 
-![](_page_151_Picture_3.jpeg)
+![](assets/_page_151_Picture_3.jpeg)
 
 any instruction field marked as "Reserved" must be set to zero.
 
@@ -5677,13 +5677,13 @@ When more than one data-type specifier occurs in an instruction, the first one i
 
 E.g. V\_CVT\_F32\_I32 reads an integer and writes a float.
 
-![](_page_152_Picture_1.jpeg)
+![](assets/_page_152_Picture_1.jpeg)
 
 # <span id="page-152-0"></span>**15.1. Scalar ALU and Control Formats**
 
 ### <span id="page-152-1"></span>**15.1.1. SOP2**
 
-![](_page_152_Figure_4.jpeg)
+![](assets/_page_152_Figure_4.jpeg)
 
 **Description** This is a scalar instruction with two inputs and one output. Can be followed by a 32-bit literal constant.
 
@@ -5732,7 +5732,7 @@ Table 65. SOP2 Fields
 
 Table 66. SOP2 Opcodes
 
-![](_page_153_Picture_1.jpeg)
+![](assets/_page_153_Picture_1.jpeg)
 
 | Opcode # | Name            | Opcode # | Name              |
 |----------|-----------------|----------|-------------------|
@@ -5765,7 +5765,7 @@ Table 66. SOP2 Opcodes
 
 ### <span id="page-153-0"></span>**15.1.2. SOPK**
 
-![](_page_153_Figure_4.jpeg)
+![](assets/_page_153_Figure_4.jpeg)
 
 **Description** This is a scalar instruction with one 16-bit signed immediate (SIMM16) input and a single destination. Instructions that take 2 inputs use the destination as the first input and the SIMM16 as the second input.
 
@@ -5777,7 +5777,7 @@ Table 67. SOPK Fields
 |------------|--------|--------------------------------|
 | SIMM16     | [15:0] | Signed immediate 16-bit value. |
 
-![](_page_154_Picture_1.jpeg)
+![](assets/_page_154_Picture_1.jpeg)
 
 | Field Name | Bits                                                                  | Format or Description                              |
 |------------|-----------------------------------------------------------------------|----------------------------------------------------|
@@ -5813,13 +5813,13 @@ Table 68. SOPK Opcodes
 
 ### **15.1.3. SOP1**
 
-<span id="page-154-0"></span>![](_page_154_Figure_6.jpeg)
+<span id="page-154-0"></span>![](assets/_page_154_Figure_6.jpeg)
 
 **Description** This is a scalar instruction with two inputs and one output. Can be followed by a 32-bit literal constant.
 
 Table 69. SOP1 Fields
 
-![](_page_155_Picture_1.jpeg)
+![](assets/_page_155_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                                         |  |  |
 |------------|-----------|---------------------------------------------------------------|--|--|
@@ -5878,7 +5878,7 @@ Table 70. SOP1 Opcodes
 | 14       | S_SEXT_I32_I8  | 47       | S_OR_NOT0_SAVEEXEC_B64  |
 | 15       | S_SEXT_I32_I16 | 48       | S_AND_NOT1_SAVEEXEC_B32 |
 
-![](_page_156_Picture_1.jpeg)
+![](assets/_page_156_Picture_1.jpeg)
 
 | Opcode # | Name                   | Opcode # | Name                    |
 |----------|------------------------|----------|-------------------------|
@@ -5904,13 +5904,13 @@ Table 70. SOP1 Opcodes
 
 ## <span id="page-156-0"></span>**15.1.4. SOPC**
 
-![](_page_156_Figure_4.jpeg)
+![](assets/_page_156_Figure_4.jpeg)
 
 **Description** This is a scalar instruction with two inputs that are compared and produces SCC as a result. Can be followed by a 32-bit literal constant.
 
 Table 71. SOPC Fields
 
-![](_page_157_Picture_1.jpeg)
+![](assets/_page_157_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                              |
 |------------|-----------|----------------------------------------------------|
@@ -5966,7 +5966,7 @@ Table 72. SOPC Opcodes
 
 ## <span id="page-158-0"></span>**15.1.5. SOPP**
 
-![](_page_158_Figure_3.jpeg)
+![](assets/_page_158_Figure_3.jpeg)
 
 **Description** This is a scalar instruction with one 16-bit signed immediate (SIMM16) input.
 
@@ -6002,13 +6002,13 @@ Table 74. SOPP Opcodes
 | 34       | S_CBRANCH_SCC1               | 61       | S_BARRIER                  |
 | 35       | S_CBRANCH_VCCZ               |          |                            |
 
-![](_page_159_Picture_1.jpeg)
+![](assets/_page_159_Picture_1.jpeg)
 
 # <span id="page-159-0"></span>**15.2. Scalar Memory Format**
 
 ### <span id="page-159-1"></span>**15.2.1. SMEM**
 
-![](_page_159_Figure_4.jpeg)
+![](assets/_page_159_Figure_4.jpeg)
 
 **Description** Scalar Memory data load
 
@@ -6036,13 +6036,13 @@ Table 76. SMEM Opcodes
 | 4        | S_LOAD_B512       | 32       | S_GL1_INV          |
 | 8        | S_BUFFER_LOAD_B32 | 33       | S_DCACHE_INV       |
 
-![](_page_160_Picture_1.jpeg)
+![](assets/_page_160_Picture_1.jpeg)
 
 # <span id="page-160-0"></span>**15.3. Vector ALU Formats**
 
 ### **15.3.1. VOP2**
 
-<span id="page-160-1"></span>![](_page_160_Figure_4.jpeg)
+<span id="page-160-1"></span>![](assets/_page_160_Figure_4.jpeg)
 
 **Description** Vector ALU format with two input operands. Can be followed by a 32-bit literal constant or DPP instruction DWORD when the instruction allows it.
 
@@ -6094,7 +6094,7 @@ Table 78. VOP2 Opcodes
 
 15.3. Vector ALU Formats 152 of 600
 
-![](_page_161_Picture_1.jpeg)
+![](assets/_page_161_Picture_1.jpeg)
 
 | Opcode # | Name                | Opcode # | Name                 |
 |----------|---------------------|----------|----------------------|
@@ -6124,7 +6124,7 @@ Table 78. VOP2 Opcodes
 
 ### **15.3.2. VOP1**
 
-<span id="page-161-0"></span>![](_page_161_Figure_4.jpeg)
+<span id="page-161-0"></span>![](assets/_page_161_Figure_4.jpeg)
 
 **Description** Vector ALU format with one input operand. Can be followed by a 32-bit literal constant or DPP instruction DWORD when the instruction allows it.
 
@@ -6132,7 +6132,7 @@ Table 79. VOP1 Fields
 
 15.3. Vector ALU Formats 153 of 600
 
-![](_page_162_Picture_1.jpeg)
+![](assets/_page_162_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                              |
 |------------|-----------|----------------------------------------------------|
@@ -6193,7 +6193,7 @@ Table 80. VOP1 Opcodes
 
 15.3. Vector ALU Formats 154 of 600
 
-![](_page_163_Picture_1.jpeg)
+![](assets/_page_163_Picture_1.jpeg)
 
 | 13<br>V_CVT_FLOOR_I32_F32<br>67<br>V_MOVRELS_B32<br>14<br>V_CVT_OFF_F32_I4<br>68<br>V_MOVRELSD_B32<br>15<br>V_CVT_F32_F64<br>72<br>V_MOVRELSD_2_B32<br>16<br>V_CVT_F64_F32<br>80<br>V_CVT_F16_U16<br>17<br>V_CVT_F32_UBYTE0<br>81<br>V_CVT_F16_I16<br>18<br>V_CVT_F32_UBYTE1<br>82<br>V_CVT_U16_F16<br>19<br>V_CVT_F32_UBYTE2<br>83<br>V_CVT_I16_F16<br>20<br>V_CVT_F32_UBYTE3<br>84<br>V_RCP_F16<br>21<br>V_CVT_U32_F64<br>85<br>V_SQRT_F16<br>22<br>V_CVT_F64_U32<br>86<br>V_RSQ_F16<br>23<br>V_TRUNC_F64<br>87<br>V_LOG_F16<br>24<br>V_CEIL_F64<br>88<br>V_EXP_F16<br>25<br>V_RNDNE_F64<br>89<br>V_FREXP_MANT_F16<br>26<br>V_FLOOR_F64<br>90<br>V_FREXP_EXP_I16_F16<br>27<br>V_PIPEFLUSH<br>91<br>V_FLOOR_F16<br>28<br>V_MOV_B16<br>92<br>V_CEIL_F16<br>32<br>V_FRACT_F32<br>93<br>V_TRUNC_F16<br>33<br>V_TRUNC_F32<br>94<br>V_RNDNE_F16<br>34<br>V_CEIL_F32<br>95<br>V_FRACT_F16<br>35<br>V_RNDNE_F32<br>96<br>V_SIN_F16<br>36<br>V_FLOOR_F32<br>97<br>V_COS_F16<br>37<br>V_EXP_F32<br>98<br>V_SAT_PK_U8_I16<br>39<br>V_LOG_F32<br>99<br>V_CVT_NORM_I16_F16<br>42<br>V_RCP_F32<br>100<br>V_CVT_NORM_U16_F16<br>43<br>V_RCP_IFLAG_F32<br>101<br>V_SWAP_B32<br>46<br>V_RSQ_F32<br>102<br>V_SWAP_B16<br>47<br>V_RCP_F64<br>103<br>V_PERMLANE64_B32<br>49<br>V_RSQ_F64<br>104<br>V_SWAPREL_B32<br>51<br>V_SQRT_F32<br>105<br>V_NOT_B16<br>52<br>V_SQRT_F64<br>106<br>V_CVT_I32_I16<br>53<br>V_SIN_F32<br>107<br>V_CVT_U32_U16 | Opcode # | Name | Opcode # | Name |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|------|----------|------|
@@ -6231,7 +6231,7 @@ Table 80. VOP1 Opcodes
 
 ### <span id="page-163-0"></span>**15.3.3. VOPC**
 
-![](_page_163_Figure_4.jpeg)
+![](assets/_page_163_Figure_4.jpeg)
 
 **Description** Vector instruction taking two inputs and producing a comparison result. Can be followed by a 32-bit literal constant or DPP control DWORD. Vector Comparison operations are divided into three groups:
 
@@ -6243,7 +6243,7 @@ The final opcode number is determined by adding the base for the opcode family p
 
 15.3. Vector ALU Formats 155 of 600
 
-![](_page_164_Picture_1.jpeg)
+![](assets/_page_164_Picture_1.jpeg)
 
 compare instructions have variants that writes to the EXEC mask instead of VCC or SGPR. The destination of the compare result is VCC or EXEC when encoded using the VOPC format, and can be an arbitrary SGPR (indicated in the VDST field) when only encoded in the VOP3 format.
 
@@ -6284,7 +6284,7 @@ Table 82. VOPC Fields
 
 15.3. Vector ALU Formats 156 of 600
 
-![](_page_165_Picture_1.jpeg)
+![](assets/_page_165_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                              |
 |------------|-----------|----------------------------------------------------|
@@ -6346,7 +6346,7 @@ Table 83. VOPC Opcodes
 
 15.3. Vector ALU Formats 157 of 600
 
-![](_page_166_Picture_1.jpeg)
+![](assets/_page_166_Picture_1.jpeg)
 
 | Opcode # | Name          | Opcode # | Name           |
 |----------|---------------|----------|----------------|
@@ -6400,7 +6400,7 @@ Table 83. VOPC Opcodes
 
 15.3. Vector ALU Formats 158 of 600
 
-![](_page_167_Picture_1.jpeg)
+![](assets/_page_167_Picture_1.jpeg)
 
 | Opcode # | Name            | Opcode # | Name             |
 |----------|-----------------|----------|------------------|
@@ -6443,7 +6443,7 @@ Table 83. VOPC Opcodes
 
 ### **15.3.4. VOP3**
 
-<span id="page-167-0"></span>![](_page_167_Figure_4.jpeg)
+<span id="page-167-0"></span>![](assets/_page_167_Figure_4.jpeg)
 
 **Description** Vector ALU format with three input operands. Can be followed by a 32-bit literal constant or DPP instruction DWORD when the instruction allows it.
 
@@ -6451,7 +6451,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 159 of 600
 
-![](_page_168_Picture_1.jpeg)
+![](assets/_page_168_Picture_1.jpeg)
 
 | Field Name       | Bits                                                                                                                                                                                                                                                   | Format or Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |  |
 |------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
@@ -6481,7 +6481,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 160 of 600
 
-![](_page_169_Picture_1.jpeg)
+![](assets/_page_169_Picture_1.jpeg)
 
 | Opcode # | Name                  | Opcode # | Name             |  |  |
 |----------|-----------------------|----------|------------------|--|--|
@@ -6536,7 +6536,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 161 of 600
 
-![](_page_170_Picture_1.jpeg)
+![](assets/_page_170_Picture_1.jpeg)
 
 | Opcode # | Name                | Opcode # | Name          |  |  |
 |----------|---------------------|----------|---------------|--|--|
@@ -6590,7 +6590,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 162 of 600
 
-![](_page_171_Picture_1.jpeg)
+![](assets/_page_171_Picture_1.jpeg)
 
 | Opcode # | Name                 | Opcode # | Name            |  |  |
 |----------|----------------------|----------|-----------------|--|--|
@@ -6645,7 +6645,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 163 of 600
 
-![](_page_172_Picture_1.jpeg)
+![](assets/_page_172_Picture_1.jpeg)
 
 | Opcode # | Name              | Opcode # | Name           |  |  |
 |----------|-------------------|----------|----------------|--|--|
@@ -6699,7 +6699,7 @@ Table 84. VOP3 Fields
 
 15.3. Vector ALU Formats 164 of 600
 
-![](_page_173_Picture_1.jpeg)
+![](assets/_page_173_Picture_1.jpeg)
 
 | Opcode # | Name<br>Opcode #<br>Name |     |                  |  |
 |----------|--------------------------|-----|------------------|--|
@@ -6729,7 +6729,7 @@ Table 84. VOP3 Fields
 
 ### <span id="page-173-0"></span>**15.3.5. VOP3SD**
 
-![](_page_173_Figure_4.jpeg)
+![](assets/_page_173_Figure_4.jpeg)
 
 **Description** Vector ALU format with three operands and a scalar result. This encoding is used only for a few opcodes. Can be followed by a 32-bit literal constant or DPP instruction DWORD when the instruction allows it.
 
@@ -6747,7 +6747,7 @@ Table 86. VOP3SD Fields
 
 15.3. Vector ALU Formats 165 of 600
 
-![](_page_174_Picture_1.jpeg)
+![](assets/_page_174_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                               |  |
 |------------|-----------|-----------------------------------------------------|--|
@@ -6804,9 +6804,9 @@ Table 87. VOP3SD Opcodes
 
 15.3. Vector ALU Formats 166 of 600
 
-![](_page_175_Picture_1.jpeg)
+![](assets/_page_175_Picture_1.jpeg)
 
-![](_page_175_Figure_2.jpeg)
+![](assets/_page_175_Figure_2.jpeg)
 
 **Description** Vector ALU format taking one, two or three pairs of 16 bit inputs and producing two 16-bit outputs (packed into 1 DWORD). WMMA instructions have larger input and output VGPR sets. Can be followed by a 32-bit literal constant or DPP instruction DWORD when the instruction allows it.
 
@@ -6859,7 +6859,7 @@ Table 88. VOP3P Fields
 
 15.3. Vector ALU Formats 167 of 600
 
-![](_page_176_Picture_1.jpeg)
+![](assets/_page_176_Picture_1.jpeg)
 
 | Field Name | Bits    | Format or Description                                                          |  |
 |------------|---------|--------------------------------------------------------------------------------|--|
@@ -6890,7 +6890,7 @@ Table 89. VOP3P Opcodes
 
 ### <span id="page-176-0"></span>**15.3.7. VOPD**
 
-![](_page_176_Figure_6.jpeg)
+![](assets/_page_176_Figure_6.jpeg)
 
 **Description** Vector ALU format describing two instructions to be executed in parallel. Can be followed by a 32-bit literal constant, but not a DPP control DWORD.
 
@@ -6900,7 +6900,7 @@ Table 90. VOPD Fields
 
 15.3. Vector ALU Formats 168 of 600
 
-![](_page_177_Picture_1.jpeg)
+![](assets/_page_177_Picture_1.jpeg)
 
 | Field Name | Bits       | Format or Description                                                           |  |  |
 |------------|------------|---------------------------------------------------------------------------------|--|--|
@@ -6959,7 +6959,7 @@ Table 90. VOPD Fields
 
 15.3. Vector ALU Formats 169 of 600
 
-![](_page_178_Picture_1.jpeg)
+![](assets/_page_178_Picture_1.jpeg)
 
 #### Table 92. VOPD Y-Opcodes
 
@@ -6976,7 +6976,7 @@ Table 90. VOPD Fields
 
 ### <span id="page-178-0"></span>**15.3.8. DPP16**
 
-![](_page_178_Picture_5.jpeg)
+![](assets/_page_178_Picture_5.jpeg)
 
 **Description** Data Parallel Primitives over 16 lanes. This is an additional DWORD that can follow VOP1, VOP2, VOPC, VOP3 or VOP3P instructions (in place of a literal constant) to control selection of data from other lanes.
 
@@ -6999,7 +6999,7 @@ Table 94. DPP\_CTRL Enumeration
 
 15.3. Vector ALU Formats 170 of 600
 
-![](_page_179_Picture_1.jpeg)
+![](assets/_page_179_Picture_1.jpeg)
 
 | DPP_Cntl<br>Enumeration  | Hex<br>Value | Function                                                                                                             | Description                                                                           |  |  |
 |--------------------------|--------------|----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|--|--|
@@ -7037,13 +7037,13 @@ Table 95. DPP8 Fields
 
 15.3. Vector ALU Formats 171 of 600
 
-![](_page_180_Picture_1.jpeg)
+![](assets/_page_180_Picture_1.jpeg)
 
 # <span id="page-180-0"></span>**15.4. Vector Parameter Interpolation Format**
 
 ### <span id="page-180-1"></span>**15.4.1. VINTERP**
 
-![](_page_180_Figure_4.jpeg)
+![](assets/_page_180_Figure_4.jpeg)
 
 **Description** Vector Parameter Interpolation.
 
@@ -7061,7 +7061,7 @@ Table 96. VINTERP Fields
 | ENCODING   | [31:26] | 'b11001101                                                                         |
 | SRC0       | [40:32] | Source 0. First operand for the instruction: VGPR 0-255.                           |
 
-![](_page_181_Picture_1.jpeg)
+![](assets/_page_181_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                                                          |  |  |  |
 |------------|-----------|--------------------------------------------------------------------------------|--|--|--|
@@ -7115,9 +7115,9 @@ Table 97. VINTERP Opcodes
 
 ### <span id="page-181-1"></span>**15.5.1. LDSDIR**
 
-![](_page_181_Figure_7.jpeg)
+![](assets/_page_181_Figure_7.jpeg)
 
-![](_page_182_Picture_1.jpeg)
+![](assets/_page_182_Picture_1.jpeg)
 
 **Description** LDS Direct and Parameter Load.
 
@@ -7136,13 +7136,13 @@ VGPRs.
 | OP         | [21:20] | Opcode:<br>0: LDS_DIRECT_LOAD<br>1: LDS_PARAM_LOAD<br>2, 3: Reserved.                                                                                               |  |
 | ENCODING   | [31:24] | 'b11001110                                                                                                                                                          |  |
 
-![](_page_183_Picture_1.jpeg)
+![](assets/_page_183_Picture_1.jpeg)
 
 # <span id="page-183-0"></span>**15.6. LDS and GDS Format**
 
 ### <span id="page-183-1"></span>**15.6.1. DS**
 
-![](_page_183_Figure_4.jpeg)
+![](assets/_page_183_Figure_4.jpeg)
 
 **Description** Local and Global Data Sharing instructions
 
@@ -7190,7 +7190,7 @@ Table 100. DS Opcodes
 
 15.6. LDS and GDS Format 175 of 600
 
-![](_page_184_Picture_1.jpeg)
+![](assets/_page_184_Picture_1.jpeg)
 
 | Opcode # | Name                                | Opcode # | Name                                |
 |----------|-------------------------------------|----------|-------------------------------------|
@@ -7251,7 +7251,7 @@ untyped buffer access (data type is defined by the buffer / resource-constant)
 
 ### <span id="page-185-1"></span>**15.7.1. MTBUF**
 
-![](_page_185_Figure_9.jpeg)
+![](assets/_page_185_Figure_9.jpeg)
 
 **Description** Memory Typed-Buffer Instructions
 
@@ -7285,7 +7285,7 @@ Table 102. MTBUF Opcodes
 | 4        | TBUFFER_STORE_FORMAT_X   | 12       | TBUFFER_STORE_D16_FORMAT_X   |
 | 5        | TBUFFER_STORE_FORMAT_XY  | 13       | TBUFFER_STORE_D16_FORMAT_XY  |
 
-![](_page_186_Picture_1.jpeg)
+![](assets/_page_186_Picture_1.jpeg)
 
 | Opcode # | Name                      | Opcode # | Name                          |
 |----------|---------------------------|----------|-------------------------------|
@@ -7294,7 +7294,7 @@ Table 102. MTBUF Opcodes
 
 ### **15.7.2. MUBUF**
 
-<span id="page-186-0"></span>![](_page_186_Figure_4.jpeg)
+<span id="page-186-0"></span>![](assets/_page_186_Figure_4.jpeg)
 
 #### **Description** Memory Untyped-Buffer Instructions
 
@@ -7334,7 +7334,7 @@ Table 104. MUBUF Opcodes
 | 11       | BUFFER_LOAD_D16_FORMAT_XYZW | 57       | BUFFER_ATOMIC_MIN_U32        |
 | 12       | BUFFER_STORE_D16_FORMAT_X   | 58       | BUFFER_ATOMIC_MAX_I32        |
 
-![](_page_187_Picture_1.jpeg)
+![](assets/_page_187_Picture_1.jpeg)
 
 | Opcode # | Name                         | Opcode # | Name                      |
 |----------|------------------------------|----------|---------------------------|
@@ -7363,13 +7363,13 @@ Table 104. MUBUF Opcodes
 | 35       | BUFFER_LOAD_D16_HI_B16       | 86       | BUFFER_ATOMIC_ADD_F32     |
 | 36       | BUFFER_STORE_D16_HI_B8       |          |                           |
 
-![](_page_188_Picture_1.jpeg)
+![](assets/_page_188_Picture_1.jpeg)
 
 # <span id="page-188-0"></span>**15.8. Vector Memory Image Format**
 
 ### <span id="page-188-1"></span>**15.8.1. MIMG**
 
-![](_page_188_Picture_4.jpeg)
+![](assets/_page_188_Picture_4.jpeg)
 
 **Description** Memory Image Instructions
 
@@ -7395,7 +7395,7 @@ Table 105. MIMG Fields
 | OP         | [25:18] | Opcode. See table below.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |  |
 | ENCODING   | [31:26] | 'b111100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |  |
 
-![](_page_189_Picture_1.jpeg)
+![](assets/_page_189_Picture_1.jpeg)
 
 | Field Name | Bits    | Format or Description                                                                                                                       |
 |------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------|
@@ -7446,7 +7446,7 @@ Table 106. MIMG Opcodes
 | 31       | IMAGE_SAMPLE_LZ           | 84       | IMAGE_SAMPLE_C_D_CL_G16 |
 | 32       | IMAGE_SAMPLE_C            | 85       | IMAGE_SAMPLE_D_CL_O_G16 |
 
-![](_page_190_Picture_1.jpeg)
+![](assets/_page_190_Picture_1.jpeg)
 
 | Opcode # | Name              | Opcode # | Name                      |
 |----------|-------------------|----------|---------------------------|
@@ -7460,7 +7460,7 @@ Table 106. MIMG Opcodes
 | 40       | IMAGE_SAMPLE_B_O  | 101      | IMAGE_GATHER4_C_B_CL      |
 | 41       | IMAGE_SAMPLE_LZ_O | 144      | IMAGE_GATHER4H            |
 
-![](_page_191_Picture_1.jpeg)
+![](assets/_page_191_Picture_1.jpeg)
 
 # <span id="page-191-0"></span>**15.9. Flat Formats**
 
@@ -7482,7 +7482,7 @@ The microcode format is identical for each, and only the value of the SEG (segme
 
 ### **15.9.1. FLAT**
 
-<span id="page-191-1"></span>![](_page_191_Figure_12.jpeg)
+<span id="page-191-1"></span>![](assets/_page_191_Figure_12.jpeg)
 
 **Description** FLAT Memory Access
 
@@ -7503,7 +7503,7 @@ Table 107. FLAT Fields
 
 15.9. Flat Formats 183 of 600
 
-![](_page_192_Picture_1.jpeg)
+![](assets/_page_192_Picture_1.jpeg)
 
 | Field Name | Bits    | Format or Description                                                                               |
 |------------|---------|-----------------------------------------------------------------------------------------------------|
@@ -7560,7 +7560,7 @@ Table 109. GLOBAL Opcodes
 
 15.9. Flat Formats 184 of 600
 
-![](_page_193_Picture_1.jpeg)
+![](assets/_page_193_Picture_1.jpeg)
 
 | Opcode # | Name                      | Opcode # | Name                      |
 |----------|---------------------------|----------|---------------------------|
@@ -7604,13 +7604,13 @@ Table 110. SCRATCH Opcodes
 
 15.9. Flat Formats 185 of 600
 
-![](_page_194_Picture_1.jpeg)
+![](assets/_page_194_Picture_1.jpeg)
 
 # <span id="page-194-0"></span>**15.10. Export Format**
 
 ### <span id="page-194-1"></span>**15.10.1. EXP**
 
-![](_page_194_Figure_4.jpeg)
+![](assets/_page_194_Figure_4.jpeg)
 
 **Description** EXPORT instructions
 
@@ -7632,7 +7632,7 @@ Table 111. EXP Fields
 
 15.10. Export Format 186 of 600
 
-![](_page_195_Picture_1.jpeg)
+![](assets/_page_195_Picture_1.jpeg)
 
 # <span id="page-195-0"></span>**Chapter 16. Instructions**
 
@@ -7642,7 +7642,7 @@ Note: Rounding and Denormal modes apply to all floating-point operations unless 
 
 # <span id="page-196-0"></span>**16.1. SOP2 Instructions**
 
-![](_page_196_Figure_3.jpeg)
+![](assets/_page_196_Figure_3.jpeg)
 
 Instructions in this format may use a 32-bit literal constant that occurs immediately after the instruction.
 
@@ -7687,7 +7687,7 @@ This opcode is not suitable for use with S\_ADDC\_U32 for implementing 64-bit op
 
 16.1. SOP2 Instructions 188 of 600
 
-![](_page_197_Picture_1.jpeg)
+![](assets/_page_197_Picture_1.jpeg)
 
 Subtract the second signed input from the first input, store the result into a scalar register and store the carryout bit into SCC.
 
@@ -7738,7 +7738,7 @@ SCC = D0.i != 0
 
 16.1. SOP2 Instructions 189 of 600
 
-![](_page_198_Picture_1.jpeg)
+![](assets/_page_198_Picture_1.jpeg)
 
 Functional examples:
 
@@ -7784,7 +7784,7 @@ Given a shift count in the second scalar input, calculate the logical shift righ
 
 16.1. SOP2 Instructions 190 of 600
 
-![](_page_199_Picture_1.jpeg)
+![](assets/_page_199_Picture_1.jpeg)
 
 ```
 D0.u64 = (S0.u64 >> S1.u[5 : 0].u);
@@ -7833,7 +7833,7 @@ D0.u = tmp.u
 
 16.1. SOP2 Instructions 191 of 600
 
-![](_page_200_Picture_1.jpeg)
+![](assets/_page_200_Picture_1.jpeg)
 
 **S\_LSHL3\_ADD\_U32 16**
 
@@ -7879,7 +7879,7 @@ D0.u = SCC ? S0.u : S1.u
 
 16.1. SOP2 Instructions 192 of 600
 
-![](_page_201_Picture_1.jpeg)
+![](assets/_page_201_Picture_1.jpeg)
 
 Select the maximum of two signed integers, store the selected value into a scalar register and set SCC iff the first value is selected.
 
@@ -7926,7 +7926,7 @@ SCC = D0.u != 0U
 
 16.1. SOP2 Instructions 193 of 600
 
-![](_page_202_Picture_1.jpeg)
+![](assets/_page_202_Picture_1.jpeg)
 
 **S\_OR\_B64 25**
 
@@ -7970,7 +7970,7 @@ Calculate bitwise NAND on two scalar inputs, store the result into a scalar regi
 
 16.1. SOP2 Instructions 194 of 600
 
-![](_page_203_Picture_1.jpeg)
+![](assets/_page_203_Picture_1.jpeg)
 
 ```
 D0.u64 = ~(S0.u64 & S1.u64);
@@ -8017,7 +8017,7 @@ SCC = D0.u64 != 0ULL
 
 16.1. SOP2 Instructions 195 of 600
 
-![](_page_204_Picture_1.jpeg)
+![](assets/_page_204_Picture_1.jpeg)
 
 Calculate bitwise AND with the first input and the negation of the second input, store the result into a scalar register and set SCC if the result is nonzero.
 
@@ -8064,7 +8064,7 @@ SCC = D0.u != 0U
 
 16.1. SOP2 Instructions 196 of 600
 
-![](_page_205_Picture_1.jpeg)
+![](assets/_page_205_Picture_1.jpeg)
 
 **S\_BFE\_I32 39**
 
@@ -8113,7 +8113,7 @@ D0.u64 = (((1ULL << S0.u[5 : 0].u) - 1ULL) << S1.u[5 : 0].u)
 
 16.1. SOP2 Instructions 197 of 600
 
-![](_page_206_Picture_1.jpeg)
+![](assets/_page_206_Picture_1.jpeg)
 
 **S\_MUL\_I32 44**
 
@@ -8159,7 +8159,7 @@ D0.u64 = SCC ? S0.u64 : S1.u64
 
 16.1. SOP2 Instructions 198 of 600
 
-![](_page_207_Picture_1.jpeg)
+![](assets/_page_207_Picture_1.jpeg)
 
 Pack two 16-bit scalar values into a scalar register.
 
@@ -8193,11 +8193,11 @@ D0 = { S1[15 : 0].u16, S0[31 : 16].u16 }
 
 16.1. SOP2 Instructions 199 of 600
 
-![](_page_208_Picture_1.jpeg)
+![](assets/_page_208_Picture_1.jpeg)
 
 # <span id="page-208-0"></span>**16.2. SOPK Instructions**
 
-![](_page_208_Figure_3.jpeg)
+![](assets/_page_208_Figure_3.jpeg)
 
 Instructions in this format may not use a 32-bit literal constant that occurs immediately after the instruction.
 
@@ -8236,7 +8236,7 @@ if SCC then
 
 16.2. SOPK Instructions 200 of 600
 
-![](_page_209_Picture_1.jpeg)
+![](assets/_page_209_Picture_1.jpeg)
 
 ```
   D0.i = 32'I(signext(SIMM16.i16))
@@ -8285,7 +8285,7 @@ SCC = 64'I(S0.i) < signext(SIMM16.i16)
 
 16.2. SOPK Instructions 201 of 600
 
-![](_page_210_Picture_1.jpeg)
+![](assets/_page_210_Picture_1.jpeg)
 
 **S\_CMPK\_LE\_I32 8**
 
@@ -8333,7 +8333,7 @@ Set SCC to 1 iff scalar input is less than the zero extension of a literal 16-bi
 
 16.2. SOPK Instructions 202 of 600
 
-![](_page_211_Picture_1.jpeg)
+![](assets/_page_211_Picture_1.jpeg)
 
 ```
 SCC = S0.u < 32'U(SIMM16.u16)
@@ -8383,7 +8383,7 @@ LSB offset of register bits to access.
 
 16.2. SOPK Instructions 203 of 600
 
-![](_page_212_Picture_1.jpeg)
+![](assets/_page_212_Picture_1.jpeg)
 
 ### **SIZE = SIMM16[15:11]**
 
@@ -8444,7 +8444,7 @@ ID of hardware register to access.
 
 16.2. SOPK Instructions 204 of 600
 
-![](_page_213_Picture_1.jpeg)
+![](assets/_page_213_Picture_1.jpeg)
 
 #### **OFFSET = SIMM16[10:6]**
 
@@ -8498,7 +8498,7 @@ Waits for the following condition to hold before continuing:
 
 16.2. SOPK Instructions 205 of 600
 
-![](_page_214_Picture_1.jpeg)
+![](assets/_page_214_Picture_1.jpeg)
 
 To wait on a literal constant only, write 'null' for the GPR argument.
 
@@ -8548,7 +8548,7 @@ Waits for the following condition to hold before continuing:
 
 16.2. SOPK Instructions 206 of 600
 
-![](_page_215_Picture_1.jpeg)
+![](assets/_page_215_Picture_1.jpeg)
 
 ```
   lgkmcnt <= S0.u[5:0] + S1.u[5:0].
@@ -8565,7 +8565,7 @@ See also S\_WAITCNT.
 
 # <span id="page-216-0"></span>**16.3. SOP1 Instructions**
 
-![](_page_216_Figure_3.jpeg)
+![](assets/_page_216_Figure_3.jpeg)
 
 Instructions in this format may use a 32-bit literal constant that occurs immediately after the instruction.
 
@@ -8609,7 +8609,7 @@ endif
 
 16.3. SOP1 Instructions 208 of 600
 
-![](_page_217_Picture_1.jpeg)
+![](assets/_page_217_Picture_1.jpeg)
 
 Reverse the order of bits in a scalar input and store the result into a scalar register.
 
@@ -8662,7 +8662,7 @@ Count the number of trailing "0" bits before the first "1" in a scalar input and
 
 16.3. SOP1 Instructions 209 of 600
 
-![](_page_218_Picture_1.jpeg)
+![](assets/_page_218_Picture_1.jpeg)
 
 ```
 tmp = -1;
@@ -8719,7 +8719,7 @@ tmp = -1;
 
 16.3. SOP1 Instructions 210 of 600
 
-![](_page_219_Picture_1.jpeg)
+![](assets/_page_219_Picture_1.jpeg)
 
 ```
 // Set if no ones are found
@@ -8777,7 +8777,7 @@ for i in 1 : 63 do
 
 16.3. SOP1 Instructions 211 of 600
 
-![](_page_220_Picture_1.jpeg)
+![](assets/_page_220_Picture_1.jpeg)
 
 ```
   // Search from MSB
@@ -8827,7 +8827,7 @@ Given a bit offset in a scalar input, set the indicated bit in the destination s
 
 16.3. SOP1 Instructions 212 of 600
 
-![](_page_221_Picture_1.jpeg)
+![](assets/_page_221_Picture_1.jpeg)
 
 ```
 D0.u[S0.u[4 : 0]] = 1'1U
@@ -8879,7 +8879,7 @@ Functional examples:
 
 16.3. SOP1 Instructions 213 of 600
 
-![](_page_222_Picture_1.jpeg)
+![](assets/_page_222_Picture_1.jpeg)
 
 ```
 S_ABS_I32(0x00000001) => 0x00000001
@@ -8932,7 +8932,7 @@ Count the number of "1" bits in a scalar input, store the result into a scalar r
 
 16.3. SOP1 Instructions 214 of 600
 
-![](_page_223_Picture_1.jpeg)
+![](assets/_page_223_Picture_1.jpeg)
 
 nonzero.
 
@@ -8987,7 +8987,7 @@ To perform the inverse operation see S\_BITREPLICATE\_B64\_B32.
 
 16.3. SOP1 Instructions 215 of 600
 
-![](_page_224_Picture_1.jpeg)
+![](assets/_page_224_Picture_1.jpeg)
 
 **S\_QUADMASK\_B64 27**
 
@@ -9043,7 +9043,7 @@ D0.u64 = tmp;
 
 16.3. SOP1 Instructions 216 of 600
 
-![](_page_225_Picture_1.jpeg)
+![](assets/_page_225_Picture_1.jpeg)
 
 ```
 SCC = D0.u64 != 0ULL
@@ -9088,7 +9088,7 @@ The original EXEC mask is saved to the destination SGPRs before the bitwise oper
 
 16.3. SOP1 Instructions 217 of 600
 
-![](_page_226_Picture_1.jpeg)
+![](assets/_page_226_Picture_1.jpeg)
 
 ```
 saveexec = EXEC.u64;
@@ -9137,7 +9137,7 @@ D0.u = saveexec.u;
 
 16.3. SOP1 Instructions 218 of 600
 
-![](_page_227_Picture_1.jpeg)
+![](assets/_page_227_Picture_1.jpeg)
 
 ```
 SCC = EXEC.u != 0U
@@ -9188,7 +9188,7 @@ Bitwise NOR with EXEC mask.
 
 16.3. SOP1 Instructions 219 of 600
 
-![](_page_228_Picture_1.jpeg)
+![](assets/_page_228_Picture_1.jpeg)
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
@@ -9242,7 +9242,7 @@ SCC = EXEC.u64 != 0ULL
 
 16.3. SOP1 Instructions 220 of 600
 
-![](_page_229_Picture_1.jpeg)
+![](assets/_page_229_Picture_1.jpeg)
 
 #### **S\_AND\_NOT0\_SAVEEXEC\_B32 44**
 
@@ -9289,7 +9289,7 @@ Calculate bitwise OR on the EXEC mask and the negation of the scalar input, stor
 
 16.3. SOP1 Instructions 221 of 600
 
-![](_page_230_Picture_1.jpeg)
+![](assets/_page_230_Picture_1.jpeg)
 
 scalar destination register.
 
@@ -9336,7 +9336,7 @@ The original EXEC mask is saved to the destination SGPRs before the bitwise oper
 
 16.3. SOP1 Instructions 222 of 600
 
-![](_page_231_Picture_1.jpeg)
+![](assets/_page_231_Picture_1.jpeg)
 
 ```
 saveexec = EXEC.u;
@@ -9383,7 +9383,7 @@ D0.u64 = EXEC.u64;
 
 16.3. SOP1 Instructions 223 of 600
 
-![](_page_232_Picture_1.jpeg)
+![](assets/_page_232_Picture_1.jpeg)
 
 ```
 SCC = EXEC.u64 != 0ULL
@@ -9435,7 +9435,7 @@ v_readfirstlane_b32 s0, v0
 
 16.3. SOP1 Instructions 224 of 600
 
-![](_page_233_Picture_1.jpeg)
+![](assets/_page_233_Picture_1.jpeg)
 
 ```
 v_cmpx_eq s0, v0
@@ -9493,7 +9493,7 @@ addr = DST.u;
 
 16.3. SOP1 Instructions 225 of 600
 
-![](_page_234_Picture_1.jpeg)
+![](assets/_page_234_Picture_1.jpeg)
 
 ```
 addr += M0.u[31 : 0];
@@ -9545,7 +9545,7 @@ Example: The following instruction sequence performs the move s25 <= s17:
 
 16.3. SOP1 Instructions 226 of 600
 
-![](_page_235_Picture_1.jpeg)
+![](assets/_page_235_Picture_1.jpeg)
 
 **S\_GETPC\_B64 71**
 
@@ -9595,7 +9595,7 @@ The argument is a byte address of the instruction to jump to; this address is li
 
 16.3. SOP1 Instructions 227 of 600
 
-![](_page_236_Picture_1.jpeg)
+![](assets/_page_236_Picture_1.jpeg)
 
 This instruction may only be used within a trap handler.
 
@@ -9632,7 +9632,7 @@ If SDST is VCC then VCCZ is undefined.
 
 # <span id="page-237-0"></span>**16.4. SOPC Instructions**
 
-![](_page_237_Figure_3.jpeg)
+![](assets/_page_237_Figure_3.jpeg)
 
 Instructions in this format may use a 32-bit literal constant that occurs immediately after the instruction.
 
@@ -9674,7 +9674,7 @@ SCC = S0.i >= S1.i
 
 16.4. SOPC Instructions 229 of 600
 
-![](_page_238_Picture_1.jpeg)
+![](assets/_page_238_Picture_1.jpeg)
 
 **S\_CMP\_LT\_I32 4**
 
@@ -9726,7 +9726,7 @@ SCC = S0.u > S1.u
 
 16.4. SOPC Instructions 230 of 600
 
-![](_page_239_Picture_1.jpeg)
+![](assets/_page_239_Picture_1.jpeg)
 
 **S\_CMP\_GE\_U32 9**
 
@@ -9772,7 +9772,7 @@ SCC = S0.u[S1.u[4 : 0]] == 1'1U
 
 16.4. SOPC Instructions 231 of 600
 
-![](_page_240_Picture_1.jpeg)
+![](assets/_page_240_Picture_1.jpeg)
 
 Extract a bit from the first scalar input based on an index in the second scalar input, and set SCC to 1 iff the extracted bit is equal to 0.
 
@@ -9806,11 +9806,11 @@ SCC = S0.u64 <> S1.u64
 
 16.4. SOPC Instructions 232 of 600
 
-![](_page_241_Picture_1.jpeg)
+![](assets/_page_241_Picture_1.jpeg)
 
 # <span id="page-241-0"></span>**16.5. SOPP Instructions**
 
-![](_page_241_Figure_3.jpeg)
+![](assets/_page_241_Figure_3.jpeg)
 
 **S\_NOP 0**
 
@@ -9851,7 +9851,7 @@ When halt type control is set to 1 (FATAL HALT bit select): Set FATAL\_HALT bit 
 
 16.5. SOPP Instructions 233 of 600
 
-![](_page_242_Picture_1.jpeg)
+![](assets/_page_242_Picture_1.jpeg)
 
 **S\_SLEEP 3**
 
@@ -9906,7 +9906,7 @@ The next instruction determines the clause type, which may be one of the followi
 
 16.5. SOPP Instructions 234 of 600
 
-![](_page_243_Picture_1.jpeg)
+![](assets/_page_243_Picture_1.jpeg)
 
 - Buffer/Global/Scratch Load
 - Buffer/Global/Scratch Store
@@ -9953,7 +9953,7 @@ To schedule an S\_WAITCNT or S\_DELAY\_ALU instruction for the first instruction
 
 16.5. SOPP Instructions 235 of 600
 
-![](_page_244_Picture_1.jpeg)
+![](assets/_page_244_Picture_1.jpeg)
 
 determine the clause type.
 
@@ -10017,7 +10017,7 @@ Single cycle penalty for FMA accumulation (reserved).
 
 16.5. SOPP Instructions 236 of 600
 
-![](_page_245_Picture_1.jpeg)
+![](assets/_page_245_Picture_1.jpeg)
 
 #### **INSTID\_SALU\_CYCLE\_1 (0x9)**
 
@@ -10073,7 +10073,7 @@ Example:
 
 16.5. SOPP Instructions 237 of 600
 
-![](_page_246_Picture_1.jpeg)
+![](assets/_page_246_Picture_1.jpeg)
 
 ```
 v_mov_b32 v3, v0
@@ -10127,7 +10127,7 @@ Wait for an event to occur or a condition to be satisfied before continuing. The
 
 16.5. SOPP Instructions 238 of 600
 
-![](_page_247_Picture_1.jpeg)
+![](assets/_page_247_Picture_1.jpeg)
 
 which event(s) to wait on.
 
@@ -10174,7 +10174,7 @@ Generate an illegal instruction interrupt. This instruction is used to mark the 
 
 16.5. SOPP Instructions 239 of 600
 
-![](_page_248_Picture_1.jpeg)
+![](assets/_page_248_Picture_1.jpeg)
 
 This instruction should not appear in typical shader code. It is used to pad the end of a shader program to make it easier for analysis programs to locate the end of a shader program buffer. Use of this opcode in an embedded shader block may cause analysis tools to fail.
 
@@ -10223,7 +10223,7 @@ label:
 
 16.5. SOPP Instructions 240 of 600
 
-![](_page_249_Picture_1.jpeg)
+![](assets/_page_249_Picture_1.jpeg)
 
 If SCC is 0 then jump to a constant offset relative to the current PC.
 
@@ -10279,7 +10279,7 @@ else
 
 16.5. SOPP Instructions 241 of 600
 
-![](_page_250_Picture_1.jpeg)
+![](assets/_page_250_Picture_1.jpeg)
 
 ```
   PC = PC + 4LL
@@ -10332,7 +10332,7 @@ endif
 
 16.5. SOPP Instructions 242 of 600
 
-![](_page_251_Picture_1.jpeg)
+![](assets/_page_251_Picture_1.jpeg)
 
 If the user debug flag is set then jump to a constant offset relative to the current PC.
 
@@ -10382,7 +10382,7 @@ The hardware implicitly executes S\_WAITCNT 0 and S\_WAITCNT\_VSCNT 0 before exe
 
 16.5. SOPP Instructions 243 of 600
 
-![](_page_252_Picture_1.jpeg)
+![](assets/_page_252_Picture_1.jpeg)
 
 **S\_ENDPGM\_SAVED 49**
 
@@ -10421,7 +10421,7 @@ The system priority cannot be modified from within the wave.
 
 16.5. SOPP Instructions 244 of 600
 
-![](_page_253_Picture_1.jpeg)
+![](assets/_page_253_Picture_1.jpeg)
 
 **S\_SENDMSG 54** Send a message to upstream control hardware. SIMM16[7:0] contains the message type. **Notes S\_SENDMSGHALT 55** Send a message to upstream control hardware and then HALT the wavefront; see S\_SENDMSG for details. **S\_INCPERFLEVEL 56** Increment performance counter specified in SIMM16[3:0] by 1. **S\_DECPERFLEVEL 57** Decrement performance counter specified in SIMM16[3:0] by 1. **S\_ICACHE\_INV 60** Invalidate entire first level instruction cache. **S\_BARRIER 61** Synchronize waves within a threadgroup. If not all waves of the threadgroup have been created yet, waits for entire group before proceeding. If some waves in the threadgroup have already terminated, this waits on only the surviving waves. Barriers are legal
 
@@ -10431,11 +10431,11 @@ Barrier instructions do not wait for any counters to go to zero before issuing. 
 
 16.5. SOPP Instructions 245 of 600
 
-![](_page_254_Picture_1.jpeg)
+![](assets/_page_254_Picture_1.jpeg)
 
 # <span id="page-254-0"></span>**16.6. SMEM Instructions**
 
-![](_page_254_Figure_3.jpeg)
+![](assets/_page_254_Figure_3.jpeg)
 
 **S\_LOAD\_B32 0**
 
@@ -10481,7 +10481,7 @@ See S\_LOAD\_B32 for details on the offset input.
 
 16.6. SMEM Instructions 246 of 600
 
-![](_page_255_Picture_1.jpeg)
+![](assets/_page_255_Picture_1.jpeg)
 
 **S\_LOAD\_B256 3**
 
@@ -10537,7 +10537,7 @@ Load 32 bits of data from the scalar data cache into a scalar register using a b
 
 16.6. SMEM Instructions 247 of 600
 
-![](_page_256_Picture_1.jpeg)
+![](assets/_page_256_Picture_1.jpeg)
 
 ```
 SDATA[31 : 0] = MEM[ADDR + 0U].b
@@ -10590,7 +10590,7 @@ SDATA[255 : 224] = MEM[ADDR + 28U].b
 
 16.6. SMEM Instructions 248 of 600
 
-![](_page_257_Picture_1.jpeg)
+![](assets/_page_257_Picture_1.jpeg)
 
 See S\_LOAD\_B32 for details on the offset input.
 
@@ -10631,11 +10631,11 @@ Invalidate the scalar data L0 cache.
 
 16.6. SMEM Instructions 249 of 600
 
-![](_page_258_Picture_1.jpeg)
+![](assets/_page_258_Picture_1.jpeg)
 
 # <span id="page-258-0"></span>**16.7. VOP2 Instructions**
 
-![](_page_258_Figure_3.jpeg)
+![](assets/_page_258_Figure_3.jpeg)
 
 Instructions in this format may use a 32-bit literal constant or DPP that occurs immediately after the instruction.
 
@@ -10679,7 +10679,7 @@ D0.f = S0.f + S1.f
 
 16.7. VOP2 Instructions 250 of 600
 
-![](_page_259_Picture_1.jpeg)
+![](assets/_page_259_Picture_1.jpeg)
 
 Subtract the second floating point input from the first input and store the result into a vector register.
 
@@ -10731,7 +10731,7 @@ endif
 
 16.7. VOP2 Instructions 251 of 600
 
-![](_page_260_Picture_1.jpeg)
+![](assets/_page_260_Picture_1.jpeg)
 
 **V\_MUL\_F32 8**
 
@@ -10781,7 +10781,7 @@ D0.u = 32'U(S0.u24) * 32'U(S1.u24)
 
 16.7. VOP2 Instructions 252 of 600
 
-![](_page_261_Picture_1.jpeg)
+![](assets/_page_261_Picture_1.jpeg)
 
 This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision floating point multiplier. See also V\_MUL\_HI\_U32\_U24.
 
@@ -10837,7 +10837,7 @@ endif;
 
 16.7. VOP2 Instructions 253 of 600
 
-![](_page_262_Picture_1.jpeg)
+![](assets/_page_262_Picture_1.jpeg)
 
 ```
 // when both inputs are +-0.
@@ -10892,7 +10892,7 @@ IEEE compliant. Supports denormals, round mode, exception flags, saturation.
 
 16.7. VOP2 Instructions 254 of 600
 
-![](_page_263_Picture_1.jpeg)
+![](assets/_page_263_Picture_1.jpeg)
 
 Denorm flushing for this operation is effectively controlled by the input denorm mode control: If input denorm mode is disabling denorm, the internal result of a min/max operation cannot be a denorm value, so output denorm mode is irrelevant. If input denorm mode is enabling denorm, the internal min/max result can be a denorm and this operation outputs as a denorm regardless of output denorm mode.
 
@@ -10938,7 +10938,7 @@ D0.u = (S1.u << S0[4 : 0].u)
 
 16.7. VOP2 Instructions 255 of 600
 
-![](_page_264_Picture_1.jpeg)
+![](assets/_page_264_Picture_1.jpeg)
 
 **V\_LSHRREV\_B32 25**
 
@@ -10986,7 +10986,7 @@ Calculate bitwise XOR on two vector inputs and store the result into a vector re
 
 16.7. VOP2 Instructions 256 of 600
 
-![](_page_265_Picture_1.jpeg)
+![](assets/_page_265_Picture_1.jpeg)
 
 ```
 D0.u = (S0.u ^ S1.u)
@@ -11034,7 +11034,7 @@ D0.u = tmp.u
 
 16.7. VOP2 Instructions 257 of 600
 
-![](_page_266_Picture_1.jpeg)
+![](assets/_page_266_Picture_1.jpeg)
 
 In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u.
 
@@ -11084,7 +11084,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 16.7. VOP2 Instructions 258 of 600
 
-![](_page_267_Picture_1.jpeg)
+![](assets/_page_267_Picture_1.jpeg)
 
 **V\_SUBREV\_NC\_U32 39**
 
@@ -11132,7 +11132,7 @@ This opcode cannot use the VOP3 encoding and cannot use input/output modifiers.
 
 16.7. VOP2 Instructions 259 of 600
 
-![](_page_268_Picture_1.jpeg)
+![](assets/_page_268_Picture_1.jpeg)
 
 #### **V\_CVT\_PK\_RTZ\_F16\_F32 47**
 
@@ -11182,7 +11182,7 @@ D0.f16 = S1.f16 - S0.f16
 
 16.7. VOP2 Instructions 260 of 600
 
-![](_page_269_Picture_1.jpeg)
+![](assets/_page_269_Picture_1.jpeg)
 
 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
@@ -11228,7 +11228,7 @@ Multiply two FP16 values and add a literal constant using fused multiply-add.
 
 16.7. VOP2 Instructions 261 of 600
 
-![](_page_270_Picture_1.jpeg)
+![](assets/_page_270_Picture_1.jpeg)
 
 ```
 D0.f16 = fma(S0.f16, S1.f16, SIMM32.f16)
@@ -11283,7 +11283,7 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 16.7. VOP2 Instructions 262 of 600
 
-![](_page_271_Picture_1.jpeg)
+![](assets/_page_271_Picture_1.jpeg)
 
 be a denorm and this operation outputs as a denorm regardless of output denorm mode.
 
@@ -11336,7 +11336,7 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 16.7. VOP2 Instructions 263 of 600
 
-![](_page_272_Picture_1.jpeg)
+![](assets/_page_272_Picture_1.jpeg)
 
 Multiply the first input, a floating point value, by an integral power of 2 specified in the second input, a signed integer value, and store the floating point result into a vector register. Compare with the ldexp() function in C.
 
@@ -11361,13 +11361,13 @@ VOP2 version of V\_PK\_FMA\_F16 with third source VGPR address is the destinatio
 
 Instructions in this format may also be encoded as VOP3. VOP3 allows access to the extra control bits (e.g. ABS, OMOD) at the expense of a larger instruction word. The VOP3 opcode is: VOP2 opcode + 0x100.
 
-![](_page_272_Figure_11.jpeg)
+![](assets/_page_272_Figure_11.jpeg)
 
 16.7. VOP2 Instructions 264 of 600
 
 # <span id="page-273-0"></span>**16.8. VOP1 Instructions**
 
-![](_page_273_Figure_3.jpeg)
+![](assets/_page_273_Figure_3.jpeg)
 
 Instructions in this format may use a 32-bit literal constant or DPP that occurs immediately after the instruction.
 
@@ -11415,7 +11415,7 @@ else
 
 16.8. VOP1 Instructions 265 of 600
 
-![](_page_274_Picture_1.jpeg)
+![](assets/_page_274_Picture_1.jpeg)
 
 ```
   // 32 lanes
@@ -11464,7 +11464,7 @@ Convert from a signed 32-bit integer input to a single-precision float and store
 
 16.8. VOP1 Instructions 266 of 600
 
-![](_page_275_Picture_1.jpeg)
+![](assets/_page_275_Picture_1.jpeg)
 
 ```
 D0.f = i32_to_f32(S0.i)
@@ -11512,7 +11512,7 @@ D0.i = f32_to_i32(S0.f)
 
 16.8. VOP1 Instructions 267 of 600
 
-![](_page_276_Picture_1.jpeg)
+![](assets/_page_276_Picture_1.jpeg)
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
@@ -11558,7 +11558,7 @@ Convert from a single-precision float input to a signed 32-bit integer using rou
 
 16.8. VOP1 Instructions 268 of 600
 
-![](_page_277_Picture_1.jpeg)
+![](assets/_page_277_Picture_1.jpeg)
 
 ```
 D0.i = f32_to_i32(floor(S0.f))
@@ -11625,7 +11625,7 @@ D0.f = f64_to_f32(S0.f64)
 
 16.8. VOP1 Instructions 269 of 600
 
-![](_page_278_Picture_1.jpeg)
+![](assets/_page_278_Picture_1.jpeg)
 
 **V\_CVT\_F64\_F32 16**
 
@@ -11669,7 +11669,7 @@ Convert an unsigned byte in byte 3 of the input to a single-precision float and 
 
 16.8. VOP1 Instructions 270 of 600
 
-![](_page_279_Picture_1.jpeg)
+![](assets/_page_279_Picture_1.jpeg)
 
 ```
 D0.f = u32_to_f32(S0.u[31 : 24].u)
@@ -11715,7 +11715,7 @@ Round the double-precision float input up to next integer and store the result i
 
 16.8. VOP1 Instructions 271 of 600
 
-![](_page_280_Picture_1.jpeg)
+![](assets/_page_280_Picture_1.jpeg)
 
 ```
 D0.f64 = trunc(S0.f64);
@@ -11764,7 +11764,7 @@ Floating-point modifiers are valid for this instruction if S0.u16 is a 16-bit fl
 
 16.8. VOP1 Instructions 272 of 600
 
-![](_page_281_Picture_1.jpeg)
+![](assets/_page_281_Picture_1.jpeg)
 
 **V\_FRACT\_F32 32**
 
@@ -11812,7 +11812,7 @@ if (isEven(64'F(floor(S0.f))) && (fract(S0.f) == 0.5F)) then
 
 16.8. VOP1 Instructions 273 of 600
 
-![](_page_282_Picture_1.jpeg)
+![](assets/_page_282_Picture_1.jpeg)
 
 ```
   D0.f -= 1.0F
@@ -11866,7 +11866,7 @@ Functional examples:
 
 16.8. VOP1 Instructions 274 of 600
 
-![](_page_283_Picture_1.jpeg)
+![](assets/_page_283_Picture_1.jpeg)
 
 ```
 V_LOG_F32(0xff800000) => 0xffc00000 // log(-INF) = NAN
@@ -11918,7 +11918,7 @@ CVT\_F32\_U32 RCP\_IFLAG\_F32
 
 16.8. VOP1 Instructions 275 of 600
 
-![](_page_284_Picture_1.jpeg)
+![](assets/_page_284_Picture_1.jpeg)
 
 ```
 MUL_F32 (2**32 - 1)
@@ -11970,7 +11970,7 @@ Calculate the reciprocal of the square root of the double-precision float input 
 
 16.8. VOP1 Instructions 276 of 600
 
-![](_page_285_Picture_1.jpeg)
+![](assets/_page_285_Picture_1.jpeg)
 
 ```
 D0.f64 = 1.0 / sqrt(S0.f64)
@@ -12018,7 +12018,7 @@ Calculate the trigonometric sine of a single-precision float value using IEEE ru
 
 16.8. VOP1 Instructions 277 of 600
 
-![](_page_286_Picture_1.jpeg)
+![](assets/_page_286_Picture_1.jpeg)
 
 ```
 D0.f = 32'F(sin(64'F(S0.f) * 2.0 * PI))
@@ -12072,7 +12072,7 @@ Input and output modifiers not supported.
 
 16.8. VOP1 Instructions 278 of 600
 
-![](_page_287_Picture_1.jpeg)
+![](assets/_page_287_Picture_1.jpeg)
 
 **V\_BFREV\_B32 56**
 
@@ -12126,7 +12126,7 @@ D0.i = -1;
 
 16.8. VOP1 Instructions 279 of 600
 
-![](_page_288_Picture_1.jpeg)
+![](assets/_page_288_Picture_1.jpeg)
 
 ```
 // Set if no ones are found
@@ -12184,7 +12184,7 @@ V_CLS_I32(0xfffffffe) => 31
 
 16.8. VOP1 Instructions 280 of 600
 
-![](_page_289_Picture_1.jpeg)
+![](assets/_page_289_Picture_1.jpeg)
 
 ```
 V_CLS_I32(0xffffffff) => 0xffffffff
@@ -12238,7 +12238,7 @@ D0.f64 = S0.f64 + -floor(S0.f64)
 
 16.8. VOP1 Instructions 281 of 600
 
-![](_page_290_Picture_1.jpeg)
+![](assets/_page_290_Picture_1.jpeg)
 
 0.5ULP accuracy, denormals are accepted.
 
@@ -12286,7 +12286,7 @@ This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent)
 
 16.8. VOP1 Instructions 282 of 600
 
-![](_page_291_Picture_1.jpeg)
+![](assets/_page_291_Picture_1.jpeg)
 
 Move to a relative destination address.
 
@@ -12344,7 +12344,7 @@ VGPR[laneId][addrd].b = VGPR[laneId][addrs].b
 
 16.8. VOP1 Instructions 283 of 600
 
-![](_page_292_Picture_1.jpeg)
+![](assets/_page_292_Picture_1.jpeg)
 
 Example: The following instruction sequence performs the move v15 <= v17:
 
@@ -12398,7 +12398,7 @@ D0.f16 = i16_to_f16(S0.i16)
 
 16.8. VOP1 Instructions 284 of 600
 
-![](_page_293_Picture_1.jpeg)
+![](assets/_page_293_Picture_1.jpeg)
 
 0.5ULP accuracy, supports denormals, rounding, exception flags and saturation.
 
@@ -12444,7 +12444,7 @@ D0.f16 = 16'1.0 / S0.f16
 
 16.8. VOP1 Instructions 285 of 600
 
-![](_page_294_Picture_1.jpeg)
+![](assets/_page_294_Picture_1.jpeg)
 
 Functional examples:
 
@@ -12500,7 +12500,7 @@ V_RSQ_F16(0x0000) => 0x7c00 // rsq(+0.0) = +INF
 
 16.8. VOP1 Instructions 286 of 600
 
-![](_page_295_Picture_1.jpeg)
+![](assets/_page_295_Picture_1.jpeg)
 
 ```
 V_RSQ_F16(0x4400) => 0x3800 // rsq(+4.0) = +0.5
@@ -12556,7 +12556,7 @@ Extract the binary significand, or mantissa, of an FP16 float input and store th
 
 16.8. VOP1 Instructions 287 of 600
 
-![](_page_296_Picture_1.jpeg)
+![](assets/_page_296_Picture_1.jpeg)
 
 vector register.
 
@@ -12607,7 +12607,7 @@ Round the half-precision float input up to next integer and store the result in 
 
 16.8. VOP1 Instructions 288 of 600
 
-![](_page_297_Picture_1.jpeg)
+![](assets/_page_297_Picture_1.jpeg)
 
 ```
 D0.f16 = trunc(S0.f16);
@@ -12653,7 +12653,7 @@ This is intended to comply with the DX specification of fract where the function
 
 16.8. VOP1 Instructions 289 of 600
 
-![](_page_298_Picture_1.jpeg)
+![](assets/_page_298_Picture_1.jpeg)
 
 Calculate the trigonometric sine of an FP16 float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
@@ -12705,7 +12705,7 @@ Given two 16-bit unsigned integer inputs, saturate each input over an 8-bit unsi
 
 16.8. VOP1 Instructions 290 of 600
 
-![](_page_299_Picture_1.jpeg)
+![](assets/_page_299_Picture_1.jpeg)
 
 ```
 SAT8 = lambda(n) (
@@ -12761,7 +12761,7 @@ S0.b = tmp
 
 16.8. VOP1 Instructions 291 of 600
 
-![](_page_300_Picture_1.jpeg)
+![](assets/_page_300_Picture_1.jpeg)
 
 Input and output modifiers not supported; this is an untyped operation.
 
@@ -12814,7 +12814,7 @@ The source must be a VGPR and SVGPRs are not allowed for this opcode.
 
 16.8. VOP1 Instructions 292 of 600
 
-![](_page_301_Picture_1.jpeg)
+![](assets/_page_301_Picture_1.jpeg)
 
 ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
@@ -12869,7 +12869,7 @@ D0.i = 32'I(signext(S0.i16))
 
 16.8. VOP1 Instructions 293 of 600
 
-![](_page_302_Picture_1.jpeg)
+![](assets/_page_302_Picture_1.jpeg)
 
 To convert in the other direction (from 32-bit to 16-bit integer) use V\_MOV\_B16.
 
@@ -12889,7 +12889,7 @@ To convert in the other direction (from 32-bit to 16-bit integer) use V\_MOV\_B1
 
 Instructions in this format may also be encoded as VOP3. VOP3 allows access to the extra control bits (e.g. ABS, OMOD) at the expense of a larger instruction word. The VOP3 opcode is: VOP2 opcode + 0x180.
 
-![](_page_302_Figure_10.jpeg)
+![](assets/_page_302_Figure_10.jpeg)
 
 16.8. VOP1 Instructions 294 of 600
 
@@ -12897,7 +12897,7 @@ Instructions in this format may also be encoded as VOP3. VOP3 allows access to t
 
 The bitfield map for VOPC is:
 
-![](_page_303_Figure_4.jpeg)
+![](assets/_page_303_Figure_4.jpeg)
 
 Compare instructions perform the same compare operation on each lane (work-Item or thread) using that lane's private data, and producing a 1 bit result per lane into VCC or EXEC.
 
@@ -12943,7 +12943,7 @@ Table 113. Instructions with Sixteen Compare Operations
 
 16.9. VOPC Instructions 295 of 600
 
-![](_page_304_Picture_1.jpeg)
+![](assets/_page_304_Picture_1.jpeg)
 
 | Instruction        | Description                            | Hex Range    |
 |--------------------|----------------------------------------|--------------|
@@ -13000,7 +13000,7 @@ Return 1 iff A less than B.
 
 16.9. VOPC Instructions 296 of 600
 
-![](_page_305_Picture_1.jpeg)
+![](assets/_page_305_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = S0.f16 < S1.f16;
@@ -13050,7 +13050,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 297 of 600
 
-![](_page_306_Picture_1.jpeg)
+![](assets/_page_306_Picture_1.jpeg)
 
 **V\_CMP\_LG\_F16 5**
 
@@ -13104,7 +13104,7 @@ D0.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)));
 
 16.9. VOPC Instructions 298 of 600
 
-![](_page_307_Picture_1.jpeg)
+![](assets/_page_307_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -13156,7 +13156,7 @@ Return 1 iff A not less than or equal to B.
 
 16.9. VOPC Instructions 299 of 600
 
-![](_page_308_Picture_1.jpeg)
+![](assets/_page_308_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = !(S0.f16 <= S1.f16);
@@ -13209,7 +13209,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 300 of 600
 
-![](_page_309_Picture_1.jpeg)
+![](assets/_page_309_Picture_1.jpeg)
 
 **V\_CMP\_F\_F32 16**
 
@@ -13265,7 +13265,7 @@ D0.u64[laneId] = S0.f <= S1.f;
 
 16.9. VOPC Instructions 301 of 600
 
-![](_page_310_Picture_1.jpeg)
+![](assets/_page_310_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -13314,7 +13314,7 @@ Return 1 iff A orderable with B.
 
 16.9. VOPC Instructions 302 of 600
 
-![](_page_311_Picture_1.jpeg)
+![](assets/_page_311_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = (!isNAN(64'F(S0.f)) && !isNAN(64'F(S1.f)));
@@ -13366,7 +13366,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 303 of 600
 
-![](_page_312_Picture_1.jpeg)
+![](assets/_page_312_Picture_1.jpeg)
 
 **V\_CMP\_NGT\_F32 27**
 
@@ -13421,7 +13421,7 @@ D0.u64[laneId] = !(S0.f < S1.f);
 
 16.9. VOPC Instructions 304 of 600
 
-![](_page_313_Picture_1.jpeg)
+![](assets/_page_313_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -13472,7 +13472,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 305 of 600
 
-![](_page_314_Picture_1.jpeg)
+![](assets/_page_314_Picture_1.jpeg)
 
 Return 1 iff A equal to B.
 
@@ -13526,7 +13526,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 306 of 600
 
-![](_page_315_Picture_1.jpeg)
+![](assets/_page_315_Picture_1.jpeg)
 
 **V\_CMP\_GE\_F64 38**
 
@@ -13579,7 +13579,7 @@ D0.u64[laneId] = !(S0.f64 >= S1.f64);
 
 16.9. VOPC Instructions 307 of 600
 
-![](_page_316_Picture_1.jpeg)
+![](assets/_page_316_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -13629,7 +13629,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 308 of 600
 
-![](_page_317_Picture_1.jpeg)
+![](assets/_page_317_Picture_1.jpeg)
 
 Return 1 iff A not equal to B.
 
@@ -13683,7 +13683,7 @@ D0.u64[laneId] = S0.i16 < S1.i16;
 
 16.9. VOPC Instructions 309 of 600
 
-![](_page_318_Picture_1.jpeg)
+![](assets/_page_318_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -13736,7 +13736,7 @@ D0.u64[laneId] = S0.i16 <> S1.i16;
 
 16.9. VOPC Instructions 310 of 600
 
-![](_page_319_Picture_1.jpeg)
+![](assets/_page_319_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -13787,7 +13787,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 311 of 600
 
-![](_page_320_Picture_1.jpeg)
+![](assets/_page_320_Picture_1.jpeg)
 
 Return 1 iff A less than or equal to B.
 
@@ -13841,7 +13841,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 312 of 600
 
-![](_page_321_Picture_1.jpeg)
+![](assets/_page_321_Picture_1.jpeg)
 
 **V\_CMP\_F\_I32 64**
 
@@ -13893,7 +13893,7 @@ D0.u64[laneId] = S0.i <= S1.i;
 
 16.9. VOPC Instructions 313 of 600
 
-![](_page_322_Picture_1.jpeg)
+![](assets/_page_322_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -13942,7 +13942,7 @@ Return 1.
 
 16.9. VOPC Instructions 314 of 600
 
-![](_page_323_Picture_1.jpeg)
+![](assets/_page_323_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = 1'1U;
@@ -13992,7 +13992,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 315 of 600
 
-![](_page_324_Picture_1.jpeg)
+![](assets/_page_324_Picture_1.jpeg)
 
 **V\_CMP\_LE\_U32 75**
 
@@ -14046,7 +14046,7 @@ D0.u64[laneId] = S0.u >= S1.u;
 
 16.9. VOPC Instructions 316 of 600
 
-![](_page_325_Picture_1.jpeg)
+![](assets/_page_325_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -14099,7 +14099,7 @@ D0.u64[laneId] = S0.i64 == S1.i64;
 
 16.9. VOPC Instructions 317 of 600
 
-![](_page_326_Picture_1.jpeg)
+![](assets/_page_326_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -14150,7 +14150,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 318 of 600
 
-![](_page_327_Picture_1.jpeg)
+![](assets/_page_327_Picture_1.jpeg)
 
 Return 1 iff A greater than or equal to B.
 
@@ -14204,7 +14204,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 16.9. VOPC Instructions 319 of 600
 
-![](_page_328_Picture_1.jpeg)
+![](assets/_page_328_Picture_1.jpeg)
 
 **V\_CMP\_EQ\_U64 90**
 
@@ -14256,7 +14256,7 @@ D0.u64[laneId] = S0.u64 <> S1.u64;
 
 16.9. VOPC Instructions 320 of 600
 
-![](_page_329_Picture_1.jpeg)
+![](assets/_page_329_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -14314,7 +14314,7 @@ S1.u[9] -- value is positive infinity.
 
 16.9. VOPC Instructions 321 of 600
 
-![](_page_330_Picture_1.jpeg)
+![](assets/_page_330_Picture_1.jpeg)
 
 ```
 declare result : 1'U;
@@ -14373,7 +14373,7 @@ elsif exponent(S0.f) == 255 then
 
 16.9. VOPC Instructions 322 of 600
 
-![](_page_331_Picture_1.jpeg)
+![](assets/_page_331_Picture_1.jpeg)
 
 ```
 elsif exponent(S0.f) > 0 then
@@ -14433,7 +14433,7 @@ else
 
 16.9. VOPC Instructions 323 of 600
 
-![](_page_332_Picture_1.jpeg)
+![](assets/_page_332_Picture_1.jpeg)
 
 ```
 endif;
@@ -14483,7 +14483,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 324 of 600
 
-![](_page_333_Picture_1.jpeg)
+![](assets/_page_333_Picture_1.jpeg)
 
 Return 1 iff A less than or equal to B.
 
@@ -14535,7 +14535,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 325 of 600
 
-![](_page_334_Picture_1.jpeg)
+![](assets/_page_334_Picture_1.jpeg)
 
 Return 1 iff A orderable with B.
 
@@ -14587,7 +14587,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 326 of 600
 
-![](_page_335_Picture_1.jpeg)
+![](assets/_page_335_Picture_1.jpeg)
 
 **V\_CMPX\_NGT\_F16 139**
 
@@ -14641,7 +14641,7 @@ EXEC.u64[laneId] = !(S0.f16 < S1.f16);
 
 16.9. VOPC Instructions 327 of 600
 
-![](_page_336_Picture_1.jpeg)
+![](assets/_page_336_Picture_1.jpeg)
 
 **V\_CMPX\_T\_F16 143**
 
@@ -14691,7 +14691,7 @@ EXEC.u64[laneId] = S0.f == S1.f
 
 16.9. VOPC Instructions 328 of 600
 
-![](_page_337_Picture_1.jpeg)
+![](assets/_page_337_Picture_1.jpeg)
 
 **V\_CMPX\_LE\_F32 147**
 
@@ -14737,7 +14737,7 @@ EXEC.u64[laneId] = S0.f >= S1.f
 
 16.9. VOPC Instructions 329 of 600
 
-![](_page_338_Picture_1.jpeg)
+![](assets/_page_338_Picture_1.jpeg)
 
 **V\_CMPX\_O\_F32 151**
 
@@ -14787,7 +14787,7 @@ EXEC.u64[laneId] = !(S0.f <> S1.f);
 
 16.9. VOPC Instructions 330 of 600
 
-![](_page_339_Picture_1.jpeg)
+![](assets/_page_339_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -14836,7 +14836,7 @@ Return 1 iff A not less than B.
 
 16.9. VOPC Instructions 331 of 600
 
-![](_page_340_Picture_1.jpeg)
+![](assets/_page_340_Picture_1.jpeg)
 
 ```
 EXEC.u64[laneId] = !(S0.f < S1.f);
@@ -14885,7 +14885,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 332 of 600
 
-![](_page_341_Picture_1.jpeg)
+![](assets/_page_341_Picture_1.jpeg)
 
 Return 1 iff A equal to B.
 
@@ -14937,7 +14937,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 333 of 600
 
-![](_page_342_Picture_1.jpeg)
+![](assets/_page_342_Picture_1.jpeg)
 
 Return 1 iff A greater than or equal to B.
 
@@ -14988,7 +14988,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 16.9. VOPC Instructions 334 of 600
 
-![](_page_343_Picture_1.jpeg)
+![](assets/_page_343_Picture_1.jpeg)
 
 **V\_CMPX\_NLG\_F64 170**
 
@@ -15042,7 +15042,7 @@ EXEC.u64[laneId] = !(S0.f64 == S1.f64);
 
 16.9. VOPC Instructions 335 of 600
 
-![](_page_344_Picture_1.jpeg)
+![](assets/_page_344_Picture_1.jpeg)
 
 **V\_CMPX\_NLT\_F64 174**
 
@@ -15091,7 +15091,7 @@ EXEC.u64[laneId] = S0.i16 == S1.i16
 
 16.9. VOPC Instructions 336 of 600
 
-![](_page_345_Picture_1.jpeg)
+![](assets/_page_345_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15141,7 +15141,7 @@ EXEC.u64[laneId] = S0.i16 >= S1.i16
 
 16.9. VOPC Instructions 337 of 600
 
-![](_page_346_Picture_1.jpeg)
+![](assets/_page_346_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15191,7 +15191,7 @@ EXEC.u64[laneId] = S0.u16 > S1.u16
 
 16.9. VOPC Instructions 338 of 600
 
-![](_page_347_Picture_1.jpeg)
+![](assets/_page_347_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15241,7 +15241,7 @@ EXEC.u64[laneId] = S0.i < S1.i
 
 16.9. VOPC Instructions 339 of 600
 
-![](_page_348_Picture_1.jpeg)
+![](assets/_page_348_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15291,7 +15291,7 @@ EXEC.u64[laneId] = S0.i <> S1.i
 
 16.9. VOPC Instructions 340 of 600
 
-![](_page_349_Picture_1.jpeg)
+![](assets/_page_349_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15341,7 +15341,7 @@ EXEC.u64[laneId] = S0.u < S1.u
 
 16.9. VOPC Instructions 341 of 600
 
-![](_page_350_Picture_1.jpeg)
+![](assets/_page_350_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15391,7 +15391,7 @@ EXEC.u64[laneId] = S0.u <> S1.u
 
 16.9. VOPC Instructions 342 of 600
 
-![](_page_351_Picture_1.jpeg)
+![](assets/_page_351_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15441,7 +15441,7 @@ EXEC.u64[laneId] = S0.i64 < S1.i64
 
 16.9. VOPC Instructions 343 of 600
 
-![](_page_352_Picture_1.jpeg)
+![](assets/_page_352_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15491,7 +15491,7 @@ EXEC.u64[laneId] = S0.i64 <> S1.i64
 
 16.9. VOPC Instructions 344 of 600
 
-![](_page_353_Picture_1.jpeg)
+![](assets/_page_353_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15541,7 +15541,7 @@ EXEC.u64[laneId] = S0.u64 < S1.u64
 
 16.9. VOPC Instructions 345 of 600
 
-![](_page_354_Picture_1.jpeg)
+![](assets/_page_354_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15591,7 +15591,7 @@ EXEC.u64[laneId] = S0.u64 <> S1.u64
 
 16.9. VOPC Instructions 346 of 600
 
-![](_page_355_Picture_1.jpeg)
+![](assets/_page_355_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15651,7 +15651,7 @@ declare result : 1'U;
 
 16.9. VOPC Instructions 347 of 600
 
-![](_page_356_Picture_1.jpeg)
+![](assets/_page_356_Picture_1.jpeg)
 
 ```
 if isSignalNAN(64'F(S0.f16)) then
@@ -15711,7 +15711,7 @@ elsif exponent(S0.f) > 0 then
 
 16.9. VOPC Instructions 348 of 600
 
-![](_page_357_Picture_1.jpeg)
+![](assets/_page_357_Picture_1.jpeg)
 
 ```
 elsif 64'F(abs(S0.f)) > 0.0 then
@@ -15769,7 +15769,7 @@ EXEC.u64[laneId] = result
 
 16.9. VOPC Instructions 349 of 600
 
-![](_page_358_Picture_1.jpeg)
+![](assets/_page_358_Picture_1.jpeg)
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15779,7 +15779,7 @@ Instructions in this format may also be encoded as VOP3. VOP3 allows access to t
 
 When the CLAMP microcode bit is set to 1, these compare instructions signal an exception when either of the inputs is NaN. When CLAMP is set to zero, NaN does not signal an exception. The second eight VOPC instructions have {OP8} embedded in them. This refers to each of the compare operations listed below.
 
-![](_page_358_Figure_7.jpeg)
+![](assets/_page_358_Figure_7.jpeg)
 
 ```
   VDST = Destination for instruction in the VGPR.
@@ -15795,11 +15795,11 @@ When the CLAMP microcode bit is set to 1, these compare instructions signal an e
 
 16.9. VOPC Instructions 350 of 600
 
-![](_page_359_Picture_1.jpeg)
+![](assets/_page_359_Picture_1.jpeg)
 
 # <span id="page-359-0"></span>**16.10. VOP3P Instructions**
 
-![](_page_359_Figure_3.jpeg)
+![](assets/_page_359_Figure_3.jpeg)
 
 **V\_PK\_MAD\_I16 0**
 
@@ -15843,7 +15843,7 @@ Packed logical shift left. The shift count is in the first operand.
 
 16.10. VOP3P Instructions 351 of 600
 
-![](_page_360_Picture_1.jpeg)
+![](assets/_page_360_Picture_1.jpeg)
 
 ```
 D0[31 : 16].u16 = (S1[31 : 16].u16 << S0.u[19 : 16].u);
@@ -15892,7 +15892,7 @@ Packed multiply-add on unsigned shorts.
 
 16.10. VOP3P Instructions 352 of 600
 
-![](_page_361_Picture_1.jpeg)
+![](assets/_page_361_Picture_1.jpeg)
 
 ```
 D0[31 : 16].u16 = S0[31 : 16].u16 * S1[31 : 16].u16 + S2[31 : 16].u16;
@@ -15941,7 +15941,7 @@ Packed fused-multiply-add of FP16 values.
 
 16.10. VOP3P Instructions 353 of 600
 
-![](_page_362_Picture_1.jpeg)
+![](assets/_page_362_Picture_1.jpeg)
 
 ```
 D0[31 : 16].f16 = fma(S0[31 : 16].f16, S1[31 : 16].f16, S2[31 : 16].f16);
@@ -15990,7 +15990,7 @@ Dot product of packed FP16 values.
 
 16.10. VOP3P Instructions 354 of 600
 
-![](_page_363_Picture_1.jpeg)
+![](assets/_page_363_Picture_1.jpeg)
 
 ```
 tmp = 32'F(S0[15 : 0].f16) * 32'F(S1[15 : 0].f16);
@@ -16101,7 +16101,7 @@ tmp += S2.f;
 
 16.10. VOP3P Instructions 356 of 600
 
-![](_page_365_Picture_1.jpeg)
+![](assets/_page_365_Picture_1.jpeg)
 
 ```
 D0.f = tmp
@@ -16155,7 +16155,7 @@ Fused-multiply-add of FP16 values with MIX encoding, result stored in HIGH 16 bi
 
 16.10. VOP3P Instructions 357 of 600
 
-![](_page_366_Picture_1.jpeg)
+![](assets/_page_366_Picture_1.jpeg)
 
 Size and location of S0, S1 and S2 controlled by OPSEL: 0=src[31:0], 1=src[31:0], 2=src[15:0], 3=src[31:16]. Also, for FMA\_MIX, the NEG\_HI field acts instead as an absolute-value modifier.
 
@@ -16209,7 +16209,7 @@ EXEC = saved_exec
 
 16.10. VOP3P Instructions 358 of 600
 
-![](_page_367_Picture_1.jpeg)
+![](assets/_page_367_Picture_1.jpeg)
 
 #### **V\_WMMA\_BF16\_16X16X16\_BF16 67**
 
@@ -16246,11 +16246,11 @@ EXEC = saved_exec
 
 16.10. VOP3P Instructions 359 of 600
 
-![](_page_368_Picture_1.jpeg)
+![](assets/_page_368_Picture_1.jpeg)
 
 # <span id="page-368-0"></span>**16.11. VOPD Instructions**
 
-![](_page_368_Figure_3.jpeg)
+![](assets/_page_368_Figure_3.jpeg)
 
 The VOPD encoded describes two VALU opcodes that are executed in parallel.
 
@@ -16284,7 +16284,7 @@ Subtract the second floating point input from the first input and store the resu
 
 16.11. VOPD Instructions 360 of 600
 
-![](_page_369_Picture_1.jpeg)
+![](assets/_page_369_Picture_1.jpeg)
 
 **V\_DUAL\_SUBREV\_F32 6** Subtract the first floating point input from the second input and store the result into a vector register. **V\_DUAL\_MUL\_DX9\_ZERO\_F32 7** Multiply two floating point inputs and store the result in a vector register. Follows DX9 rules where 0.0 times anything produces 0.0 (this differs from other APIs when the other input is infinity or NaN). **V\_DUAL\_MOV\_B32 8** Move data from a vector input into a vector register. **V\_DUAL\_CNDMASK\_B32 9** Copy data from one of two inputs based on the vector condition code and store the result into a vector register. **V\_DUAL\_MAX\_F32 10** Select the maximum of two floating point inputs and store the result into a vector register. **V\_DUAL\_MIN\_F32 11** Select the minimum of two floating point inputs and store the result into a vector register. **V\_DUAL\_DOT2ACC\_F32\_F16 12** Dot product of packed FP16 values, accumulate with destination. The initial value in D is used as S2.
 
@@ -16294,7 +16294,7 @@ Dot product of packed brain-float values, accumulate with destination. The initi
 
 16.11. VOPD Instructions 361 of 600
 
-![](_page_370_Picture_1.jpeg)
+![](assets/_page_370_Picture_1.jpeg)
 
 ### <span id="page-370-0"></span>**16.11.2. VOPD Y-Instructions**
 
@@ -16332,7 +16332,7 @@ Multiply two floating point inputs and store the result in a vector register. Fo
 
 16.11. VOPD Instructions 362 of 600
 
-![](_page_371_Picture_1.jpeg)
+![](assets/_page_371_Picture_1.jpeg)
 
 | V_DUAL_MOV_B32                                                                                                                                             | 8  |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------|----|
@@ -16356,7 +16356,7 @@ Multiply two floating point inputs and store the result in a vector register. Fo
 
 16.11. VOPD Instructions 363 of 600
 
-![](_page_372_Picture_1.jpeg)
+![](assets/_page_372_Picture_1.jpeg)
 
 16.11. VOPD Instructions 364 of 600
 
@@ -16364,7 +16364,7 @@ Multiply two floating point inputs and store the result in a vector register. Fo
 
 VOP3 instructions use one of two encodings:
 
-![](_page_373_Figure_4.jpeg)
+![](assets/_page_373_Figure_4.jpeg)
 
 **VOP3SD** this encoding allows specifying a unique scalar destination, and is used only for:
 
@@ -16414,7 +16414,7 @@ Functional examples:
   v_mov_b32 v0, abs(v1) // Set v1 to the absolute value of v0
 ```
 
-![](_page_374_Picture_1.jpeg)
+![](assets/_page_374_Picture_1.jpeg)
 
 **V\_READFIRSTLANE\_B32 386**
 
@@ -16464,7 +16464,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 **V\_CVT\_F64\_I32 388**
 
-![](_page_375_Picture_1.jpeg)
+![](assets/_page_375_Picture_1.jpeg)
 
 Convert from a signed 32-bit integer input to a double-precision float and store the result into a vector register.
 
@@ -16514,7 +16514,7 @@ D0.u = f32_to_u32(S0.f)
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this
 
-![](_page_376_Picture_1.jpeg)
+![](assets/_page_376_Picture_1.jpeg)
 
 conversion iff CLAMP == 1.
 
@@ -16560,7 +16560,7 @@ D0.f = f16_to_f32(S0.f16)
 
 Convert from a single-precision float input to a signed 32-bit integer using round-to-nearest-integer semantics (ignore the default rounding mode) and store the result into a vector register.
 
-![](_page_377_Picture_1.jpeg)
+![](assets/_page_377_Picture_1.jpeg)
 
 ```
 D0.i = f32_to_i32(floor(S0.f + 0.5F))
@@ -16623,7 +16623,7 @@ declare CVT_OFF_TABLE : 32'F[16];
 D0.f = CVT_OFF_TABLE[S0.u[3 : 0]]
 ```
 
-![](_page_378_Picture_1.jpeg)
+![](assets/_page_378_Picture_1.jpeg)
 
 **V\_CVT\_F32\_F64 399**
 
@@ -16669,7 +16669,7 @@ D0.f = u32_to_f32(S0.u[15 : 8].u)
 
 Convert an unsigned byte in byte 2 of the input to a single-precision float and store the result into a vector
 
-![](_page_379_Picture_1.jpeg)
+![](assets/_page_379_Picture_1.jpeg)
 
 register.
 
@@ -16715,7 +16715,7 @@ D0.f64 = u32_to_f64(S0.u)
 
 Compute the integer part of a double-precision float input with round-toward-zero semantics and store the
 
-![](_page_380_Picture_1.jpeg)
+![](assets/_page_380_Picture_1.jpeg)
 
 result in floating point format into a vector register.
 
@@ -16760,7 +16760,7 @@ endif
 
 Flush the VALU destination cache.
 
-![](_page_381_Picture_1.jpeg)
+![](assets/_page_381_Picture_1.jpeg)
 
 **V\_MOV\_B16 412**
 
@@ -16807,7 +16807,7 @@ D0.f = trunc(S0.f);
 if ((S0.f > 0.0F) && (S0.f != D0.f)) then
 ```
 
-![](_page_382_Picture_1.jpeg)
+![](assets/_page_382_Picture_1.jpeg)
 
 ```
   D0.f += 1.0F
@@ -16856,7 +16856,7 @@ V_EXP_F32(0x80000000) => 0x3f800000 // exp(-0.0) = 1
 V_EXP_F32(0x7f800000) => 0x7f800000 // exp(+INF) = +INF
 ```
 
-![](_page_383_Picture_1.jpeg)
+![](assets/_page_383_Picture_1.jpeg)
 
 **V\_LOG\_F32 423**
 
@@ -16953,7 +16953,7 @@ V_RSQ_F32(0x7f800000) => 0x00000000 // rsq(+INF) = +0
 
 Calculate the reciprocal of the double-precision float input using IEEE rules and store the result into a vector register.
 
-![](_page_385_Picture_1.jpeg)
+![](assets/_page_385_Picture_1.jpeg)
 
 ```
 D0.f64 = 1.0 / S0.f64
@@ -16999,7 +16999,7 @@ V_SQRT_F32(0x7f800000) => 0x7f800000 // sqrt(+INF) = +INF
 
 Calculate the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
-![](_page_386_Picture_1.jpeg)
+![](assets/_page_386_Picture_1.jpeg)
 
 ```
 D0.f64 = sqrt(S0.f64)
@@ -17050,7 +17050,7 @@ V_COS_F32(0x80000000) => 0x3f800000 // cos(-0.0) = 1
 V_COS_F32(0x3e800000) => 0x00000000 // cos(0.25) = 0
 ```
 
-![](_page_387_Picture_1.jpeg)
+![](assets/_page_387_Picture_1.jpeg)
 
 ```
 V_COS_F32(0x7f800000) => 0xffc00000 // cos(+INF) = NAN
@@ -17155,7 +17155,7 @@ for i in 1 : 31 do
   endif
 ```
 
-![](_page_389_Picture_1.jpeg)
+![](assets/_page_389_Picture_1.jpeg)
 
 endfor
 
@@ -17205,7 +17205,7 @@ else
 endif
 ```
 
-![](_page_390_Picture_1.jpeg)
+![](assets/_page_390_Picture_1.jpeg)
 
 This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent). Result range is in (-1.0,-0.5][0.5,1.0) in normal cases. See also V\_FREXP\_EXP\_I\_F64, which returns integer exponent. See the C library function frexp() for more information.
 
@@ -17300,7 +17300,7 @@ Example: The following instruction sequence performs the move v5 <= v17:
   v_movrels_b32 v5, v7
 ```
 
-![](_page_392_Picture_1.jpeg)
+![](assets/_page_392_Picture_1.jpeg)
 
 **V\_MOVRELSD\_B32 452**
 
@@ -17356,7 +17356,7 @@ Convert from an unsigned 16-bit integer input to an FP16 float and store the res
 D0.f16 = u16_to_f16(S0.u16)
 ```
 
-![](_page_393_Picture_1.jpeg)
+![](assets/_page_393_Picture_1.jpeg)
 
 0.5ULP accuracy, supports denormals, rounding, exception flags and saturation.
 
@@ -17400,7 +17400,7 @@ D0.i16 = f16_to_i16(S0.f16)
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-![](_page_394_Picture_1.jpeg)
+![](assets/_page_394_Picture_1.jpeg)
 
 **V\_RCP\_F16 468**
 
@@ -17450,7 +17450,7 @@ V_SQRT_F16(0x7c00) => 0x7c00 // sqrt(+INF) = +INF
 
 Calculate the reciprocal of the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
-![](_page_395_Picture_1.jpeg)
+![](assets/_page_395_Picture_1.jpeg)
 
 ```
 D0.f16 = 16'1.0 / sqrt(S0.f16)
@@ -17549,7 +17549,7 @@ This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent)
 
 Round the half-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-![](_page_397_Picture_1.jpeg)
+![](assets/_page_397_Picture_1.jpeg)
 
 ```
 D0.f16 = trunc(S0.f16);
@@ -17596,7 +17596,7 @@ Compute the fractional portion of an FP16 float input and store the result in fl
 D0.f16 = S0.f16 + -floor(S0.f16)
 ```
 
-![](_page_398_Picture_1.jpeg)
+![](assets/_page_398_Picture_1.jpeg)
 
 0.5ULP accuracy, denormals are accepted.
 
@@ -17646,7 +17646,7 @@ V_COS_F16(0x8000) => 0x3c00 // cos(-0.0) = 1
 V_COS_F16(0x3400) => 0x0000 // cos(0.25) = 0
 ```
 
-![](_page_399_Picture_1.jpeg)
+![](assets/_page_399_Picture_1.jpeg)
 
 ```
 V_COS_F16(0x7bff) => 0x3c00 // Most positive finite FP16
@@ -17697,7 +17697,7 @@ D0.u16 = f16_to_unorm(S0.f16)
 
 0.5ULP accuracy, supports rounding, exception flags and saturation, denormals are supported.
 
-![](_page_400_Picture_1.jpeg)
+![](assets/_page_400_Picture_1.jpeg)
 
 **V\_NOT\_B16 489**
 
@@ -17749,7 +17749,7 @@ In VOP3 the VCC source may be a scalar GPR specified in S2.
 
 Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit floating point values. This
 
-![](_page_401_Picture_1.jpeg)
+![](assets/_page_401_Picture_1.jpeg)
 
 instruction is suitable for negating or taking the absolute value of a floating-point value.
 
@@ -17799,7 +17799,7 @@ if ((64'F(S0.f) == 0.0) || (64'F(S1.f) == 0.0)) then
   D0.f = S2.f
 ```
 
-![](_page_402_Picture_1.jpeg)
+![](assets/_page_402_Picture_1.jpeg)
 
 ```
 else
@@ -17850,7 +17850,7 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Multiply two signed 24 bit integer inputs and store the high 32 bits of the result as a signed 32 bit integer into a
 
-![](_page_403_Picture_1.jpeg)
+![](assets/_page_403_Picture_1.jpeg)
 
 vector register.
 
@@ -17998,7 +17998,7 @@ D0.i = S0.i >= S1.i ? S0.i : S1.i
 
 Select the minimum of two unsigned integers and store the selected value into a vector register.
 
-![](_page_406_Picture_1.jpeg)
+![](assets/_page_406_Picture_1.jpeg)
 
 ```
 D0.u = S0.u < S1.u ? S0.u : S1.u
@@ -18044,7 +18044,7 @@ Calculate bitwise AND on two vector inputs and store the result into a vector re
 D0.u = (S0.u & S1.u)
 ```
 
-![](_page_407_Picture_1.jpeg)
+![](assets/_page_407_Picture_1.jpeg)
 
 Input and output modifiers not supported.
 
@@ -18092,7 +18092,7 @@ Add two unsigned inputs and a bit from a carry-in mask, store the result into a 
 tmp = 64'U(S0.u) + 64'U(S1.u) + VCC.u64[laneId].u64;
 ```
 
-![](_page_408_Picture_1.jpeg)
+![](assets/_page_408_Picture_1.jpeg)
 
 ```
 VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
@@ -18137,7 +18137,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 **V\_ADD\_NC\_U32 293**
 
-![](_page_409_Picture_1.jpeg)
+![](assets/_page_409_Picture_1.jpeg)
 
 Add two unsigned inputs and store the result into a vector register. No carry-in or carry-out support.
 
@@ -18183,7 +18183,7 @@ D0.f = fma(S0.f, S1.f, D0.f)
 
 **V\_CVT\_PK\_RTZ\_F16\_F32 303**
 
-![](_page_410_Picture_1.jpeg)
+![](assets/_page_410_Picture_1.jpeg)
 
 Convert two single-precision float inputs into a packed FP16 result with round toward zero semantics (ignore the current rounding mode), and store the result into a vector register.
 
@@ -18378,7 +18378,7 @@ Multiply two signed 24-bit integers, add a signed 32-bit integer and store the r
 D0.i = 32'I(S0.i24) * 32'I(S1.i24) + S2.i
 ```
 
-![](_page_414_Picture_1.jpeg)
+![](assets/_page_414_Picture_1.jpeg)
 
 This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision floating point multiplier.
 
@@ -18523,7 +18523,7 @@ D0.u = ((S0.u & S1.u) | (~S0.u & S2.u))
 
 Fused single precision multiply add.
 
-![](_page_417_Picture_1.jpeg)
+![](assets/_page_417_Picture_1.jpeg)
 
 ```
 D0.f = fma(S0.f, S1.f, S2.f)
@@ -18566,13 +18566,13 @@ D0.u = 32'U(({ S0.u, S1.u } >> S2.u[4 : 0].u) & 0xffffffffLL)
 
 #### **Notes**
 
-![](_page_417_Picture_18.jpeg)
+![](assets/_page_417_Picture_18.jpeg)
 
 S0 carries the MSBs and S1 carries the LSBs of the value being aligned.
 
 **V\_ALIGNBYTE\_B32 535**
 
-![](_page_418_Picture_1.jpeg)
+![](assets/_page_418_Picture_1.jpeg)
 
 Align a value to the specified byte position.
 
@@ -18582,7 +18582,7 @@ D0.u = 32'U(({ S0.u, S1.u } >> (S2.u[1 : 0].u * 8U)) & 0xffffffffLL)
 
 #### **Notes**
 
-![](_page_418_Picture_5.jpeg)
+![](assets/_page_418_Picture_5.jpeg)
 
 S0 carries the MSBs and S1 carries the LSBs of the value being aligned.
 
@@ -18621,7 +18621,7 @@ D0.i = v_min_i32(v_min_i32(S0.i, S1.i), S2.i)
 
 Return minimum unsigned integer value of three inputs.
 
-![](_page_419_Picture_1.jpeg)
+![](assets/_page_419_Picture_1.jpeg)
 
 ```
 D0.u = v_min_u32(v_min_u32(S0.u, S1.u), S2.u)
@@ -18718,7 +18718,7 @@ Sum of absolute differences with accumulation, accumulate from the higher-order 
 D0.u = (32'U(v_sad_u8(S0, S1, 0U)) << 16U) + S2.u
 ```
 
-![](_page_421_Picture_1.jpeg)
+![](assets/_page_421_Picture_1.jpeg)
 
 **V\_SAD\_U16 548**
 
@@ -18826,7 +18826,7 @@ elsif exponent(S1.f64) == 2047 then
 else
 ```
 
-![](_page_423_Picture_1.jpeg)
+![](assets/_page_423_Picture_1.jpeg)
 
 ```
   D0.f64 = sign_out ? -abs(S0.f64) : abs(S0.f64)
@@ -18879,7 +18879,7 @@ Components where the reference value in S1 is zero are not included in the sum.
 ABSDIFF = lambda(x, y) (
 ```
 
-![](_page_424_Picture_1.jpeg)
+![](assets/_page_424_Picture_1.jpeg)
 
 ```
   x > y ? x - y : y - x);
@@ -18932,7 +18932,7 @@ Calculate the bitwise XOR of three vector inputs and store the result into a vec
 D0.u = (S0.u ^ S1.u ^ S2.u)
 ```
 
-![](_page_425_Picture_1.jpeg)
+![](assets/_page_425_Picture_1.jpeg)
 
 Input and output modifiers not supported.
 
@@ -18983,7 +18983,7 @@ D0[7 : 0] = BYTE_PERMUTE({ S0.u, S1.u }, S2.u[7 : 0])
 
 Selects 8 through 11 are useful in modeling sign extension of a smaller-precision signed integer to a largerprecision result.
 
-![](_page_426_Picture_1.jpeg)
+![](assets/_page_426_Picture_1.jpeg)
 
 Note the MSBs of the 64-bit value being selected are stored in S0. This is counterintuitive for a little-endian architecture.
 
@@ -19027,7 +19027,7 @@ D0.f16 = fma(S0.f16, S1.f16, S2.f16)
 
 0.5ULP accuracy, denormals are supported.
 
-![](_page_427_Picture_1.jpeg)
+![](assets/_page_427_Picture_1.jpeg)
 
 **V\_MIN3\_F16 585**
 
@@ -19073,7 +19073,7 @@ D0.i16 = v_max_i16(v_max_i16(S0.i16, S1.i16), S2.i16)
 
 Return maximum unsigned short value of three inputs.
 
-![](_page_428_Picture_1.jpeg)
+![](assets/_page_428_Picture_1.jpeg)
 
 ```
 D0.u16 = v_max_u16(v_max_u16(S0.u16, S1.u16), S2.u16)
@@ -19174,7 +19174,7 @@ Add three unsigned integers.
 D0.u = S0.u + S1.u + S2.u
 ```
 
-![](_page_430_Picture_1.jpeg)
+![](assets/_page_430_Picture_1.jpeg)
 
 **V\_LSHL\_OR\_B32 598**
 
@@ -19376,7 +19376,7 @@ D0.f = v_min_f32(v_max_f32(S0.f, S1.f), S2.f)
 
 Support input denorm control, allow output denorm value. Exceptions are supported. Note: +0.0 > -0.0 is true.
 
-![](_page_434_Picture_1.jpeg)
+![](assets/_page_434_Picture_1.jpeg)
 
 **V\_MINMAX\_F32 607**
 
@@ -19424,7 +19424,7 @@ Support input denorm control, allow output denorm value. Exceptions are supporte
 
 Compute maximum of first two operands, followed by minimum of that result and the third operand.
 
-![](_page_435_Picture_1.jpeg)
+![](assets/_page_435_Picture_1.jpeg)
 
 This instruction can emulate an API-level "clamp"; unlike MED3 this correctly handles the case where the clamp's maxBound < minBound.
 
@@ -19471,7 +19471,7 @@ tmp = S0[15 : 0].f16 * S1[15 : 0].f16;
 tmp += S0[31 : 16].f16 * S1[31 : 16].f16;
 ```
 
-![](_page_436_Picture_1.jpeg)
+![](assets/_page_436_Picture_1.jpeg)
 
 ```
 tmp += S2.f16;
@@ -19580,7 +19580,7 @@ elsif S2.f64 / S1.f64 == DENORM.f64 then
   endif
 ```
 
-![](_page_438_Picture_1.jpeg)
+![](assets/_page_438_Picture_1.jpeg)
 
 ```
 elsif exponent(S2.f64) <= 53 then
@@ -19676,7 +19676,7 @@ D0.u16 = S0.u16 + S1.u16
 
 Supports saturation (unsigned 16-bit integer domain).
 
-![](_page_440_Picture_1.jpeg)
+![](assets/_page_440_Picture_1.jpeg)
 
 **V\_SUB\_NC\_U16 772**
 
@@ -19724,7 +19724,7 @@ D0[15 : 0] = 16'B(v_cvt_u16_f32(S0.f))
 
 Select the maximum of two unsigned integers and store the selected value into a vector register.
 
-![](_page_441_Picture_1.jpeg)
+![](assets/_page_441_Picture_1.jpeg)
 
 ```
 D0.u16 = S0.u16 >= S1.u16 ? S0.u16 : S1.u16
@@ -19770,7 +19770,7 @@ Supports saturation (signed 16-bit integer domain).
 
 Subtract the second signed input from the first input and store the result into a vector register. No carry-in or carry-out support.
 
-![](_page_442_Picture_1.jpeg)
+![](assets/_page_442_Picture_1.jpeg)
 
 ```
 D0.i16 = S0.i16 - S1.i16
@@ -19815,7 +19815,7 @@ D0.f = S0.f * 2.0F ** S1.i
 
 **V\_BFM\_B32 797**
 
-![](_page_443_Picture_1.jpeg)
+![](assets/_page_443_Picture_1.jpeg)
 
 Bitfield modify.
 
@@ -19867,7 +19867,7 @@ for i in 0 : 31 do
 endfor
 ```
 
-![](_page_444_Picture_1.jpeg)
+![](assets/_page_444_Picture_1.jpeg)
 
 Note that in Wave32 mode ThreadMask[63:32] == 0 and this instruction simply performs a move from S1 to D.
 
@@ -19917,7 +19917,7 @@ D0[31 : 16].i16 = i32_to_i16(S1.i)
 
 16.12. VOP3 & VOP3SD Instructions 436 of 600
 
-![](_page_445_Picture_1.jpeg)
+![](assets/_page_445_Picture_1.jpeg)
 
 **V\_SUB\_NC\_I32 805**
 
@@ -20059,7 +20059,7 @@ Multiply the first input, a floating point value, by an integral power of 2 spec
 D0.f64 = S0.f64 * 2.0 ** S1.i
 ```
 
-![](_page_448_Picture_1.jpeg)
+![](assets/_page_448_Picture_1.jpeg)
 
 **V\_MUL\_LO\_U32 812**
 
@@ -20152,7 +20152,7 @@ D0.i[15 : 0] = (S1.i[15 : 0] >> S0[3 : 0].u)
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
-![](_page_450_Picture_1.jpeg)
+![](assets/_page_450_Picture_1.jpeg)
 
 ```
 D0.u64 = (S1.u64 << S0[5 : 0].u)
@@ -20200,7 +20200,7 @@ endif;
 D0.b = VGPR[lane][SRC0.u]
 ```
 
-![](_page_451_Picture_1.jpeg)
+![](assets/_page_451_Picture_1.jpeg)
 
 Ignores EXEC mask for the VGPR read. Input and output modifiers not supported; this is an untyped operation.
 
@@ -20248,7 +20248,7 @@ D0.u16 = (S0.u16 | S1.u16)
 
 Input and output modifiers not supported.
 
-![](_page_452_Picture_1.jpeg)
+![](assets/_page_452_Picture_1.jpeg)
 
 **V\_XOR\_B16 868**
 
@@ -20297,7 +20297,7 @@ D0.u64[laneId] = S0.f16 == S1.f16;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_453_Picture_1.jpeg)
+![](assets/_page_453_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -20348,7 +20348,7 @@ Return 1 iff A greater than or equal to B.
 D0.u64[laneId] = S0.f16 >= S1.f16;
 ```
 
-![](_page_454_Picture_1.jpeg)
+![](assets/_page_454_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -20396,7 +20396,7 @@ D0.u64[laneId] = !(S0.f16 >= S1.f16);
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_455_Picture_1.jpeg)
+![](assets/_page_455_Picture_1.jpeg)
 
 **V\_CMP\_NLG\_F16 10**
 
@@ -20449,7 +20449,7 @@ D0.u64[laneId] = !(S0.f16 == S1.f16);
 // With NAN inputs this is not the same operation as !=
 ```
 
-![](_page_456_Picture_1.jpeg)
+![](assets/_page_456_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -20497,7 +20497,7 @@ D0.u64[laneId] = 1'0U;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_457_Picture_1.jpeg)
+![](assets/_page_457_Picture_1.jpeg)
 
 **V\_CMP\_LT\_F32 17**
 
@@ -20547,7 +20547,7 @@ D0.u64[laneId] = S0.f > S1.f;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_458_Picture_1.jpeg)
+![](assets/_page_458_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -20598,7 +20598,7 @@ Return 1 iff A not orderable with B.
 D0.u64[laneId] = (isNAN(64'F(S0.f)) || isNAN(64'F(S1.f)));
 ```
 
-![](_page_459_Picture_1.jpeg)
+![](assets/_page_459_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -20648,7 +20648,7 @@ D0.u64[laneId] = !(S0.f > S1.f);
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_460_Picture_1.jpeg)
+![](assets/_page_460_Picture_1.jpeg)
 
 **V\_CMP\_NLE\_F32 28**
 
@@ -20701,7 +20701,7 @@ D0.u64[laneId] = 1'1U;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_461_Picture_1.jpeg)
+![](assets/_page_461_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -20748,7 +20748,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 1 iff A less than or equal to B.
 
-![](_page_462_Picture_1.jpeg)
+![](assets/_page_462_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = S0.f64 <= S1.f64;
@@ -20796,7 +20796,7 @@ D0.u64[laneId] = S0.f64 >= S1.f64;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_463_Picture_1.jpeg)
+![](assets/_page_463_Picture_1.jpeg)
 
 **V\_CMP\_O\_F64 39**
 
@@ -20848,7 +20848,7 @@ D0.u64[laneId] = !(S0.f64 <> S1.f64);
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_464_Picture_1.jpeg)
+![](assets/_page_464_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -20896,7 +20896,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 **V\_CMP\_NLT\_F64 46**
 
-![](_page_465_Picture_1.jpeg)
+![](assets/_page_465_Picture_1.jpeg)
 
 Return 1 iff A not less than B.
 
@@ -20949,7 +20949,7 @@ D0.u64[laneId] = S0.i16 == S1.i16;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_466_Picture_1.jpeg)
+![](assets/_page_466_Picture_1.jpeg)
 
 **V\_CMP\_LE\_I16 51**
 
@@ -20999,7 +20999,7 @@ D0.u64[laneId] = S0.i16 >= S1.i16;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_467_Picture_1.jpeg)
+![](assets/_page_467_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -21046,7 +21046,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 1 iff A greater than B.
 
-![](_page_468_Picture_1.jpeg)
+![](assets/_page_468_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = S0.u16 > S1.u16;
@@ -21094,7 +21094,7 @@ D0.u64[laneId] = 1'0U;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_469_Picture_1.jpeg)
+![](assets/_page_469_Picture_1.jpeg)
 
 **V\_CMP\_LT\_I32 65**
 
@@ -21144,7 +21144,7 @@ D0.u64[laneId] = S0.i > S1.i;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_470_Picture_1.jpeg)
+![](assets/_page_470_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -21195,7 +21195,7 @@ Return 0.
 D0.u64[laneId] = 1'0U;
 ```
 
-![](_page_471_Picture_1.jpeg)
+![](assets/_page_471_Picture_1.jpeg)
 
 ```
 // D0 = VCC in VOPC encoding.
@@ -21244,7 +21244,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 **V\_CMP\_GT\_U32 76**
 
-![](_page_472_Picture_1.jpeg)
+![](assets/_page_472_Picture_1.jpeg)
 
 Return 1 iff A greater than B.
 
@@ -21296,7 +21296,7 @@ D0.u64[laneId] = 1'1U;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_473_Picture_1.jpeg)
+![](assets/_page_473_Picture_1.jpeg)
 
 **V\_CMP\_F\_I64 80**
 
@@ -21346,7 +21346,7 @@ D0.u64[laneId] = S0.i64 <= S1.i64;
 // D0 = VCC in VOPC encoding.
 ```
 
-![](_page_474_Picture_1.jpeg)
+![](assets/_page_474_Picture_1.jpeg)
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -21393,7 +21393,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 1.
 
-![](_page_475_Picture_1.jpeg)
+![](assets/_page_475_Picture_1.jpeg)
 
 ```
 D0.u64[laneId] = 1'1U;
@@ -21441,7 +21441,7 @@ D0.u64[laneId] = S0.u64 == S1.u64;
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_476_Picture_1.jpeg)
+![](assets/_page_476_Picture_1.jpeg)
 
 **V\_CMP\_LE\_U64 91**
 
@@ -21647,7 +21647,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 0.
 
-![](_page_480_Picture_1.jpeg)
+![](assets/_page_480_Picture_1.jpeg)
 
 ```
 EXEC.u64[laneId] = 1'0U
@@ -21695,7 +21695,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Return 1 iff A greater than B.
 
-![](_page_481_Picture_1.jpeg)
+![](assets/_page_481_Picture_1.jpeg)
 
 ```
 EXEC.u64[laneId] = S0.f16 > S1.f16
@@ -21743,7 +21743,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Return 1 iff A not orderable with B.
 
-![](_page_482_Picture_1.jpeg)
+![](assets/_page_482_Picture_1.jpeg)
 
 ```
 EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))
@@ -21790,7 +21790,7 @@ EXEC.u64[laneId] = !(S0.f16 > S1.f16);
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_483_Picture_1.jpeg)
+![](assets/_page_483_Picture_1.jpeg)
 
 **V\_CMPX\_NLE\_F16 140**
 
@@ -21839,7 +21839,7 @@ Return 1.
 EXEC.u64[laneId] = 1'1U
 ```
 
-![](_page_484_Picture_1.jpeg)
+![](assets/_page_484_Picture_1.jpeg)
 
 **V\_CMPX\_F\_F32 144**
 
@@ -21877,7 +21877,7 @@ Return 1 iff A less than or equal to B.
 
 EXEC.u64[laneId] = S0.f <= S1.f
 
-![](_page_485_Picture_1.jpeg)
+![](assets/_page_485_Picture_1.jpeg)
 
 **V\_CMPX\_GT\_F32 148**
 
@@ -21923,7 +21923,7 @@ Return 1 iff A orderable with B.
 EXEC.u64[laneId] = (!isNAN(64'F(S0.f)) && !isNAN(64'F(S1.f)))
 ```
 
-![](_page_486_Picture_1.jpeg)
+![](assets/_page_486_Picture_1.jpeg)
 
 **V\_CMPX\_U\_F32 152**
 
@@ -21971,7 +21971,7 @@ Return 1 iff A not greater than B.
 EXEC.u64[laneId] = !(S0.f > S1.f);
 ```
 
-![](_page_487_Picture_1.jpeg)
+![](assets/_page_487_Picture_1.jpeg)
 
 ```
 // With NAN inputs this is not the same operation as <=
@@ -22020,7 +22020,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 **V\_CMPX\_T\_F32 159**
 
-![](_page_488_Picture_1.jpeg)
+![](assets/_page_488_Picture_1.jpeg)
 
 #### Return 1.
 
@@ -22070,7 +22070,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 **V\_CMPX\_LE\_F64 163**
 
-![](_page_489_Picture_1.jpeg)
+![](assets/_page_489_Picture_1.jpeg)
 
 Return 1 iff A less than or equal to B.
 
@@ -22168,7 +22168,7 @@ EXEC.u64[laneId] = !(S0.f64 <> S1.f64);
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_491_Picture_1.jpeg)
+![](assets/_page_491_Picture_1.jpeg)
 
 **V\_CMPX\_NGT\_F64 171**
 
@@ -22218,7 +22218,7 @@ EXEC.u64[laneId] = !(S0.f64 < S1.f64);
 // With NAN inputs this is not the same operation as >=
 ```
 
-![](_page_492_Picture_1.jpeg)
+![](assets/_page_492_Picture_1.jpeg)
 
 **V\_CMPX\_T\_F64 175**
 
@@ -22264,7 +22264,7 @@ Return 1 iff A less than or equal to B.
 EXEC.u64[laneId] = S0.i16 <= S1.i16
 ```
 
-![](_page_493_Picture_1.jpeg)
+![](assets/_page_493_Picture_1.jpeg)
 
 **V\_CMPX\_GT\_I16 180**
 
@@ -22306,7 +22306,7 @@ Return 1 iff A less than B.
 
 EXEC.u64[laneId] = S0.u16 < S1.u16
 
-![](_page_494_Picture_1.jpeg)
+![](assets/_page_494_Picture_1.jpeg)
 
 **V\_CMPX\_EQ\_U16 186**
 
@@ -22352,7 +22352,7 @@ Return 1 iff A not equal to B.
 EXEC.u64[laneId] = S0.u16 <> S1.u16
 ```
 
-![](_page_495_Picture_1.jpeg)
+![](assets/_page_495_Picture_1.jpeg)
 
 **V\_CMPX\_GE\_U16 190**
 
@@ -22398,7 +22398,7 @@ Return 1 iff A equal to B.
 EXEC.u64[laneId] = S0.i == S1.i
 ```
 
-![](_page_496_Picture_1.jpeg)
+![](assets/_page_496_Picture_1.jpeg)
 
 **V\_CMPX\_LE\_I32 195**
 
@@ -22444,7 +22444,7 @@ Return 1 iff A greater than or equal to B.
 EXEC.u64[laneId] = S0.i >= S1.i
 ```
 
-![](_page_497_Picture_1.jpeg)
+![](assets/_page_497_Picture_1.jpeg)
 
 **V\_CMPX\_T\_I32 199**
 
@@ -22490,7 +22490,7 @@ Return 1 iff A equal to B.
 EXEC.u64[laneId] = S0.u == S1.u
 ```
 
-![](_page_498_Picture_1.jpeg)
+![](assets/_page_498_Picture_1.jpeg)
 
 **V\_CMPX\_LE\_U32 203**
 
@@ -22534,7 +22534,7 @@ Return 1 iff A greater than or equal to B.
 EXEC.u64[laneId] = S0.u >= S1.u
 ```
 
-![](_page_499_Picture_1.jpeg)
+![](assets/_page_499_Picture_1.jpeg)
 
 **V\_CMPX\_T\_U32 207**
 
@@ -22580,7 +22580,7 @@ Return 1 iff A equal to B.
 EXEC.u64[laneId] = S0.i64 == S1.i64
 ```
 
-![](_page_500_Picture_1.jpeg)
+![](assets/_page_500_Picture_1.jpeg)
 
 **V\_CMPX\_LE\_I64 211**
 
@@ -22620,7 +22620,7 @@ Return 1 iff A greater than or equal to B.
 
 EXEC.u64[laneId] = S0.i64 >= S1.i64
 
-![](_page_501_Picture_1.jpeg)
+![](assets/_page_501_Picture_1.jpeg)
 
 **V\_CMPX\_T\_I64 215**
 
@@ -22660,7 +22660,7 @@ Return 1 iff A equal to B.
 
 EXEC.u64[laneId] = S0.u64 == S1.u64
 
-![](_page_502_Picture_1.jpeg)
+![](assets/_page_502_Picture_1.jpeg)
 
 **V\_CMPX\_LE\_U64 219**
 
@@ -22700,7 +22700,7 @@ Return 1 iff A greater than or equal to B.
 
 EXEC.u64[laneId] = S0.u64 >= S1.u64
 
-![](_page_503_Picture_1.jpeg)
+![](assets/_page_503_Picture_1.jpeg)
 
 **V\_CMPX\_T\_U64 223**
 
@@ -22849,13 +22849,13 @@ EXEC.u64[laneId] = result
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-![](_page_506_Picture_1.jpeg)
+![](assets/_page_506_Picture_1.jpeg)
 
 # <span id="page-506-0"></span>**16.13. VINTERP Instructions**
 
 Parameter interpolation VALU instructions.
 
-![](_page_506_Figure_4.jpeg)
+![](assets/_page_506_Figure_4.jpeg)
 
 **V\_INTERP\_P10\_F32 0**
 
@@ -22944,15 +22944,15 @@ Same as V\_INTERP\_P10\_F16\_F32 except rounding mode is overridden to round tow
 
 Same as V\_INTERP\_P2\_F16\_F32 except rounding mode is overridden to round toward zero.
 
-![](_page_508_Picture_1.jpeg)
+![](assets/_page_508_Picture_1.jpeg)
 
-![](_page_509_Picture_1.jpeg)
+![](assets/_page_509_Picture_1.jpeg)
 
 # <span id="page-509-0"></span>**16.14. Parameter and Direct Load from LDS Instructions**
 
 These instructions load data from LDS into a VGPR where the LDS address is derived from wave state and the M0 register.
 
-![](_page_509_Figure_4.jpeg)
+![](assets/_page_509_Figure_4.jpeg)
 
 **LDS\_PARAM\_LOAD 0**
 
@@ -22970,7 +22970,7 @@ This instruction runs in whole quad mode: if any pixel of a quad is active then 
 
 Read a single 32-bit value from LDS to all lanes. A single DWORD is read from LDS memory at ADDR[M0[15:0]], where M0[15:0] is a byte address and is dword-aligned. M0[18:16] specify the data type for the read and may be 0=UBYTE, 1=USHORT, 2=DWORD, 4=SBYTE, 5=SSHORT.
 
-![](_page_509_Picture_13.jpeg)
+![](assets/_page_509_Picture_13.jpeg)
 
 This instruction runs in whole quad mode: if any pixel of a quad is active then all 4 pixels of that quad are written.
 
@@ -22980,7 +22980,7 @@ This suite of instructions operates on data stored within the data share memory.
 
 The bitfield map for the LDS/GDS is:
 
-![](_page_510_Figure_5.jpeg)
+![](assets/_page_510_Figure_5.jpeg)
 
 ```
 OFFSET0 = Unsigned byte offset added to the address from the ADDR VGPR.
@@ -22993,7 +22993,7 @@ DATA1 = Source data1 VGPR 0 - 255.
 VDST = Destination VGPR 0- 255.
 ```
 
-![](_page_510_Picture_7.jpeg)
+![](assets/_page_510_Picture_7.jpeg)
 
 All instructions with RTN in the name return the value that was in memory before the operation was performed.
 
@@ -23021,7 +23021,7 @@ RETURN_DATA.u = tmp
 
 Subtraction with reversed operands.
 
-![](_page_511_Picture_1.jpeg)
+![](assets/_page_511_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].b;
@@ -23073,7 +23073,7 @@ MEM[ADDR].i = src > tmp ? src : tmp;
 RETURN_DATA.i = tmp
 ```
 
-![](_page_512_Picture_1.jpeg)
+![](assets/_page_512_Picture_1.jpeg)
 
 **DS\_MIN\_U32 7**
 
@@ -23121,7 +23121,7 @@ RETURN_DATA.b = tmp
 
 Bitwise XOR of register value and memory value.
 
-![](_page_513_Picture_1.jpeg)
+![](assets/_page_513_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].b;
@@ -23169,7 +23169,7 @@ MEM[ADDR_BASE.u + OFFSET1.u * 4U * 64U] = DATA2.b
 
 Compare and store.
 
-![](_page_514_Picture_1.jpeg)
+![](assets/_page_514_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].b;
@@ -23221,7 +23221,7 @@ tmp = MEM[ADDR].f;
 src = DATA.f;
 ```
 
-![](_page_515_Picture_1.jpeg)
+![](assets/_page_515_Picture_1.jpeg)
 
 ```
 MEM[ADDR].f = src > tmp ? src : tmp;
@@ -23267,7 +23267,7 @@ MEM[ADDR].b16 = DATA[15 : 0].b16
 
 **DS\_ADD\_RTN\_U32 32**
 
-![](_page_516_Picture_1.jpeg)
+![](assets/_page_516_Picture_1.jpeg)
 
 Add data register to memory value.
 
@@ -23319,7 +23319,7 @@ MEM[ADDR].u = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
 RETURN_DATA.u = tmp
 ```
 
-![](_page_517_Picture_1.jpeg)
+![](assets/_page_517_Picture_1.jpeg)
 
 **DS\_MIN\_RTN\_I32 37**
 
@@ -23367,7 +23367,7 @@ RETURN_DATA.u = tmp
 
 **DS\_AND\_RTN\_B32 41**
 
-![](_page_518_Picture_1.jpeg)
+![](assets/_page_518_Picture_1.jpeg)
 
 Bitwise AND of register value and memory value.
 
@@ -23419,7 +23419,7 @@ RETURN_DATA.b = tmp
 
 16.15. LDS & GDS Instructions 510 of 600
 
-![](_page_519_Picture_1.jpeg)
+![](assets/_page_519_Picture_1.jpeg)
 
 #### **DS\_STOREXCHG\_2ADDR\_RTN\_B32 46**
 
@@ -23471,7 +23471,7 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 #### **DS\_CMPSTORE\_RTN\_F32 49**
 
-![](_page_520_Picture_1.jpeg)
+![](assets/_page_520_Picture_1.jpeg)
 
 Floating point compare and store that handles NAN/INF/denormal values.
 
@@ -23623,7 +23623,7 @@ if (offset >= 0xe000) {
   thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
 ```
 
-![](_page_523_Picture_1.jpeg)
+![](assets/_page_523_Picture_1.jpeg)
 
 ```
   }
@@ -23679,7 +23679,7 @@ Read 2 dwords with a larger stride.
 RETURN_DATA[31 : 0] = MEM[ADDR_BASE.u + OFFSET0.u * 4U * 64U].b;
 ```
 
-![](_page_524_Picture_1.jpeg)
+![](assets/_page_524_Picture_1.jpeg)
 
 ```
 RETURN_DATA[63 : 32] = MEM[ADDR_BASE.u + OFFSET1.u * 4U * 64U].b
@@ -23801,7 +23801,7 @@ MEM[ADDR].b64 = DATA.b64 - tmp;
 RETURN_DATA.b64 = tmp
 ```
 
-![](_page_527_Picture_1.jpeg)
+![](assets/_page_527_Picture_1.jpeg)
 
 **DS\_INC\_U64 67**
 
@@ -23851,7 +23851,7 @@ RETURN_DATA.i64 = tmp
 
 Minimum of two unsigned 64-bit integer values.
 
-![](_page_528_Picture_1.jpeg)
+![](assets/_page_528_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].u64;
@@ -23901,7 +23901,7 @@ MEM[ADDR].b64 = (tmp ^ DATA.b64);
 RETURN_DATA.b64 = tmp
 ```
 
-![](_page_529_Picture_1.jpeg)
+![](assets/_page_529_Picture_1.jpeg)
 
 **DS\_MSKOR\_B64 76**
 
@@ -23953,7 +23953,7 @@ RETURN_DATA.b64 = tmp
 
 16.15. LDS & GDS Instructions 521 of 600
 
-![](_page_530_Picture_1.jpeg)
+![](assets/_page_530_Picture_1.jpeg)
 
 In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMPSWAP opcode.
 
@@ -24003,7 +24003,7 @@ RETURN_DATA.f64 = tmp
 
 Floating-point compare handles NAN/INF/denorm.
 
-![](_page_531_Picture_1.jpeg)
+![](assets/_page_531_Picture_1.jpeg)
 
 **DS\_ADD\_RTN\_U64 96**
 
@@ -24056,7 +24056,7 @@ tmp = MEM[ADDR].u64;
 
 16.15. LDS & GDS Instructions 523 of 600
 
-![](_page_532_Picture_1.jpeg)
+![](assets/_page_532_Picture_1.jpeg)
 
 ```
 src = DATA.u64;
@@ -24108,7 +24108,7 @@ MEM[ADDR].u64 = src > tmp ? src : tmp;
 RETURN_DATA.u64 = tmp
 ```
 
-![](_page_533_Picture_1.jpeg)
+![](assets/_page_533_Picture_1.jpeg)
 
 **DS\_AND\_RTN\_B64 105**
 
@@ -24159,7 +24159,7 @@ tmp = MEM[ADDR].b64;
 MEM[ADDR].b64 = DATA.b64;
 ```
 
-![](_page_534_Picture_1.jpeg)
+![](assets/_page_534_Picture_1.jpeg)
 
 ```
 RETURN_DATA.b64 = tmp
@@ -24213,7 +24213,7 @@ RETURN_DATA.b64 = tmp
 
 In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMPSWAP opcode.
 
-![](_page_535_Picture_1.jpeg)
+![](assets/_page_535_Picture_1.jpeg)
 
 #### **DS\_CMPSTORE\_RTN\_F64 113**
 
@@ -24265,7 +24265,7 @@ Floating-point compare handles NAN/INF/denorm.
 
 16.15. LDS & GDS Instructions 527 of 600
 
-![](_page_536_Picture_1.jpeg)
+![](assets/_page_536_Picture_1.jpeg)
 
 Read 1 qword.
 
@@ -24431,7 +24431,7 @@ if DATA[63] then
 
 16.15. LDS & GDS Instructions 530 of 600
 
-![](_page_539_Picture_1.jpeg)
+![](assets/_page_539_Picture_1.jpeg)
 
 endif
 
@@ -24477,7 +24477,7 @@ RETURN_DATA[15 : 0].i16 = 16'I(signext(MEM[ADDR][7 : 0].i8))
 
 **DS\_LOAD\_I8\_D16\_HI 165**
 
-![](_page_540_Picture_1.jpeg)
+![](assets/_page_540_Picture_1.jpeg)
 
 Signed byte read with masked return to upper word.
 
@@ -24523,7 +24523,7 @@ In general this instruction performs the following :
   if DATA_VALID(DATA1[i])
 ```
 
-![](_page_541_Picture_1.jpeg)
+![](assets/_page_541_Picture_1.jpeg)
 
 ```
   MEM[stack_base + stack_index] = DATA1[i];
@@ -24689,7 +24689,7 @@ Examples (simplified 4-thread wavefronts):
   VGPR[ADDR] = { 0, 0, 12, 4 }
 ```
 
-![](_page_544_Picture_1.jpeg)
+![](assets/_page_544_Picture_1.jpeg)
 
 ```
   EXEC = 0xA, OFFSET = 0
@@ -24740,7 +24740,7 @@ RETURN_DATA[127 : 96] = MEM[ADDR + 12U].b
 
 16.15. LDS & GDS Instructions 536 of 600
 
-![](_page_545_Picture_1.jpeg)
+![](assets/_page_545_Picture_1.jpeg)
 
 ### <span id="page-545-0"></span>**16.15.1. LDS Instruction Limitations**
 
@@ -24754,13 +24754,13 @@ Some of the DS instructions are available only to GDS, not LDS. These are:
 - DS\_GWS\_BARRIER
 - DS\_ORDERED\_COUNT
 
-![](_page_546_Picture_1.jpeg)
+![](assets/_page_546_Picture_1.jpeg)
 
 # <span id="page-546-0"></span>**16.16. MUBUF Instructions**
 
 The bitfield map of the MUBUF format is:
 
-![](_page_546_Figure_4.jpeg)
+![](assets/_page_546_Figure_4.jpeg)
 
 #### **BUFFER\_LOAD\_FORMAT\_X 0**
 
@@ -24805,7 +24805,7 @@ VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
 
 16.16. MUBUF Instructions 538 of 600
 
-![](_page_547_Picture_1.jpeg)
+![](assets/_page_547_Picture_1.jpeg)
 
 ```
 VDATA[127 : 96].b = ConvertFromFormat(MEM[TADDR.W])
@@ -24857,7 +24857,7 @@ MEM[TADDR.W] = ConvertToFormat(VDATA[127 : 96].b)
 
 16.16. MUBUF Instructions 539 of 600
 
-![](_page_548_Picture_1.jpeg)
+![](assets/_page_548_Picture_1.jpeg)
 
 Untyped buffer load 1 component with format conversion, packed 16-bit components in data register.
 
@@ -24911,7 +24911,7 @@ MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
 
 16.16. MUBUF Instructions 540 of 600
 
-![](_page_549_Picture_1.jpeg)
+![](assets/_page_549_Picture_1.jpeg)
 
 ```
 // Mem access size depends on format
@@ -24962,7 +24962,7 @@ VDATA.u = 32'U({ 24'0, MEM[ADDR].u8 })
 
 16.16. MUBUF Instructions 541 of 600
 
-![](_page_550_Picture_1.jpeg)
+![](assets/_page_550_Picture_1.jpeg)
 
 Untyped buffer load signed byte, sign extend in data register.
 
@@ -25014,7 +25014,7 @@ VDATA[63 : 32] = MEM[ADDR + 4U].b;
 
 16.16. MUBUF Instructions 542 of 600
 
-![](_page_551_Picture_1.jpeg)
+![](assets/_page_551_Picture_1.jpeg)
 
 ```
 VDATA[95 : 64] = MEM[ADDR + 8U].b
@@ -25066,7 +25066,7 @@ MEM[ADDR + 4U].b = VDATA[63 : 32]
 
 16.16. MUBUF Instructions 543 of 600
 
-![](_page_552_Picture_1.jpeg)
+![](assets/_page_552_Picture_1.jpeg)
 
 **BUFFER\_STORE\_B96 28**
 
@@ -25117,7 +25117,7 @@ VDATA[15 : 0].b16 = MEM[ADDR].b16;
 
 16.16. MUBUF Instructions 544 of 600
 
-![](_page_553_Picture_1.jpeg)
+![](assets/_page_553_Picture_1.jpeg)
 
 ```
 // VDATA[31:16] is preserved.
@@ -25168,7 +25168,7 @@ MEM[ADDR].b16 = VDATA[31 : 16].b16
 
 16.16. MUBUF Instructions 545 of 600
 
-![](_page_554_Picture_1.jpeg)
+![](assets/_page_554_Picture_1.jpeg)
 
 #### **BUFFER\_LOAD\_D16\_HI\_FORMAT\_X 38**
 
@@ -25221,7 +25221,7 @@ cmp = DATA[63 : 32].b;
 
 16.16. MUBUF Instructions 546 of 600
 
-![](_page_555_Picture_1.jpeg)
+![](assets/_page_555_Picture_1.jpeg)
 
 ```
 MEM[ADDR].b = tmp == cmp ? src : tmp;
@@ -25276,7 +25276,7 @@ MEM[ADDR].i = src < tmp ? src : tmp;
 
 16.16. MUBUF Instructions 547 of 600
 
-![](_page_556_Picture_1.jpeg)
+![](assets/_page_556_Picture_1.jpeg)
 
 ```
 RETURN_DATA.i = tmp
@@ -25327,7 +25327,7 @@ RETURN_DATA.b = tmp
 
 16.16. MUBUF Instructions 548 of 600
 
-![](_page_557_Picture_1.jpeg)
+![](assets/_page_557_Picture_1.jpeg)
 
 #### **BUFFER\_ATOMIC\_OR\_B32 61**
 
@@ -25381,7 +25381,7 @@ tmp = MEM[ADDR].b64;
 
 16.16. MUBUF Instructions 549 of 600
 
-![](_page_558_Picture_1.jpeg)
+![](assets/_page_558_Picture_1.jpeg)
 
 ```
 MEM[ADDR].b64 = DATA.b64;
@@ -25433,7 +25433,7 @@ RETURN_DATA.i64 = tmp
 
 16.16. MUBUF Instructions 550 of 600
 
-![](_page_559_Picture_1.jpeg)
+![](assets/_page_559_Picture_1.jpeg)
 
 #### **BUFFER\_ATOMIC\_MIN\_U64 70**
 
@@ -25484,7 +25484,7 @@ Bitwise OR of register value and 64-bit memory value.
 
 16.16. MUBUF Instructions 551 of 600
 
-![](_page_560_Picture_1.jpeg)
+![](assets/_page_560_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].b64;
@@ -25538,7 +25538,7 @@ RETURN_DATA.f = tmp
 
 16.16. MUBUF Instructions 552 of 600
 
-![](_page_561_Picture_1.jpeg)
+![](assets/_page_561_Picture_1.jpeg)
 
 Floating-point compare handles NAN/INF/denorm.
 
@@ -25589,13 +25589,13 @@ Floating-point addition handles NAN/INF/denorm.
 
 16.16. MUBUF Instructions 553 of 600
 
-![](_page_562_Picture_1.jpeg)
+![](assets/_page_562_Picture_1.jpeg)
 
 # <span id="page-562-0"></span>**16.17. MTBUF Instructions**
 
 The bitfield map of the MTBUF format is:
 
-![](_page_562_Figure_4.jpeg)
+![](assets/_page_562_Figure_4.jpeg)
 
 #### **TBUFFER\_LOAD\_FORMAT\_X 0**
 
@@ -25640,7 +25640,7 @@ VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
 
 16.17. MTBUF Instructions 554 of 600
 
-![](_page_563_Picture_1.jpeg)
+![](assets/_page_563_Picture_1.jpeg)
 
 ```
 VDATA[127 : 96].b = ConvertFromFormat(MEM[TADDR.W])
@@ -25692,7 +25692,7 @@ MEM[TADDR.W] = ConvertToFormat(VDATA[127 : 96].b)
 
 16.17. MTBUF Instructions 555 of 600
 
-![](_page_564_Picture_1.jpeg)
+![](assets/_page_564_Picture_1.jpeg)
 
 Typed buffer load 1 component with format conversion, packed 16-bit components in data register.
 
@@ -25746,7 +25746,7 @@ MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
 
 16.17. MTBUF Instructions 556 of 600
 
-![](_page_565_Picture_1.jpeg)
+![](assets/_page_565_Picture_1.jpeg)
 
 ```
 // Mem access size depends on format
@@ -25787,13 +25787,13 @@ MEM[TADDR.W] = ConvertToFormat(32'B(VDATA[63 : 48].b16))
 
 16.17. MTBUF Instructions 557 of 600
 
-![](_page_566_Picture_1.jpeg)
+![](assets/_page_566_Picture_1.jpeg)
 
 # <span id="page-566-0"></span>**16.18. MIMG Instructions**
 
 The bitfield map of the MIMG format is:
 
-![](_page_566_Figure_4.jpeg)
+![](assets/_page_566_Figure_4.jpeg)
 
 **IMAGE\_LOAD 0**
 
@@ -25821,7 +25821,7 @@ Load element from user-supplied miplevel in resource view, without format conver
 
 16.18. MIMG Instructions 558 of 600
 
-![](_page_567_Picture_1.jpeg)
+![](assets/_page_567_Picture_1.jpeg)
 
 **IMAGE\_STORE 6**
 
@@ -25865,7 +25865,7 @@ RETURN_DATA.b = tmp
 
 16.18. MIMG Instructions 559 of 600
 
-![](_page_568_Picture_1.jpeg)
+![](assets/_page_568_Picture_1.jpeg)
 
 Add data register to memory value.
 
@@ -25919,7 +25919,7 @@ MEM[ADDR].i = src > tmp ? src : tmp;
 
 16.18. MIMG Instructions 560 of 600
 
-![](_page_569_Picture_1.jpeg)
+![](assets/_page_569_Picture_1.jpeg)
 
 ```
 RETURN_DATA.i = tmp
@@ -25970,7 +25970,7 @@ RETURN_DATA.b = tmp
 
 16.18. MIMG Instructions 561 of 600
 
-![](_page_570_Picture_1.jpeg)
+![](assets/_page_570_Picture_1.jpeg)
 
 Increment memory value with wraparound to zero when incremented to register value.
 
@@ -26018,7 +26018,7 @@ The address GPR packing varies based on addressing mode (A16) and NSA mode.
 
 16.18. MIMG Instructions 562 of 600
 
-![](_page_571_Picture_1.jpeg)
+![](assets/_page_571_Picture_1.jpeg)
 
 11 address VGPRs contain the ray data and BVH node pointer for the intersection test. The data is laid out as follows (dependent on NSA mode):
 
@@ -26075,7 +26075,7 @@ These restrictions must be respected by the SW/compiler, and are not enforced by
 
 16.18. MIMG Instructions 563 of 600
 
-![](_page_572_Picture_1.jpeg)
+![](assets/_page_572_Picture_1.jpeg)
 
 any other undefined behavior, if the above fields do not match their specified values for these instructions.
 
@@ -26159,7 +26159,7 @@ SAMPLE\_C\_O, with user derivatives. **IMAGE\_SAMPLE\_C\_L\_O 44** SAMPLE\_C\_O,
 
 16.18. MIMG Instructions 567 of 600
 
-![](_page_576_Picture_1.jpeg)
+![](assets/_page_576_Picture_1.jpeg)
 
 | IMAGE_GATHER4_LZ_O                                               | 54 |
 |------------------------------------------------------------------|----|
@@ -26231,7 +26231,7 @@ SAMPLE\_C\_O, with user derivatives. **IMAGE\_SAMPLE\_C\_L\_O 44** SAMPLE\_C\_O,
 
 have only one bit set to 1.
 
-![](_page_579_Picture_1.jpeg)
+![](assets/_page_579_Picture_1.jpeg)
 
 | IMAGE_GATHER4_C_L                                                       | 99  |
 |-------------------------------------------------------------------------|-----|
@@ -26246,23 +26246,23 @@ Fetch 1 component per texel from 4x1 texels. DMASK selects which component to re
 
 16.18. MIMG Instructions 571 of 600
 
-![](_page_580_Picture_1.jpeg)
+![](assets/_page_580_Picture_1.jpeg)
 
 # <span id="page-580-0"></span>**16.19. EXPORT Instructions**
 
 Transfer vertex position, vertex parameter, pixel color, or pixel depth information to the output buffer. Every pixel shader must do at least one export to a color, depth or NULL target with the VM bit set to 1. This communicates the pixel-valid mask to the color and depth buffers. Every pixel does only one of the above export types with the DONE bit set to 1. Vertex shaders must do one or more position exports, and at least one parameter export. The final position export must have the DONE bit set to 1.
 
-![](_page_580_Figure_4.jpeg)
+![](assets/_page_580_Figure_4.jpeg)
 
 16.19. EXPORT Instructions 572 of 600
 
-![](_page_581_Picture_1.jpeg)
+![](assets/_page_581_Picture_1.jpeg)
 
 # <span id="page-581-0"></span>**16.20. FLAT, Scratch and Global Instructions**
 
 The bitfield map of the FLAT format is:
 
-![](_page_581_Figure_4.jpeg)
+![](assets/_page_581_Figure_4.jpeg)
 
 ## <span id="page-581-1"></span>**16.20.1. Flat Instructions**
 
@@ -26300,7 +26300,7 @@ Untyped buffer load signed short, sign extend in data register.
 VDATA.i = 32'I(signext(MEM[ADDR].i16))
 ```
 
-![](_page_582_Picture_1.jpeg)
+![](assets/_page_582_Picture_1.jpeg)
 
 **FLAT\_LOAD\_B32 20**
 
@@ -26348,7 +26348,7 @@ Untyped buffer store byte.
 MEM[ADDR].b8 = VDATA[7 : 0]
 ```
 
-![](_page_583_Picture_1.jpeg)
+![](assets/_page_583_Picture_1.jpeg)
 
 **FLAT\_STORE\_B16 25**
 
@@ -26396,7 +26396,7 @@ MEM[ADDR + 8U].b = VDATA[95 : 64];
 MEM[ADDR + 12U].b = VDATA[127 : 96]
 ```
 
-![](_page_584_Picture_1.jpeg)
+![](assets/_page_584_Picture_1.jpeg)
 
 **FLAT\_LOAD\_D16\_U8 30**
 
@@ -26445,7 +26445,7 @@ VDATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8));
 
 **FLAT\_LOAD\_D16\_HI\_B16 35**
 
-![](_page_585_Picture_1.jpeg)
+![](assets/_page_585_Picture_1.jpeg)
 
 Untyped buffer load short, use high 16 bits of data register.
 
@@ -26494,7 +26494,7 @@ RETURN_DATA.b = tmp
 
 #### **FLAT\_ATOMIC\_ADD\_U32 53**
 
-![](_page_586_Picture_1.jpeg)
+![](assets/_page_586_Picture_1.jpeg)
 
 Add data register to memory value.
 
@@ -26546,7 +26546,7 @@ src = DATA.i;
 MEM[ADDR].i = src > tmp ? src : tmp;
 ```
 
-![](_page_587_Picture_1.jpeg)
+![](assets/_page_587_Picture_1.jpeg)
 
 | RETURN_DATA.i = tmp |  |  |
 |---------------------|--|--|
@@ -26595,7 +26595,7 @@ RETURN_DATA.b = tmp
 
 #### **FLAT\_ATOMIC\_INC\_U32 63**
 
-![](_page_588_Picture_1.jpeg)
+![](assets/_page_588_Picture_1.jpeg)
 
 Increment memory value with wraparound to zero when incremented to register value.
 
@@ -26645,7 +26645,7 @@ RETURN_DATA.b64 = tmp
 
 Add data register to 64-bit memory value.
 
-![](_page_589_Picture_1.jpeg)
+![](assets/_page_589_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].u64;
@@ -26696,7 +26696,7 @@ MEM[ADDR].i64 = src > tmp ? src : tmp;
 RETURN_DATA.i64 = tmp
 ```
 
-![](_page_590_Picture_1.jpeg)
+![](assets/_page_590_Picture_1.jpeg)
 
 **FLAT\_ATOMIC\_MAX\_U64 72**
 
@@ -26747,7 +26747,7 @@ Increment 64-bit memory value with wraparound to zero when incremented to regist
 tmp = MEM[ADDR].u64;
 ```
 
-![](_page_591_Picture_1.jpeg)
+![](assets/_page_591_Picture_1.jpeg)
 
 ```
 src = DATA.u64;
@@ -26799,7 +26799,7 @@ Floating-point compare handles NAN/INF/denorm.
 
 #### **FLAT\_ATOMIC\_MAX\_F32 82**
 
-![](_page_592_Picture_1.jpeg)
+![](assets/_page_592_Picture_1.jpeg)
 
 Maximum of two floating-point values.
 
@@ -26845,7 +26845,7 @@ VDATA.u = 32'U({ 24'0, MEM[ADDR].u8 })
 
 Untyped buffer load signed byte, sign extend in data register.
 
-![](_page_593_Picture_1.jpeg)
+![](assets/_page_593_Picture_1.jpeg)
 
 ```
 VDATA.i = 32'I(signext(MEM[ADDR].i8))
@@ -26894,7 +26894,7 @@ VDATA[63 : 32] = MEM[ADDR + 4U].b;
 VDATA[95 : 64] = MEM[ADDR + 8U].b
 ```
 
-![](_page_594_Picture_1.jpeg)
+![](assets/_page_594_Picture_1.jpeg)
 
 | SCRATCH_LOAD_B128 | 23 |
 |-------------------|----|
@@ -26942,7 +26942,7 @@ MEM[ADDR + 0U].b = VDATA[31 : 0];
 MEM[ADDR + 4U].b = VDATA[63 : 32]
 ```
 
-![](_page_595_Picture_1.jpeg)
+![](assets/_page_595_Picture_1.jpeg)
 
 **SCRATCH\_STORE\_B96 28**
 
@@ -26994,7 +26994,7 @@ VDATA[15 : 0].b16 = MEM[ADDR].b16;
 
 16.20. FLAT, Scratch and Global Instructions 587 of 600
 
-![](_page_596_Picture_1.jpeg)
+![](assets/_page_596_Picture_1.jpeg)
 
 #### **SCRATCH\_LOAD\_D16\_HI\_U8 33**
 
@@ -27039,7 +27039,7 @@ Untyped buffer store short, use high 16 bits of data register.
 MEM[ADDR].b16 = VDATA[31 : 16].b16
 ```
 
-![](_page_597_Picture_1.jpeg)
+![](assets/_page_597_Picture_1.jpeg)
 
 ### <span id="page-597-0"></span>**16.20.3. Global Instructions**
 
@@ -27085,7 +27085,7 @@ Untyped buffer load dword.
 VDATA.b = MEM[ADDR].b
 ```
 
-![](_page_598_Picture_1.jpeg)
+![](assets/_page_598_Picture_1.jpeg)
 
 **GLOBAL\_LOAD\_B64 21**
 
@@ -27133,7 +27133,7 @@ Untyped buffer store short.
 MEM[ADDR].b16 = VDATA[15 : 0]
 ```
 
-![](_page_599_Picture_1.jpeg)
+![](assets/_page_599_Picture_1.jpeg)
 
 **GLOBAL\_STORE\_B32 26**
 
@@ -27184,7 +27184,7 @@ VDATA[15 : 0].u16 = 16'U({ 8'0, MEM[ADDR].u8 });
 
 16.20. FLAT, Scratch and Global Instructions 591 of 600
 
-![](_page_600_Picture_1.jpeg)
+![](assets/_page_600_Picture_1.jpeg)
 
 **GLOBAL\_LOAD\_D16\_I8 31**
 
@@ -27233,7 +27233,7 @@ VDATA[31 : 16].b16 = MEM[ADDR].b16;
 
 #### **GLOBAL\_STORE\_D16\_HI\_B8 36**
 
-![](_page_601_Picture_1.jpeg)
+![](assets/_page_601_Picture_1.jpeg)
 
 Untyped buffer store byte, use high 16 bits of data register.
 
@@ -27280,7 +27280,7 @@ tmp = MEM[ADDR].b;
 src = DATA[31 : 0].b;
 ```
 
-![](_page_602_Picture_1.jpeg)
+![](assets/_page_602_Picture_1.jpeg)
 
 ```
 cmp = DATA[63 : 32].b;
@@ -27334,7 +27334,7 @@ src = DATA.i;
 MEM[ADDR].i = src < tmp ? src : tmp;
 ```
 
-![](_page_603_Picture_1.jpeg)
+![](assets/_page_603_Picture_1.jpeg)
 
 ```
 RETURN_DATA.i = tmp
@@ -27383,7 +27383,7 @@ MEM[ADDR].b = (tmp & DATA.b);
 RETURN_DATA.b = tmp
 ```
 
-![](_page_604_Picture_1.jpeg)
+![](assets/_page_604_Picture_1.jpeg)
 
 #### **GLOBAL\_ATOMIC\_OR\_B32 61**
 
@@ -27435,7 +27435,7 @@ Swap 64-bit values in data register and memory.
 tmp = MEM[ADDR].b64;
 ```
 
-![](_page_605_Picture_1.jpeg)
+![](assets/_page_605_Picture_1.jpeg)
 
 ```
 MEM[ADDR].b64 = DATA.b64;
@@ -27485,7 +27485,7 @@ MEM[ADDR].i64 = src < tmp ? src : tmp;
 RETURN_DATA.i64 = tmp
 ```
 
-![](_page_606_Picture_1.jpeg)
+![](assets/_page_606_Picture_1.jpeg)
 
 #### **GLOBAL\_ATOMIC\_MIN\_U64 70**
 
@@ -27534,7 +27534,7 @@ RETURN_DATA.b64 = tmp
 
 Bitwise OR of register value and 64-bit memory value.
 
-![](_page_607_Picture_1.jpeg)
+![](assets/_page_607_Picture_1.jpeg)
 
 ```
 tmp = MEM[ADDR].b64;
@@ -27586,7 +27586,7 @@ MEM[ADDR].f = tmp == cmp ? src : tmp;
 RETURN_DATA.f = tmp
 ```
 
-![](_page_608_Picture_1.jpeg)
+![](assets/_page_608_Picture_1.jpeg)
 
 Floating-point compare handles NAN/INF/denorm.
 
