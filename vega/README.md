@@ -1,5 +1,3 @@
-![](assets/_page_0_Picture_0.jpeg)
-
 # "Vega" Instruction Set Architecture *Reference Guide*
 
 27-January-2020
@@ -27,8 +25,6 @@ The information contained herein is for informational purposes only, and is subj
 AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Micro Devices, Inc. Other product names used in this publication are for identification purposes only and may be trademarks of their respective companies.
 
 © 2017-2020 Advanced Micro Devices, Inc. All rights reserved.
-
-![](assets/_page_2_Picture_7.jpeg)
 
 **Advanced Micro Devices, Inc.**
 
@@ -311,8 +307,6 @@ Summary of kernel instruction changes in Vega GPUs:
 
 Conventions 2 of 288
 
-![](assets/_page_10_Picture_1.jpeg)
-
 | V_PK_MAD_I16     | V_PK_MUL_LO_U16  | V_PK_ADD_I16              | V_PK_SUB_I16  |
 |------------------|------------------|---------------------------|---------------|
 | V_PK_LSHLREV_B16 | V_PK_LSHRREV_B16 | V_PK_ASHRREV_I16          | V_PK_MAX_I16  |
@@ -521,8 +515,6 @@ EXEC can be read from, and written to, through scalar instructions; it also can 
 
 A helper bit (EXECZ) can be used as a condition for branches to skip code when EXEC is zero.
 
-![](assets/_page_19_Picture_2.jpeg)
-
 This GPU does no optimization when EXEC = 0. The shader hardware executes every instruction, wasting instruction issue bandwidth. Use CBRANCH or VSKIP to rapidly skip over code when it is likely that the EXEC mask is zero.
 
 ## <span id="page-19-0"></span>**3.4. Status registers**
@@ -701,8 +693,6 @@ V_CMP_* ⇒ VCC[n] = EXEC[n] & (test passed for thread[n])
 ```
 
 VCC is fully written; there are no partial mask updates.
-
-![](assets/_page_25_Picture_5.jpeg)
 
 VCC physically resides in the SGPR register file, so when an instruction sources VCC, that counts against the limit on the total number of SGPRs that can be sourced for a given instruction. VCC physically resides in the highest two user SGPRs.
 
@@ -906,8 +896,6 @@ The register requirements per wavefront are:
 
 This method compares how many of the 64 threads go down the PASS path instead of the FAIL path; then, it selects the path with the fewer number of threads first. This means at most 50% of
 
-![](assets/_page_33_Picture_1.jpeg)
-
 the threads are active, and this limits the necessary stack depth to Log264 = 6.
 
 The following pseudo-code shows the details of CBRANCH Fork and Join operations.
@@ -1110,8 +1098,6 @@ Bit-wise instructions operate on 32- or 64-bit data without interpreting it has 
 *Table 13. Bit-Wise Instructions*
 
 5.5. Conditional Instructions 31 of 288
-
-![](assets/_page_39_Picture_1.jpeg)
 
 | Instruction                                                       | Encoding | Sets<br>SCC? | Operation                                                                                                                                                                                                                                                                                                                |
 |-------------------------------------------------------------------|----------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1443,8 +1429,6 @@ The shader program has explicit control over the rounding mode applied and the h
 
 *Table 22. Round and Denormal Modes*
 
-![](assets/_page_49_Picture_1.jpeg)
-
 | Field     | Bit Position | Description                                                                                                                                                                                                                                                                              |
 |-----------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | FP_ROUND  | 3:0          | [1:0] Single-precision round mode.<br>[3:2] Double/Half-precision round mode.<br>Round Modes: 0=nearest even; 1= +infinity; 2= -infinity, 3= toward zero.                                                                                                                                |
@@ -1526,8 +1510,6 @@ Packed math uses the instructions below and the microcode format "VOP3P". This f
 | V_PK_MIN_I16     | V_PK_MAD_U16     | V_PK_ADD_U16     | V_PK_SUB_U16  |
 | V_PK_MAX_U16     | V_PK_MIN_U16     | V_PK_FMA_F16     | V_PK_ADD_F16  |
 | V_PK_MUL_F16     | V_PK_MIN_F16     | V_PK_MAX_F16     | V_MAD_MIX_F32 |
-
-![](assets/_page_51_Picture_7.jpeg)
 
 V\_MAD\_MIX\_\* are not packed math, but perform a single MAD operation on a mixture of 16- and 32-bit inputs. They are listed here because they use the VOP3P encoding.
 
@@ -1794,8 +1776,6 @@ The amount and type of data that is read or written is controlled by the followi
 
 **Data format derived** : The data format is derived from the opcode and ignores the resource definition. For example, buffer\_load\_ubyte sets the data-format to 8 and number-format to uint.
 
-![](assets/_page_61_Picture_10.jpeg)
-
 The resource's data format must not be INVALID; that format has specific meaning (unbound resource), and for that case the data format is not replaced by the instruction's implied data format.
 
 **DST\_SEL identity** : Depending on the number of components in the data-format, this is: X000, XY00, XYZ0, or XYZW.
@@ -1803,8 +1783,6 @@ The resource's data format must not be INVALID; that format has specific meaning
 The MTBUF derives the data format from the instruction. The MUBUF BUFFER\_LOAD\_FORMAT and BUFFER\_STORE\_FORMAT instructions use dst\_sel from the resource; other MUBUF instructions derive data-format from the instruction itself.
 
 **D16 Instructions** : Load-format and store-format instructions also come in a "d16" variant. For stores, each 32-bit VGPR holds two 16-bit data elements that are passed to the texture unit. This texture unit converts them to the texture format before writing to memory. For loads, data
-
-![](assets/_page_62_Picture_1.jpeg)
 
 returned from the texture unit is converted to 16 bits, and a pair of data are stored in each 32-bit VGPR (LSBs first, then MSBs). Control over int vs. float is controlled by NFMT.
 
@@ -1883,8 +1861,6 @@ Used when: AddTID==0 && Stride!=0 && IdxEn==1 Out of Range if: Index(vgpr) >= Nu
 
 Swizzled addressing rearranges the data in the buffer to help provide improved cache locality for arrays of structures. Swizzled addressing also requires Dword-aligned accesses. A single fetch instruction cannot attempt to fetch a unit larger than const-element-size. The buffer's STRIDE must be a multiple of element\_size.
 
-![](assets/_page_65_Picture_1.jpeg)
-
 ```
 Index = (inst_idxen ? vgpr_index : 0) +
   (const_add_tid_enable ? thread_id[5:0] : 0)
@@ -1900,8 +1876,6 @@ Final Address = const_base + sgpr_offset + buffer_offset
 ```
 
 Remember that the "sgpr\_offset" is not a part of the "offset" term in the above equations.
-
-![](assets/_page_66_Picture_1.jpeg)
 
 ![](assets/_page_66_Figure_3.jpeg)
 
@@ -2064,8 +2038,6 @@ This section describes the image instruction set, and the microcode fields avail
 | DA    | 1 | Shader declared an array resource to be used with this fetch.<br>When 1, the shader provides an array-index with the instruction.<br>When 0, no array index is provided.                                                                                                                                                                                                                                                                                                                                                                                             |
 | DMASK | 4 | Data VGPR enable mask: one to four consecutive VGPRs. Reads: defines which components<br>are returned.<br>0 = red, 1 = green, 2 = blue, 3 = alpha<br>Writes: defines which components are written with data from VGPRs (missing components get<br>0). Enabled components come from consecutive VGPRs.<br>For example: DMASK=1001: Red is in VGPRn and alpha in VGPRn+1. For D16 writes, DMASK<br>is used only as a word count: each bit represents 16 bits of data to be written, starting at the<br>LSBs of VADDR, the MSBs, VADDR+1, etc. Bit position is ignored. |
 
-![](assets/_page_72_Picture_1.jpeg)
-
 | Field |   | Bit Size Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |-------|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GLC   | 1 | Globally Coherent. Controls how reads and writes are handled by the L1 texture cache.<br>READ:<br>GLC = 0 Reads can hit on the L1 and persist across waves.<br>GLC = 1 Reads miss the L1 and force fetch to L2. No L1 persistence across waves.<br>WRITE:<br>GLC = 0 Writes miss the L1, write through to L2, and persist in L1 across wavefronts.<br>GLC = 1 Writes miss the L1, write through to L2. No persistence across wavefronts.<br>ATOMIC:<br>GLC = 0 Previous data value is not returned. No L1 persistence across wavefronts.<br>GLC = 1 Previous data value is returned. No L1 persistence across wavefronts. |
@@ -2121,8 +2093,6 @@ Certain sample and gather opcodes require additional values from VGPRs beyond wh
 |                              | 2    | 2D Array      | x     | y       | slice   |         |
 |                              | 2    | 3D            | x     | y       | z       |         |
 |                              | 2    | Cube          | x     | y       | face_id |         |
-
-![](assets/_page_74_Picture_1.jpeg)
 
 | Image Opcode<br>(w/ Sampler) | Acnt | dim           | VGPRn | VGPRn+1 | VGPRn+2 | VGPRn+3 |
 |------------------------------|------|---------------|-------|---------|---------|---------|
@@ -2315,8 +2285,6 @@ The sampler resource (also referred to as S#) defines what operations to perform
 
 Data formats 0-15 are available to buffer resources, and all formats are available to image formats. The table below details all the data formats that can be used by image and buffer resources.
 
-![](assets/_page_80_Picture_1.jpeg)
-
 | value<br>0 | enum                       |        |                 |          |               |                             |        |                   |          |                                    |          |                |
 |------------|----------------------------|--------|-----------------|----------|---------------|-----------------------------|--------|-------------------|----------|------------------------------------|----------|----------------|
 |            |                            | valid  | enum            | valu     | ue            | enum                        | valid  | enum              | value    | enum                               | valid    | enum           |
@@ -2385,8 +2353,6 @@ When a VM instruction is issued, the address is immediately read out of VGPRs an
 
 The shader developer's responsibility to avoid data hazards associated with VMEM instructions include waiting for VMEM read instruction completion before reading data fetched from the TC
 
-![](assets/_page_81_Picture_1.jpeg)
-
 (VMCNT).
 
 This is explained in the section: [Data Dependency Resolution](#page-29-1)
@@ -2413,8 +2379,6 @@ Flat memory instructions let the kernel read or write data in memory, or perform
 | LDS    | 1  | When set, data is moved between LDS and memory instead of VGPRs and memory. For Global<br>and Scratch only; must be zero for Flat. |
 | NV     | 1  | Non-volatile. When set, the read/write is operating on non-volatile memory.                                                        |
 | OFFSET | 13 | Address offset.<br>Scratch, Global: 13-bit signed byte offset.<br>Flat: 12-bit unsigned offset (MSB is ignored).                   |
-
-![](assets/_page_83_Picture_1.jpeg)
 
 | Field |    | Bit Size Description                                                                                                                           |
 |-------|----|------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2870,8 +2834,6 @@ Note: Rounding and Denormal modes apply to all floating-point operations unless 
 
 12.1. SOP2 Instructions 91 of 288
 
-![](assets/_page_99_Picture_1.jpeg)
-
 Instructions in this format may use a 32-bit literal constant which occurs immediately after the instruction.
 
 | Opcode | Name          | Description                                                                                                                                                                                     |
@@ -2916,8 +2878,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.1. SOP2 Instructions 93 of 288
 
-![](assets/_page_101_Picture_1.jpeg)
-
 | Opcode | Name       | Description                                                                                                                                                                 |
 |--------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 32     | S_ASHR_I32 | D.i = signext(S0.i) >> S1.u[4:0];<br>SCC = (D.i != 0).                                                                                                                      |
@@ -2932,8 +2892,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 |        |            | is field width.                                                                                                                                                             |
 
 12.1. SOP2 Instructions 94 of 288
-
-![](assets/_page_102_Picture_1.jpeg)
 
 | Opcode | Name                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |--------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -2973,8 +2931,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.2. SOPK Instructions 96 of 288
 
-![](assets/_page_104_Picture_1.jpeg)
-
 | Opcode | Name                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |--------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 7      | S_CMPK_LE_I32        | SCC = (S0.i <= signext(SIMM16)).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -3013,8 +2969,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.3. SOP1 Instructions 98 of 288
 
-![](assets/_page_106_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                                                                                                                     |
 |--------|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 5      | S_NOT_B64       | D = ~S0;<br>SCC = (D != 0).<br>Bitwise negation.                                                                                                                                                                                                |
@@ -3027,8 +2981,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.3. SOP1 Instructions 99 of 288
 
-![](assets/_page_107_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |--------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 12     | S_BCNT1_I32_B32 | D = 0;<br>for i in 0 opcode_size_in_bits - 1 do<br>D += (S0[i] == 1 ? 1 : 0)<br>endfor;<br>SCC = (D != 0).<br>Examples:<br>S_BCNT1_I32_B32(0x00000000) => 0<br>S_BCNT1_I32_B32(0xcccccccc) => 16<br>S_BCNT1_I32_B32(0xffffffff) => 32                                                                                                                                                                                                                                |
@@ -3037,16 +2989,12 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.3. SOP1 Instructions 100 of 288
 
-![](assets/_page_108_Picture_1.jpeg)
-
 | Opcode | Name          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 15     | S_FF0_I32_B64 | D.i = -1; // Set if no zeros are found<br>for i in 0 opcode_size_in_bits - 1 do // Search from LSB<br>if S0[i] == 0 then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Returns the bit position of the first zero from the LSB, or -1 if<br>there are no zeros.<br>Examples:<br>S_FF0_I32_B32(0xaaaaaaaa) => 0<br>S_FF0_I32_B32(0x55555555) => 1<br>S_FF0_I32_B32(0x00000000) => 0<br>S_FF0_I32_B32(0xffffffff) => 0xffffffff<br>S_FF0_I32_B32(0xfffeffff) => 16 |
 | 16     | S_FF1_I32_B32 | D.i = -1; // Set if no ones are found<br>for i in 0 opcode_size_in_bits - 1 do // Search from LSB<br>if S0[i] == 1 then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Returns the bit position of the first one from the LSB, or -1 if<br>there are no ones.<br>Examples:<br>S_FF1_I32_B32(0xaaaaaaaa) => 1<br>S_FF1_I32_B32(0x55555555) => 0<br>S_FF1_I32_B32(0x00000000) => 0xffffffff<br>S_FF1_I32_B32(0xffffffff) => 0<br>S_FF1_I32_B32(0x00010000) => 16    |
 
 12.3. SOP1 Instructions 101 of 288
-
-![](assets/_page_109_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 |--------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3055,16 +3003,12 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.3. SOP1 Instructions 102 of 288
 
-![](assets/_page_110_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |--------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 19     | S_FLBIT_I32_B64 | D.i = -1; // Set if no ones are found<br>for i in 0 opcode_size_in_bits - 1 do<br>// Note: search is from the MSB<br>if S0[opcode_size_in_bits - 1 - i] == 1 then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Counts how many zeros before the first one starting from the MSB.<br>Returns -1 if there are no ones.<br>Examples:<br>S_FLBIT_I32_B32(0x00000000) => 0xffffffff<br>S_FLBIT_I32_B32(0x0000cccc) => 16<br>S_FLBIT_I32_B32(0xffff3333) => 0<br>S_FLBIT_I32_B32(0x7fffffff) => 1<br>S_FLBIT_I32_B32(0x80000000) => 0                                                                   |
 | 20     | S_FLBIT_I32     | S_FLBIT_I32_B32(0xffffffff) => 0<br>D.i = -1; // Set if all bits are the same<br>for i in 1 opcode_size_in_bits - 1 do<br>// Note: search is from the MSB<br>if S0[opcode_size_in_bits - 1 - i] != S0[opcode_size_in_bits<br>- 1] then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Counts how many bits in a row (from MSB to LSB) are the same as<br>the sign bit. Returns -1 if all bits are the same.<br>Examples:<br>S_FLBIT_I32(0x00000000) => 0xffffffff<br>S_FLBIT_I32(0x0000cccc) => 16<br>S_FLBIT_I32(0xffff3333) => 16<br>S_FLBIT_I32(0x7fffffff) => 1<br>S_FLBIT_I32(0x80000000) => 1 |
 
 12.3. SOP1 Instructions 103 of 288
-
-![](assets/_page_111_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |--------|-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3080,8 +3024,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 | 30     | S_SWAPPC_B64    | D.u64 = PC + 4;<br>PC = S0.u64.<br>S0.u64 is a byte address of the instruction to jump to.<br>Destination receives the byte address of the instruction<br>immediately following the SWAPPC instruction. Note that this<br>instruction is always 4 bytes.                                                                                                                                                                                                                                                                                                                                                    |
 
 12.3. SOP1 Instructions 104 of 288
-
-![](assets/_page_112_Picture_1.jpeg)
 
 | S_RFE_B64<br>S_AND_SAVEEXEC_<br>B64<br>S_OR_SAVEEXEC_B<br>64<br>S_XOR_SAVEEXEC_<br>B64<br>S_ANDN2_SAVEEXE<br>C_B64<br>S_ORN2_SAVEEXEC | PRIV = 0;<br>PC = S0.u64.<br>Return from exception handler and continue. This instruction may<br>only be used within a trap handler.<br>D.u64 = EXEC;<br>EXEC = S0.u64 & EXEC;<br>SCC = (EXEC != 0).<br>D.u64 = EXEC;<br>EXEC = S0.u64   EXEC;<br>SCC = (EXEC != 0).<br>D.u64 = EXEC;<br>EXEC = S0.u64 ^ EXEC;<br>SCC = (EXEC != 0).<br>D.u64 = EXEC;<br>EXEC = S0.u64 & ~EXEC;<br>SCC = (EXEC != 0). |
 |---------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3099,8 +3041,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.3. SOP1 Instructions 105 of 288
 
-![](assets/_page_113_Picture_1.jpeg)
-
 | Opcode | Name           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |--------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 41     | S_QUADMASK_B64 | D = 0;<br>for i in 0 (opcode_size_in_bits / 4) - 1 do<br>D[i] = (S0[i * 4 + 3:i * 4] != 0);<br>endfor;<br>SCC = (D != 0).<br>Reduce a pixel mask to a quad mask. To perform the inverse<br>operation see S_BITREPLICATE_B64_B32.                                                                                                                                                                                                           |
@@ -3111,8 +3051,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 | 46     | S_CBRANCH_JOIN | saved_csp = S0.u;<br>if(CSP == saved_csp) then<br>PC += 4; // Second time to JOIN: continue with program.<br>else<br>CSP -= 1; // First time to JOIN; jump to other FORK path.<br>{PC, EXEC} = SGPR[CSP * 4]; // Read 128 bits from 4<br>consecutive SGPRs.<br>endif.<br>Conditional branch join point (end of conditional branch block).<br>S0 is saved CSP value. See S_CBRANCH_G_FORK and S_CBRANCH_I_FORK<br>for related instructions. |
 
 12.3. SOP1 Instructions 106 of 288
-
-![](assets/_page_114_Picture_1.jpeg)
 
 | Opcode | Name                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                        |
 |--------|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3158,8 +3096,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.4. SOPC Instructions 108 of 288
 
-![](assets/_page_116_Picture_1.jpeg)
-
 | Opcode | Name             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |  |  |
 |--------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|
 | 16     | S_SETVSKIP       | VSKIP = S0.u[S1.u[4:0]].<br>Enables and disables VSKIP mode. When VSKIP is enabled, no<br>VOP*/M*BUF/MIMG/DS/FLAT/EXP instuctions are issued. Note that<br>VSKIPped memory instructions do not manipulate the waitcnt<br>counters; as a result, if you have outstanding memory requests you<br>may want to issue S_WAITCNT 0 prior to enabling VSKIP, otherwise<br>you'll need to be careful not to count VSKIPped instructions in<br>your waitcnt calculations.<br>Examples:<br>s_setvskip 1, 0<br>// Enable vskip mode.<br>s_setvskip 0, 0<br>// Disable vskip mode.                                                               |  |  |
@@ -3194,8 +3130,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.5. SOPP Instructions 110 of 288
 
-![](assets/_page_118_Picture_1.jpeg)
-
 | Opcode | Name          | Description                                                                                                                                                                                                                                                                    |  |  |
 |--------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|
 | 12     | S_WAITCNT     | Wait for the counts of outstanding lds, vector-memory and<br>export/vmem-write-data to be at or below the specified levels.                                                                                                                                                    |  |  |
@@ -3216,8 +3150,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 
 12.5. SOPP Instructions 111 of 288
 
-![](assets/_page_119_Picture_1.jpeg)
-
 | Opcode | Name                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |  |  |
 |--------|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|--|
 | 20     | S_INCPERFLEVEL                 | Increment performance counter specified in SIMM16[3:0] by 1.                                                                                                                                                                                                                                                                                                                                                                                                                                |  |  |
@@ -3233,8 +3165,6 @@ Instructions in this format may use a 32-bit literal constant which occurs immed
 | 30     | S_ENDPGM_ORDERED<br>_PS_DONE   | End of program; signal that a wave has exited its POPS critical<br>section and terminate wavefront. The hardware implicitly<br>executes S_WAITCNT 0 before executing this instruction. This<br>instruction is an optimization that combines<br>S_SENDMSG(MSG_ORDERED_PS_DONE) and S_ENDPGM; there may be cases<br>where you still need to send the message separately, in which<br>case you can end the shader with a normal S_ENDPGM instruction.<br>See S_ENDPGM for additional variants. |  |  |
 
 12.5. SOPP Instructions 112 of 288
-
-![](assets/_page_120_Picture_1.jpeg)
 
 #### <span id="page-120-0"></span>**12.5.1. Send Message**
 
@@ -3287,8 +3217,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 
 12.6. SMEM Instructions 114 of 288
 
-![](assets/_page_122_Picture_1.jpeg)
-
 | Opcode | Name                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |--------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 26     | S_BUFFER_STORE_DWORD<br>X4  | Write 4 dwords to scalar data cache. See S_STORE_DWORD for<br>details on the offset input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -3307,8 +3235,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 
 12.6. SMEM Instructions 115 of 288
 
-![](assets/_page_123_Picture_1.jpeg)
-
 | Opcode | Name                 | Description                                                                                                           |
 |--------|----------------------|-----------------------------------------------------------------------------------------------------------------------|
 | 66     | S_BUFFER_ATOMIC_ADD  | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA;<br>RETURN_DATA = tmp.                                              |
@@ -3324,8 +3250,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 
 12.6. SMEM Instructions 116 of 288
 
-![](assets/_page_124_Picture_1.jpeg)
-
 | Opcode | Name                           | Description                                                                                                                              |
 |--------|--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | 76     | S_BUFFER_ATOMIC_DEC            | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp == 0    tmp > DATA) ? DATA : tmp - 1; //<br>unsigned compare<br>RETURN_DATA = tmp.      |
@@ -3339,8 +3263,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 | 103    | S_BUFFER_ATOMIC_UMAX_<br>X2    | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] > tmp) ? DATA[0:1] : tmp; //<br>unsigned compare<br>RETURN_DATA[0:1] = tmp.      |
 
 12.6. SMEM Instructions 117 of 288
-
-![](assets/_page_125_Picture_1.jpeg)
 
 | Opcode | Name                       | Description                                                                                                                                        |
 |--------|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3357,8 +3279,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 
 12.6. SMEM Instructions 118 of 288
 
-![](assets/_page_126_Picture_1.jpeg)
-
 | Opcode | Name                | Description                                                                                                                              |
 |--------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | 133    | S_ATOMIC_UMIN       | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (DATA < tmp) ? DATA : tmp; // unsigned compare<br>RETURN_DATA = tmp.                         |
@@ -3374,8 +3294,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 
 12.6. SMEM Instructions 119 of 288
 
-![](assets/_page_127_Picture_1.jpeg)
-
 | Opcode | Name             | Description                                                                                                                         |
 |--------|------------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | 162    | S_ATOMIC_ADD_X2  | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                  |
@@ -3390,8 +3308,6 @@ The S\_SENDMSG instruction encodes the message type in M0, and can also send dat
 | 171    | S_ATOMIC_INC_X2  | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp >= DATA[0:1]) ? 0 : tmp + 1; // unsigned<br>compare<br>RETURN_DATA[0:1] = tmp.     |
 
 12.6. SMEM Instructions 120 of 288
-
-![](assets/_page_128_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                        |
 |--------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3420,8 +3336,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 | 9      | V_MUL_HI_U32_U24 | D.i = (S0.u[23:0] * S1.u[23:0])>>32.                                                                     |
 
 12.7. VOP2 Instructions 121 of 288
-
-![](assets/_page_129_Picture_1.jpeg)
 
 | Opcode | Name          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 |--------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3462,8 +3376,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.7. VOP2 Instructions 123 of 288
 
-![](assets/_page_131_Picture_1.jpeg)
-
 | Opcode | Name             | Description                                                                                                                             |
 |--------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | 30     | V_SUBBREV_CO_U32 | D.u = S1.u - S0.u - VCC[threadId];<br>VCC[threadId] = (S1.u + VCC[threadId] > S0.u ? 1 : 0).<br>// VCC is an UNSIGNED overflow.         |
@@ -3490,8 +3402,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 |        |                  | Supports saturation (unsigned 16-bit integer domain).                                                                                   |
 
 12.7. VOP2 Instructions 124 of 288
-
-![](assets/_page_132_Picture_1.jpeg)
 
 | Opcode | Name          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |--------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3562,8 +3472,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 127 of 288
 
-![](assets/_page_135_Picture_1.jpeg)
-
 | Opcode | Name              | Description                                                                                                                                                                                                                                                                                                                                   |
 |--------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 12     | V_CVT_RPI_I32_F32 | D.i = (int)floor(S0.f + 0.5).                                                                                                                                                                                                                                                                                                                 |
@@ -3584,8 +3492,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 128 of 288
 
-![](assets/_page_136_Picture_1.jpeg)
-
 | Opcode | Name          | Description                                                                                                                                                                   |
 |--------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 22     | V_CVT_F64_U32 | D.d = (double)S0.u.                                                                                                                                                           |
@@ -3601,8 +3507,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 129 of 288
 
-![](assets/_page_137_Picture_1.jpeg)
-
 | Opcode | Name        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 |--------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 31     | V_FLOOR_F32 | D.f = trunc(S0.f);<br>if(S0.f < 0.0 && S0.f != D.f) then<br>D.f += -1.0;<br>endif.<br>Round down to previous whole integer.                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -3611,8 +3515,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 | 34     | V_RCP_F32   | D.f = 1.0 / S0.f.<br>Reciprocal with IEEE rules and 1ULP accuracy. Accuracy converges<br>to < 0.5ULP when using the Newton-Raphson method and 2 FMA<br>operations. Denormals are flushed.<br>Examples:<br>V_RCP_F32(0xff800000) => 0x80000000<br>// rcp(-INF) = -0<br>V_RCP_F32(0xc0000000) => 0xbf000000<br>// rcp(-2.0) = -0.5<br>V_RCP_F32(0x80000000) => 0xff800000<br>// rcp(-0.0) = -INF<br>V_RCP_F32(0x00000000) => 0x7f800000<br>// rcp(+0.0) = +INF<br>V_RCP_F32(0x7f800000) => 0x00000000<br>// rcp(+INF) = +0 |
 
 12.8. VOP1 Instructions 130 of 288
-
-![](assets/_page_138_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                  |
 |--------|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3626,8 +3528,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 | 38     | V_RSQ_F64       | D.f16 = 1.0 / sqrt(S0.f16).<br>Reciprocal square root with IEEE rules and perhaps not the<br>accuracy you were hoping for (2**29)ULP accuracy. On the<br>upside, denormals are supported.                                                                                                                                    |
 
 12.8. VOP1 Instructions 131 of 288
-
-![](assets/_page_139_Picture_1.jpeg)
 
 | Opcode | Name        | Description                                                                                                                   |
 |--------|-------------|-------------------------------------------------------------------------------------------------------------------------------|
@@ -3664,16 +3564,12 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 132 of 288
 
-![](assets/_page_140_Picture_1.jpeg)
-
 | Opcode | Name       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |--------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 45     | V_FFBH_U32 | D.i = -1; // Set if no ones are found<br>for i in 0 31 do<br>// Note: search is from the MSB<br>if S0.u[31 - i] == 1 then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Counts how many zeros before the first one starting from the MSB.<br>Returns -1 if there are no ones.<br>Examples:<br>V_FFBH_U32(0x00000000) => 0xffffffff<br>V_FFBH_U32(0x800000ff) => 0<br>V_FFBH_U32(0x100000ff) => 3<br>V_FFBH_U32(0x0000ffff) => 16                             |
 | 46     | V_FFBL_B32 | V_FFBH_U32(0x00000001) => 31<br>D.i = -1; // Set if no ones are found<br>for i in 0 31 do // Search from LSB<br>if S0.u[i] == 1 then<br>D.i = i;<br>break for;<br>endif;<br>endfor.<br>Returns the bit position of the first one from the LSB, or -1 if<br>there are no ones.<br>Examples:<br>V_FFBL_B32(0x00000000) => 0xffffffff<br>V_FFBL_B32(0xff000001) => 0<br>V_FFBL_B32(0xff000008) => 3<br>V_FFBL_B32(0xffff0000) => 16<br>V_FFBL_B32(0x80000000) => 31 |
 
 12.8. VOP1 Instructions 133 of 288
-
-![](assets/_page_141_Picture_1.jpeg)
 
 | Opcode | Name                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |--------|-------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3691,8 +3587,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 | 53     | V_CLREXCP               | Clear wave's exception state in SIMD (SP).                                                                                                                                                                                                                                                                                                                                                                  |
 
 12.8. VOP1 Instructions 135 of 288
-
-![](assets/_page_143_Picture_1.jpeg)
 
 | Opcode | Name                           | Description                                                                                                                           |
 |--------|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -3742,8 +3636,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 136 of 288
 
-![](assets/_page_144_Picture_1.jpeg)
-
 | Opcode | Name          | Description                                                                                                                                  |
 |--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | 57     | V_CVT_F16_U16 | D.f16 = uint16_to_flt16(S.u16).                                                                                                              |
@@ -3771,8 +3663,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 |        |               | V_SQRT_F16(0x7c00) => 0x7c00<br>// sqrt(+INF) = +INF                                                                                         |
 
 12.8. VOP1 Instructions 137 of 288
-
-![](assets/_page_145_Picture_1.jpeg)
 
 | Opcode | Name             | Description                                                                                                                                                                                                                                            |
 |--------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3806,8 +3696,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 
 12.8. VOP1 Instructions 138 of 288
 
-![](assets/_page_146_Picture_1.jpeg)
-
 | Opcode | Name                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                               |
 |--------|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 67     | V_FREXP_EXP_I16_F1<br>6 | if(S0.f16 == +-INF    S0.f16 == NAN) then<br>D.i = 0;<br>else<br>D.i = TwosComplement(Exponent(S0.f16) - 15 + 1);<br>endif.<br>Returns exponent of half precision float input, such that S0.f16<br>= significand * (2 ** exponent). See also V_FREXP_MANT_F16, which<br>returns the significand. See the C library function frexp() for<br>more information.                                                                              |
@@ -3821,8 +3709,6 @@ Instructions in this format may use a 32-bit literal constant, DPP or SDWA which
 | 73     | V_SIN_F16               | D.f16 = sin(S0.f16 * 2 * PI).<br>Trigonometric sine. Denormals are supported.<br>Examples:<br>V_SIN_F16(0xfc00) => 0xfe00<br>// sin(-INF) = NAN<br>V_SIN_F16(0xfbff) => 0x0000<br>// Most negative finite FP16<br>V_SIN_F16(0x8000) => 0x8000<br>// sin(-0.0) = -0<br>V_SIN_F16(0x3400) => 0x3c00<br>// sin(0.25) = 1<br>V_SIN_F16(0x7bff) => 0x0000<br>// Most positive finite FP16<br>V_SIN_F16(0x7c00) => 0xfe00<br>// sin(+INF) = NAN |
 
 12.8. VOP1 Instructions 139 of 288
-
-![](assets/_page_147_Picture_1.jpeg)
 
 | Opcode | Name                   | Description                                                                                     |
 |--------|------------------------|-------------------------------------------------------------------------------------------------|
@@ -3940,8 +3826,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 142 of 288
 
-![](assets/_page_150_Picture_1.jpeg)
-
 | Instruction        | Description                                        | Hex Range   |
 |--------------------|----------------------------------------------------|-------------|
 | V_CMPX_{COMPI}_U16 | 16-bit unsigned integer compare. Also writes EXEC. | 0xB8 - 0xBF |
@@ -3964,8 +3848,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 143 of 288
 
-![](assets/_page_151_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                 |
 |--------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | 17     |                 | V_CMPX_CLASS_F32  EXEC = VCC = IEEE numeric class function specified in S1.u,<br>performed on S0.f                                          |
@@ -3984,8 +3866,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 144 of 288
 
-![](assets/_page_152_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 |--------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 19     |                 | V_CMPX_CLASS_F64  EXEC = VCC = IEEE numeric class function specified in S1.u,<br>performed on S0.d<br>The function reports true if the floating point value is *any* of<br>the numeric types selected in S1.u according to the following<br>list:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -3993,8 +3873,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 | 20     | V_CMP_CLASS_F16 | VCC = IEEE numeric class function specified in S1.u, performed on<br>S0.f16.<br>Note that the S1 has a format of f16 since floating point literal<br>constants are interpreted as 16 bit value for this opcode<br>The function reports true if the floating point value is *any* of<br>the numeric types selected in S1.u according to the following<br>list:<br>S1.u[0] value is a signaling NaN.<br>S1.u[1] value is a quiet NaN.<br>S1.u[2] value is negative infinity.<br>S1.u[3] value is a negative normal value.<br>S1.u[4] value is a negative denormal value.<br>S1.u[5] value is negative zero.<br>S1.u[6] value is positive zero.<br>S1.u[7] value is a positive denormal value.<br>S1.u[8] value is a positive normal value.<br>S1.u[9] value is positive infinity. |
 
 12.9. VOPC Instructions 145 of 288
-
-![](assets/_page_153_Picture_1.jpeg)
 
 | Opcode | Name          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |--------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4018,8 +3896,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 | 47     | V_CMP_TRU_F16 | D.u64[threadId] = 1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 
 12.9. VOPC Instructions 146 of 288
-
-![](assets/_page_154_Picture_1.jpeg)
 
 | Opcode | Name           | Description                                                                                                |
 |--------|----------------|------------------------------------------------------------------------------------------------------------|
@@ -4053,8 +3929,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 147 of 288
 
-![](assets/_page_155_Picture_1.jpeg)
-
 | Opcode | Name           | Description                                                                                                |
 |--------|----------------|------------------------------------------------------------------------------------------------------------|
 | 75     | V_CMP_NGT_F32  | D.u64[threadId] = !(S0 > S1) // With NAN inputs this is not the<br>same operation as <=.                   |
@@ -4085,8 +3959,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 148 of 288
 
-![](assets/_page_156_Picture_1.jpeg)
-
 | Opcode | Name           | Description                                                                                                |
 |--------|----------------|------------------------------------------------------------------------------------------------------------|
 | 100    | V_CMP_GT_F64   | D.u64[threadId] = (S0 > S1).                                                                               |
@@ -4116,8 +3988,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 | 124    | V_CMPX_NLE_F64 | EXEC[threadId] = D.u64[threadId] = !(S0 <= S1) // With NAN<br>inputs this is not the same operation as >.  |
 
 12.9. VOPC Instructions 149 of 288
-
-![](assets/_page_157_Picture_1.jpeg)
 
 | V_CMPX_NEQ_F64 | EXEC[threadId] = D.u64[threadId] = !(S0 == S1) // With NAN<br>inputs this is not the same operation as !=. |
 |----------------|------------------------------------------------------------------------------------------------------------|
@@ -4154,8 +4024,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 |                |                                                                                                            |
 
 12.9. VOPC Instructions 150 of 288
-
-![](assets/_page_158_Picture_1.jpeg)
 
 | Opcode | Name          | Description                                    |
 |--------|---------------|------------------------------------------------|
@@ -4194,8 +4062,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 
 12.9. VOPC Instructions 151 of 288
 
-![](assets/_page_159_Picture_1.jpeg)
-
 | Opcode | Name          | Description                                    |
 |--------|---------------|------------------------------------------------|
 | 220    | V_CMPX_GT_U32 | EXEC[threadId] = D.u64[threadId] = (S0 > S1).  |
@@ -4232,8 +4098,6 @@ The opcode number is such that for these the opcode number can be calculated fro
 | 251    | V_CMPX_LE_U64 | EXEC[threadId] = D.u64[threadId] = (S0 <= S1). |
 
 12.9. VOPC Instructions 152 of 288
-
-![](assets/_page_160_Picture_1.jpeg)
 
 | Opcode | Name          | Description                                    |
 |--------|---------------|------------------------------------------------|
@@ -4272,8 +4136,6 @@ where:
 | 0      | V_PK_MAD_I16 | D.i[31:16] = S0.i[31:16] * S1.i[31:16] + S2.i[31:16] . D.i[15:0]<br>= S0.i[15:0] * S1.i[15:0] + S2.i[15:0] . |
 
 12.10. VOP3P Instructions 153 of 288
-
-![](assets/_page_161_Picture_1.jpeg)
 
 | Opcode | Name             | Description                                                                                                                                      |
 |--------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4401,8 +4263,6 @@ V\_MAD\_I64\_I32
 | 474    | V_SAD_HI_U8 | D.u = (SAD_U8(S0, S1, 0) << 16) + S2.u.<br>Sum of absolute differences with accumulation, overflow is lost.                                                                                                                                                                                                                                               |
 | 475    | V_SAD_U16   | ABSDIFF(x, y) := (x > y ? x - y : y - x) // UNSIGNED<br>comparison<br>D.u = S2.u;<br>D.u += ABSDIFF(S0.u[31:16], S1.u[31:16]);<br>D.u += ABSDIFF(S0.u[15:0], S1.u[15:0]).<br>Word SAD with accumulation.                                                                                                                                                  |
 
-![](assets/_page_167_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |--------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 476    | V_SAD_U32       | ABSDIFF(x, y) := (x > y ? x - y : y - x) // UNSIGNED<br>comparison<br>D.u = ABSDIFF(S0.u, S1.u) + S2.u.<br>Dword SAD with accumulation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -4439,8 +4299,6 @@ V\_MAD\_I64\_I32
 |        |                 | Double precision division fixup. S0 = Quotient, S1 = Denominator,                                                                                                                                                                                                     |
 |        |                 | S2 = Numerator.                                                                                                                                                                                                                                                       |
 |        |                 | Given a numerator, denominator, and quotient from a divide, this<br>opcode will detect and apply special case numerics, touching up<br>the quotient if necessary. This opcode also generates invalid,<br>denorm and divide by zero exceptions caused by the division. |
-
-![](assets/_page_169_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                  |
 |--------|-----------------|----------------------------------------------------------------------------------------------|
@@ -4482,8 +4340,6 @@ V\_MAD\_I64\_I32
 |        |                 | Raphson correction algorithm. S0 must be the same value as either<br>S1 or S2.               |
 |        |                 | This opcode producses a VCC flag for post-scaling of the quotient<br>(using V_DIV_FMAS_F32). |
 
-![](assets/_page_170_Picture_1.jpeg)
-
 | Opcode | Name            | Description                                                                                  |
 |--------|-----------------|----------------------------------------------------------------------------------------------|
 | 481    | V_DIV_SCALE_F64 | VCC = 0;                                                                                     |
@@ -4523,8 +4379,6 @@ V\_MAD\_I64\_I32
 |        |                 | Raphson correction algorithm. S0 must be the same value as either<br>S1 or S2.               |
 |        |                 | This opcode producses a VCC flag for post-scaling of the quotient<br>(using V_DIV_FMAS_F64). |
 
-![](assets/_page_171_Picture_1.jpeg)
-
 | Opcode | Name                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |--------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 482    | V_DIV_FMAS_F32        | if (VCC[threadId])<br>D.f = 2**32 * (S0.f * S1.f + S2.f);<br>else<br>D.f = S0.f * S1.f + S2.f;<br>end if.<br>Single precision FMA with fused scale.<br>This opcode performs a standard Fused Multiply-Add operation and<br>will conditionally scale the resulting exponent if VCC is set.<br>Input denormals are not flushed, but output flushing is allowed.                                                                                                                                                                                |
@@ -4542,8 +4396,6 @@ V\_MAD\_I64\_I32
 |        |                      | If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are written as 0 (this is different from<br>V_MAD_F16).<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved.                                                                                               |
 | 491    | V_MAD_LEGACY_U1<br>6 | D.u16 = S0.u16 * S1.u16 + S2.u16.<br>Supports saturation (unsigned 16-bit integer domain).<br>If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are written as 0 (this is different from<br>V_MAD_U16).<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved. |
 | 492    | V_MAD_LEGACY_I16     | D.i16 = S0.i16 * S1.i16 + S2.i16.<br>Supports saturation (signed 16-bit integer domain).<br>If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are written as 0 (this is different from<br>V_MAD_I16).<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved.   |
-
-![](assets/_page_173_Picture_1.jpeg)
 
 | Opcode | Name                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |--------|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4581,8 +4433,6 @@ V\_MAD\_I64\_I32
 | 516    | V_MAD_U16      | D.u16 = S0.u16 * S1.u16 + S2.u16.<br>Supports saturation (unsigned 16-bit integer domain).<br>If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are preserved.<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved.                           |
 | 517    | V_MAD_I16      | D.i16 = S0.i16 * S1.i16 + S2.i16.<br>Supports saturation (signed 16-bit integer domain).<br>If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are preserved.<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved.                             |
 | 518    | V_FMA_F16      | D.f16 = S0.f16 * S1.f16 + S2.f16.<br>Fused half precision multiply add. 0.5ULP accuracy, denormals are<br>supported.<br>If op_sel[3] is 0 Result is written to 16 LSBs of destination VGPR<br>and hi 16 bits are preserved.<br>If op_sel[3] is 1 Result is written to 16 MSBs of destination VGPR<br>and lo 16 bits are preserved. |
-
-![](assets/_page_176_Picture_1.jpeg)
 
 | Opcode | Name              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 |--------|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4675,16 +4525,12 @@ DATA1 = Source data1 VGPR 0 - 255.
 VDST = Destination VGPR 0- 255.
 ```
 
-![](assets/_page_181_Picture_8.jpeg)
-
 All instructions with RTN in the name return the value that was in memory before the operation was performed.
 
 | Opcode | Name       | Description                                                              |
 |--------|------------|--------------------------------------------------------------------------|
 | 0      | DS_ADD_U32 | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA;<br>RETURN_DATA = tmp. |
 | 1      | DS_SUB_U32 | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= DATA;<br>RETURN_DATA = tmp. |
-
-![](assets/_page_182_Picture_1.jpeg)
 
 | Opcode | Name        | Description                                                                                                                         |
 |--------|-------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -4699,8 +4545,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 10     | DS_OR_B32   | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR]  = DATA;<br>RETURN_DATA = tmp.                                                            |
 | 11     | DS_XOR_B32  | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] ^= DATA;<br>RETURN_DATA = tmp.                                                            |
 
-![](assets/_page_183_Picture_1.jpeg)
-
 | Opcode | Name              | Description                                                                                                                                                                                                                                      |
 |--------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 12     | DS_MSKOR_B32      | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (MEM[ADDR] & ~DATA)   DATA2;<br>RETURN_DATA = tmp.<br>Masked dword OR, D0 contains the mask and D1 contains the new<br>value.                                                                        |
@@ -4710,8 +4554,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 16     | DS_CMPST_B32      | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Compare and store. Caution, the order of src and cmp are the<br>*opposite* of the BUFFER_ATOMIC_CMPSWAP opcode. |
 | 17     | DS_CMPST_F32      | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Floating point compare and store that handles NaN/INF/denormal<br>values.                                       |
 | 18     | DS_MIN_F32        | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA;<br>cmp = DATA2;<br>MEM[ADDR] = (cmp < tmp) ? src : tmp.<br>Floating point minimum that handles NaN/INF/denormal values.                                                                              |
-
-![](assets/_page_184_Picture_1.jpeg)
 
 | Opcode | Name                | Description                                                                                                                                                         |
 |--------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4725,8 +4567,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 33     | DS_SUB_RTN_U32      | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= DATA;<br>RETURN_DATA = tmp.                                                                                            |
 | 34     | DS_RSUB_RTN_U32     | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = DATA - MEM[ADDR];<br>RETURN_DATA = tmp.<br>Subtraction with reversed operands.                                          |
 | 35     | DS_INC_RTN_U32      | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp >= DATA) ? 0 : tmp + 1; // unsigned compare<br>RETURN_DATA = tmp.                                                  |
-
-![](assets/_page_185_Picture_1.jpeg)
 
 | Opcode | Name              | Description                                                                                                                                                               |
 |--------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4742,8 +4582,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 45     | DS_WRXCHG_RTN_B32 | tmp = MEM[ADDR];<br>MEM[ADDR] = DATA;<br>RETURN_DATA = tmp.                                                                                                               |
 |        |                   | Write-exchange operation.                                                                                                                                                 |
 
-![](assets/_page_186_Picture_1.jpeg)
-
 | Opcode | Name                       | Description                                                                                                                                                                                                                                      |
 |--------|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 46     | DS_WRXCHG2_RTN_B3<br>2     | Write-exchange 2 separate dwords.                                                                                                                                                                                                                |
@@ -4754,8 +4592,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 51     | DS_MAX_RTN_F32             | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA;<br>cmp = DATA2;<br>MEM[ADDR] = (tmp > cmp) ? src : tmp.<br>Floating point maximum that handles NaN/INF/denormal values.                                                                              |
 | 52     | DS_WRAP_RTN_B32            | tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp >= DATA) ? tmp - DATA : tmp + DATA2;<br>RETURN_DATA = tmp.                                                                                                                                                  |
 | 53     | DS_ADD_RTN_F32             | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA;<br>RETURN_DATA = tmp.<br>Floating point add that handles NaN/INF/denormal values.                                                                                                             |
-
-![](assets/_page_187_Picture_1.jpeg)
 
 | Opcode | Name             | Description                                                                                                                  |
 |--------|------------------|------------------------------------------------------------------------------------------------------------------------------|
@@ -4768,22 +4604,16 @@ All instructions with RTN in the name return the value that was in memory before
 | 60     | DS_READ_U16      | RETURN_DATA = {16'h0,MEM[ADDR][15:0]}.<br>Unsigned short read.                                                               |
 | 61     | DS_SWIZZLE_B32   | Dword swizzle, no data is written to LDS memory. See next<br>section for details.                                            |
 
-![](assets/_page_188_Picture_1.jpeg)
-
 | Opcode | Name           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |--------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 62     | DS_PERMUTE_B32 | // VGPR[index][thread_id] is the VGPR RAM<br>// VDST, ADDR and DATA0 are from the microcode DS encoding<br>tmp[063] = 0<br>for i in 063 do<br>// If a source thread is disabled, it will not propagate<br>data.<br>next if !EXEC[i]<br>// ADDR needs to be divided by 4.<br>// High-order bits are ignored.<br>dst_lane = floor((VGPR[ADDR][i] + OFFSET) / 4) mod 64<br>tmp[dst_lane] = VGPR[DATA0][i]<br>endfor<br>// Copy data into destination VGPRs. If multiple sources<br>// select the same destination thread, the highest-numbered<br>// source thread wins.<br>for i in 063 do<br>next if !EXEC[i]<br>VGPR[VDST][i] = tmp[i]<br>endfor<br>Forward permute. This does not access LDS memory and may be<br>called even if no LDS memory is allocated to the wave. It uses<br>LDS hardware to implement an arbitrary swizzle across threads<br>in a wavefront.<br>Note the address passed in is the thread ID multiplied by 4.<br>This is due to a limitation in the DS hardware design.<br>If multiple sources map to the same destination lane, standard<br>LDS arbitration rules determine which write wins.<br>See also DS_BPERMUTE_B32.<br>Examples (simplified 4-thread wavefronts):<br>VGPR[SRC0] = { A, B, C, D }<br>VGPR[ADDR] = { 0, 0, 12, 4 } |
 |        |                | EXEC = 0xF, OFFSET = 0<br>VGPR[VDST] := { B, D, 0, C }<br>VGPR[SRC0] = { A, B, C, D }<br>VGPR[ADDR] = { 0, 0, 12, 4 }<br>EXEC = 0xA, OFFSET = 0<br>VGPR[VDST] := { -, D, -, 0 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-
-![](assets/_page_189_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |--------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 63     | DS_BPERMUTE_B32 | // VGPR[index][thread_id] is the VGPR RAM<br>// VDST, ADDR and DATA0 are from the microcode DS encoding<br>tmp[063] = 0<br>for i in 063 do<br>// ADDR needs to be divided by 4.<br>// High-order bits are ignored.<br>src_lane = floor((VGPR[ADDR][i] + OFFSET) / 4) mod 64<br>// EXEC is applied to the source VGPR reads.<br>next if !EXEC[src_lane]<br>tmp[i] = VGPR[DATA0][src_lane]<br>endfor<br>// Copy data into destination VGPRs. Some source<br>// data may be broadcast to multiple lanes.<br>for i in 063 do<br>next if !EXEC[i]<br>VGPR[VDST][i] = tmp[i]<br>endfor<br>Backward permute. This does not access LDS memory and may be<br>called even if no LDS memory is allocated to the wave. It uses<br>LDS hardware to implement an arbitrary swizzle across threads<br>in a wavefront.<br>Note the address passed in is the thread ID multiplied by 4.<br>This is due to a limitation in the DS hardware design.<br>Note that EXEC mask is applied to both VGPR read and write. If<br>src_lane selects a disabled thread, zero will be returned.<br>See also DS_PERMUTE_B32.<br>Examples (simplified 4-thread wavefronts):<br>VGPR[SRC0] = { A, B, C, D }<br>VGPR[ADDR] = { 0, 0, 12, 4 }<br>EXEC = 0xF, OFFSET = 0<br>VGPR[VDST] := { A, A, D, B }<br>VGPR[SRC0] = { A, B, C, D }<br>VGPR[ADDR] = { 0, 0, 12, 4 }<br>EXEC = 0xA, OFFSET = 0<br>VGPR[VDST] := { -, 0, -, B } |
 | 64     | DS_ADD_U64      | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | 65     | DS_SUB_U64      | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-
-![](assets/_page_190_Picture_1.jpeg)
 
 | Opcode | Name        | Description                                                                                                                                        |
 |--------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4797,8 +4627,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 73     | DS_AND_B64  | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] &= DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                 |
 | 74     | DS_OR_B64   | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR]  = DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                 |
 
-![](assets/_page_191_Picture_1.jpeg)
-
 | Opcode | Name              | Description                                                                                                                                                                                                                                         |
 |--------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 75     | DS_XOR_B64        | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] ^= DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                                                                                                                  |
@@ -4808,8 +4636,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 79     | DS_WRITE2ST64_B64 | // 64bit<br>MEM[ADDR_BASE + OFFSET0 * 8 * 64] = DATA;<br>MEM[ADDR_BASE + OFFSET1 * 8 * 64] = DATA2.<br>Write 2 qwords.                                                                                                                              |
 | 80     | DS_CMPST_B64      | // 64bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Compare and store. Caution, the order of src and cmp are the<br>*opposite* of the BUFFER_ATOMIC_CMPSWAP_X2 opcode. |
 | 81     | DS_CMPST_F64      | // 64bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Floating point compare and store that handles NaN/INF/denormal<br>values.                                          |
-
-![](assets/_page_192_Picture_1.jpeg)
 
 | Opcode | Name                | Description                                                                                                                                                         |
 |--------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4824,8 +4650,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 90     | DS_READ_U16_D16     | RETURN_DATA[15:0] = MEM[ADDR][15:0].<br>Unsigned short read with masked return to lower word.                                                                       |
 | 91     | DS_READ_U16_D16_HI  | RETURN_DATA[31:0] = MEM[ADDR][15:0].<br>Unsigned short read with masked return to upper word.                                                                       |
 | 96     | DS_ADD_RTN_U64      | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] += DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                                                  |
-
-![](assets/_page_193_Picture_1.jpeg)
 
 | Opcode | Name            | Description                                                                                                                                                            |
 |--------|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4849,8 +4673,6 @@ All instructions with RTN in the name return the value that was in memory before
 | 111    | DS_WRXCHG2ST64_RT<br>N_B64 | Write-exchange 2 qwords with a stride of 64 qwords.                                                                                                                                                                                                 |
 | 112    | DS_CMPST_RTN_B64           | // 64bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Compare and store. Caution, the order of src and cmp are the<br>*opposite* of the BUFFER_ATOMIC_CMPSWAP_X2 opcode. |
 | 113    | DS_CMPST_RTN_F64           | // 64bit<br>tmp = MEM[ADDR];<br>src = DATA2;<br>cmp = DATA;<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp.<br>Floating point compare and store that handles NaN/INF/denormal<br>values.                                          |
-
-![](assets/_page_195_Picture_1.jpeg)
 
 | Opcode | Name                      | Description                                                                                                                                                         |
 |--------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4885,15 +4707,11 @@ All instructions with RTN in the name return the value that was in memory before
 | 149    | DS_ADD_SRC2_F32             | //32bit<br>A = ADDR_BASE;<br>B = A + 4*(offset1[7] ? {A[31],A[31:17]} :<br>{offset1[6],offset1[6:0],offset0});<br>MEM[A] = MEM[B] + MEM[A].<br>Float, handles NaN/INF/denorm.                                                                                                                                                                                                                                                                                                                                              |
 | 152    | DS_GWS_SEMA_RELEA<br>SE_ALL | GDS Only: The GWS resource (rid) indicated will process this<br>opcode by updating the counter and labeling the specified<br>resource as a semaphore.<br>// Determine the GWS resource to work on<br>rid[5:0] = SH_SX_EXPCMD.gds_base[5:0] + offset0[5:0];<br>// Incr the state counter of the resource<br>state.counter[rid] = state.wave_in_queue;<br>state.type = SEMAPHORE;<br>return rd_done; //release calling wave<br>This action will release ALL queued waves; it Will have no<br>effect if no waves are present. |
 
-![](assets/_page_198_Picture_1.jpeg)
-
 | Opcode | Name           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |--------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 153    | DS_GWS_INIT    | GDS Only: Initialize a barrier or semaphore resource.<br>// Determine the GWS resource to work on<br>rid[5:0] = SH_SX_EXPCMD.gds_base[5:0] + offset0[5:0];<br>// Get the value to use in init<br>index = find_first_valid(vector mask)<br>value = DATA[thread: index]<br>// Set the state of the resource<br>state.counter[rid] = lsb(value); //limit #waves<br>state.flag[rid] = 0;<br>return rd_done; //release calling wave                                                                                                                                                                                                    |
 | 154    | DS_GWS_SEMA_V  | GDS Only: The GWS resource indicated will process this opcode<br>by updating the counter and labeling the resource as a<br>semaphore.<br>//Determine the GWS resource to work on<br>rid[5:0] = SH_SX_EXPCMD.gds_base[5:0] + offset0[5:0];<br>//Incr the state counter of the resource<br>state.counter[rid] += 1;<br>state.type = SEMAPHORE;<br>return rd_done; //release calling wave<br>This action will release one waved if any are queued in this<br>resource.                                                                                                                                                               |
 | 155    | DS_GWS_SEMA_BR | GDS Only: The GWS resource indicated will process this opcode<br>by updating the counter by the bulk release delivered count and<br>labeling the resource as a semaphore.<br>//Determine the GWS resource to work on<br>rid[5:0] = SH_SX_EXPCMD.gds_base[5:0] + offset0[5:0];<br>index = find first valid (vector mask)<br>count = DATA[thread: index];<br>//Add count to the resource state counter<br>state.counter[rid] += count;<br>state.type = SEMAPHORE;<br>return rd_done; //release calling wave<br>This action will release count number of waves, immediately if<br>queued, or as they arrive from the noted resource. |
-
-![](assets/_page_199_Picture_1.jpeg)
 
 | Opcode | Name               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |--------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -4937,8 +4755,6 @@ All instructions with RTN in the name return the value that was in memory before
 Dword swizzle, no data is written to LDS memory. Swizzles input thread data based on offset mask and returns; note does not read or write the DS memory banks. Note that reading from an invalid thread results in 0x0. This opcode supports two special modes, FFT and rotate, plus two basic modes which swizzle in groups of 4 or 32 consecutive threads. The FFT mode (offset >= 0xe000) swizzles the input based on offset[4:0] to support FFT calculation. Example swizzles using input {1, 2, ... 20} are: Offset[4:0]: Swizzle 0x00: {1,11,9,19,5,15,d,1d,3,13,b,1b,7,17,f,1f,2,12,a,1a,6,16,e,1e,4,14,c,1c,8,18,10,20} 0x10: {1,9,5,d,3,b,7,f,2,a,6,e,4,c,8,10,11,19,15,1d,13,1b,17,1f,12,1a,16,1e,14,1c,18,20} 0x1f: No swizzle The rotate mode (offset >= 0xc000 and offset < 0xe000) rotates the input either left (offset[10] == 0) or right (offset[10] == 1) a number of threads equal to offset[9:5]. The rotate mode also uses a mask value which can alter the rotate result. For example, mask == 1 will swap the odd threads across every other even thread (rotate left), or even threads across every other odd thread (rotate right). Offset[9:5]: Swizzle 0x01, mask=0, rotate left: {2,3,4,5,6,7,8,9,a,b,c,d,e,f,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f,20,1} 0x01, mask=0, rotate right: {20,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f} 0x01, mask=1, rotate left: {2,1,4,7,6,5,8,b,a,9,c,f,e,d,10,13,12,11,14,17,16,15,18,1b,1a,19,1c,1f,1e,1d,20,3} 0x01, mask=1, rotate right: {1e,1,4,3,2,5,8,7,6,9,c,b,a,d,10,f,e,11,14,13,12,15,18,17,16,19,1c,1b,1a,1d,20,1f} If offset < 0xc000, one of the basic swizzle modes is used based on offset[15]. If offset[15] == 1, groups of 4 consecutive threads are swizzled together. If offset[15] == 0, all 32 threads are swizzled together. The first basic swizzle mode (when offset[15] == 1) allows full data sharing between a group of 4 consecutive threads. Any thread within the group of 4 can get data from any other thread within the group of 4, specified by the corresponding offset bits --- [1:0] for the first thread, [3:2] for the second thread, [5:4] for the third thread, [7:6] for the fourth thread. Note that the offset bits apply to all groups of 4 within a wavefront; thus if offset[1:0] == 1, then thread0 will grab thread1, thread4 will grab thread5, etc. The second basic swizzle mode (when offset[15] == 0) allows limited data sharing between 32
 
 consecutive threads. In this case, the offset is used to specify a 5-bit xor-mask, 5-bit or-
-
-![](assets/_page_203_Picture_1.jpeg)
 
 ```
 mask, and 5-bit and-mask used to generate a thread mapping. Note that the offset bits apply to
@@ -5044,8 +4860,6 @@ The bitfield map of the MUBUF format is:
 
 12.14. MUBUF Instructions 198 of 288
 
-![](assets/_page_206_Picture_1.jpeg)
-
 | Opcode | Name                             | Description                                                                     |
 |--------|----------------------------------|---------------------------------------------------------------------------------|
 | 11     | BUFFER_LOAD_FORMAT_D16_XY<br>ZW  | Untyped buffer load 2 dwords with format conversion.                            |
@@ -5075,8 +4889,6 @@ The bitfield map of the MUBUF format is:
 |        |                                  | Untyped buffer load unsigned byte.                                              |
 
 12.14. MUBUF Instructions 199 of 288
-
-![](assets/_page_207_Picture_1.jpeg)
 
 | Opcode | Name                             | Description                                                                                                |
 |--------|----------------------------------|------------------------------------------------------------------------------------------------------------|
@@ -5109,8 +4921,6 @@ The bitfield map of the MUBUF format is:
 
 12.14. MUBUF Instructions 200 of 288
 
-![](assets/_page_208_Picture_1.jpeg)
-
 | Opcode | Name               | Description                                                                                                                         |
 |--------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | 68     | BUFFER_ATOMIC_SMIN | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (DATA < tmp) ? DATA : tmp; // signed<br>compare<br>RETURN_DATA = tmp.                   |
@@ -5125,8 +4935,6 @@ The bitfield map of the MUBUF format is:
 
 12.14. MUBUF Instructions 201 of 288
 
-![](assets/_page_209_Picture_1.jpeg)
-
 | Opcode | Name                     | Description                                                                                                                              |
 |--------|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | 96     | BUFFER_ATOMIC_SWAP_X2    | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                        |
@@ -5140,8 +4948,6 @@ The bitfield map of the MUBUF format is:
 | 104    | BUFFER_ATOMIC_AND_X2     | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] &= DATA[0:1];<br>RETURN_DATA[0:1] = tmp.                                                       |
 
 12.14. MUBUF Instructions 202 of 288
-
-![](assets/_page_210_Picture_1.jpeg)
 
 | Opcode | Name                 | Description                                                                                                                                        |
 |--------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -5178,8 +4984,6 @@ The bitfield map of the MTBUF format is:
 
 12.15. MTBUF Instructions 203 of 288
 
-![](assets/_page_211_Picture_1.jpeg)
-
 | Opcode | Name                              | Description                                         |
 |--------|-----------------------------------|-----------------------------------------------------|
 | 1      | TBUFFER_LOAD_FORMAT_XY            | Typed buffer load 2 dwords with format conversion.  |
@@ -5202,13 +5006,7 @@ The bitfield map of the MTBUF format is:
 
 The bitfield map of the MIMG format is:
 
-![](assets/_page_211_Picture_5.jpeg)
-
-![](assets/_page_211_Picture_6.jpeg)
-
 12.16. MIMG Instructions 204 of 288
-
-![](assets/_page_212_Picture_1.jpeg)
 
 #### where:
 
@@ -5247,8 +5045,6 @@ D16 = Data in VGPRs is 16 bits, not 32 bits.
 
 12.16. MIMG Instructions 205 of 288
 
-![](assets/_page_213_Picture_1.jpeg)
-
 | Opcode | Name                 | Description                                                                                                                        |
 |--------|----------------------|------------------------------------------------------------------------------------------------------------------------------------|
 | 17     | IMAGE_ATOMIC_CMPSWAP | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA[0];<br>cmp = DATA[1];<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp. |
@@ -5263,8 +5059,6 @@ D16 = Data in VGPRs is 16 bits, not 32 bits.
 | 26     | IMAGE_ATOMIC_XOR     | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] ^= DATA;<br>RETURN_DATA = tmp.                                                           |
 
 12.16. MIMG Instructions 206 of 288
-
-![](assets/_page_214_Picture_1.jpeg)
 
 | Opcode | Name                | Description                                                                                                                         |
 |--------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------|
@@ -5295,8 +5089,6 @@ D16 = Data in VGPRs is 16 bits, not 32 bits.
 
 12.16. MIMG Instructions 207 of 288
 
-![](assets/_page_215_Picture_1.jpeg)
-
 | Opcode | Name                  | Description                                                                                         |
 |--------|-----------------------|-----------------------------------------------------------------------------------------------------|
 | 54     | IMAGE_SAMPLE_B_CL_O   | SAMPLE_O, with LOD clamp specified in shader, with lod<br>bias.                                     |
@@ -5325,8 +5117,6 @@ D16 = Data in VGPRs is 16 bits, not 32 bits.
 | 78     | IMAGE_GATHER4_C_B_CL  | gather 4 single component elements (2x2) with user bias,<br>clamp and PCF.                          |
 
 12.16. MIMG Instructions 208 of 288
-
-![](assets/_page_216_Picture_1.jpeg)
 
 | Opcode | Name                   | Description                                                                                                                                                                  |
 |--------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -5381,8 +5171,6 @@ Flat instructions look at the per-workitem address and determine for each work i
 | 19     | FLAT_LOAD_SSHORT | Untyped buffer load signed short (sign extend to VGPR<br>destination).   |
 | 20     | FLAT_LOAD_DWORD  | Untyped buffer load dword.                                               |
 
-![](assets/_page_218_Picture_1.jpeg)
-
 | Opcode | Name                    | Description                                                    |
 |--------|-------------------------|----------------------------------------------------------------|
 | 21     | FLAT_LOAD_DWORDX2       | Untyped buffer load 2 dwords.                                  |
@@ -5430,8 +5218,6 @@ Flat instructions look at the per-workitem address and determine for each work i
 | 74     | FLAT_ATOMIC_XOR  | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] ^= DATA;<br>RETURN_DATA = tmp.                                              |
 | 75     | FLAT_ATOMIC_INC  | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp >= DATA) ? 0 : tmp + 1; // unsigned<br>compare<br>RETURN_DATA = tmp. |
 
-![](assets/_page_220_Picture_1.jpeg)
-
 | Opcode | Name                   | Description                                                                                                                              |
 |--------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | 76     | FLAT_ATOMIC_DEC        | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp == 0    tmp > DATA) ? DATA : tmp - 1; //<br>unsigned compare<br>RETURN_DATA = tmp.      |
@@ -5443,8 +5229,6 @@ Flat instructions look at the per-workitem address and determine for each work i
 | 101    | FLAT_ATOMIC_UMIN_X2    | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] < tmp) ? DATA[0:1] : tmp; //<br>unsigned compare<br>RETURN_DATA[0:1] = tmp.      |
 | 102    | FLAT_ATOMIC_SMAX_X2    | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] > tmp) ? DATA[0:1] : tmp; //<br>signed compare<br>RETURN_DATA[0:1] = tmp.        |
 | 103    | FLAT_ATOMIC_UMAX_X2    | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] > tmp) ? DATA[0:1] : tmp; //<br>unsigned compare<br>RETURN_DATA[0:1] = tmp.      |
-
-![](assets/_page_221_Picture_1.jpeg)
 
 | Opcode | Name               | Description                                                                                                                                        |
 |--------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -5468,8 +5252,6 @@ Scratch instructions are like Flat, but assume all workitem addresses fall in sc
 | 21     | SCRATCH_LOAD_DWORDX2 | Untyped buffer load 2 dwords.                                            |
 | 22     | SCRATCH_LOAD_DWORDX3 | Untyped buffer load 3 dwords.                                            |
 | 23     | SCRATCH_LOAD_DWORDX4 | Untyped buffer load 4 dwords.                                            |
-
-![](assets/_page_222_Picture_1.jpeg)
 
 | Opcode | Name                           | Description                                   |
 |--------|--------------------------------|-----------------------------------------------|
@@ -5504,8 +5286,6 @@ Global instructions are like Flat, but assume all workitem addresses fall in glo
 | 17     | GLOBAL_LOAD_SBYTE  | Untyped buffer load signed byte (sign extend to VGPR<br>destination).    |
 | 18     | GLOBAL_LOAD_USHORT | Untyped buffer load unsigned short (zero extend to VGPR<br>destination). |
 
-![](assets/_page_223_Picture_1.jpeg)
-
 | Opcode | Name                          | Description                                                             |
 |--------|-------------------------------|-------------------------------------------------------------------------|
 | 19     | GLOBAL_LOAD_SSHORT            | Untyped buffer load signed short (sign extend to VGPR<br>destination).  |
@@ -5536,8 +5316,6 @@ Global instructions are like Flat, but assume all workitem addresses fall in glo
 |        |                               | Untyped buffer load short.                                              |
 | 64     | GLOBAL_ATOMIC_SWAP            | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = DATA;<br>RETURN_DATA = tmp. |
 
-![](assets/_page_224_Picture_1.jpeg)
-
 | Opcode | Name                  | Description                                                                                                                        |
 |--------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------|
 | 65     | GLOBAL_ATOMIC_CMPSWAP | // 32bit<br>tmp = MEM[ADDR];<br>src = DATA[0];<br>cmp = DATA[1];<br>MEM[ADDR] = (tmp == cmp) ? src : tmp;<br>RETURN_DATA[0] = tmp. |
@@ -5551,8 +5329,6 @@ Global instructions are like Flat, but assume all workitem addresses fall in glo
 | 73     | GLOBAL_ATOMIC_OR      | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR]  = DATA;<br>RETURN_DATA = tmp.                                                           |
 | 74     | GLOBAL_ATOMIC_XOR     | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] ^= DATA;<br>RETURN_DATA = tmp.                                                           |
 
-![](assets/_page_225_Picture_1.jpeg)
-
 | Opcode | Name                         | Description                                                                                                                              |
 |--------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | 75     | GLOBAL_ATOMIC_INC            | // 32bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] = (tmp >= DATA) ? 0 : tmp + 1; // unsigned<br>compare<br>RETURN_DATA = tmp.                    |
@@ -5564,8 +5340,6 @@ Global instructions are like Flat, but assume all workitem addresses fall in glo
 | 100    | GLOBAL_ATOMIC_SMIN_X2        | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] < tmp) ? DATA[0:1] : tmp; //<br>signed compare<br>RETURN_DATA[0:1] = tmp.        |
 | 101    | GLOBAL_ATOMIC_UMIN_X2        | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] < tmp) ? DATA[0:1] : tmp; //<br>unsigned compare<br>RETURN_DATA[0:1] = tmp.      |
 | 102    | GLOBAL_ATOMIC_SMAX_X2        | // 64bit<br>tmp = MEM[ADDR];<br>MEM[ADDR] -= (DATA[0:1] > tmp) ? DATA[0:1] : tmp; //<br>signed compare<br>RETURN_DATA[0:1] = tmp.        |
-
-![](assets/_page_226_Picture_1.jpeg)
 
 | Opcode | Name                  | Description                                                                                                                                        |
 |--------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -6273,8 +6047,6 @@ by a 32-bit literal constant.
 
 13.3. Vector ALU Formats 238 of 288
 
-![](assets/_page_246_Picture_1.jpeg)
-
 | Field Name | Bits      | Format or Description                               |
 |------------|-----------|-----------------------------------------------------|
 | SRC0       | [8:0]     | Source 0. First operand for the instruction.        |
@@ -6574,8 +6346,6 @@ The final opcode number is determined by adding the base for the opcode family p
 | F                                 | 0                | D.u = 0     |
 
 13.3. Vector ALU Formats 245 of 288
-
-![](assets/_page_253_Picture_1.jpeg)
 
 | Compare Operation              | Opcode<br>Offset | Description                      |
 |--------------------------------|------------------|----------------------------------|
@@ -6892,8 +6662,6 @@ The final opcode number is determined by adding the base for the opcode family p
 
 ### <span id="page-261-0"></span>**13.3.4. VOP3A**
 
-![](assets/_page_261_Picture_3.jpeg)
-
 **Format** VOP3A
 
 **Description** Vector ALU format with three operands
@@ -7120,8 +6888,6 @@ This encoding allows specifying a unique scalar destination, and is used only fo
 | ENCODING   | [31:26] | Must be: 110100         |
 
 13.3. Vector ALU Formats 259 of 288
-
-![](assets/_page_267_Picture_1.jpeg)
 
 | Field Name | Bits      | Format or Description                               |
 |------------|-----------|-----------------------------------------------------|
@@ -7369,8 +7135,6 @@ selection of data from other lanes.
 
 13.3. Vector ALU Formats 265 of 288
 
-![](assets/_page_273_Picture_1.jpeg)
-
 | Field Name | Bits    | Format or Description                                                                                                                                                                                                                                                                                                                                                                                                                 |  |
 |------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--|
 | BC         | [51]    | Bounds Control: 0 = do not write when source is out of range, 1 = write.                                                                                                                                                                                                                                                                                                                                                              |  |
@@ -7397,8 +7161,6 @@ selection of data from other lanes.
 | DPP_ROW_MIRR<br>OR*     | 140          | pix[n].srca = pix[15-(n&f)].srca                                                                                  | Mirror threads within row.             |
 
 13.3. Vector ALU Formats 266 of 288
-
-![](assets/_page_274_Picture_1.jpeg)
 
 | DPP_Cntl<br>Enumeration  | Hex<br>Value | Function                                       | Description                                       |
 |--------------------------|--------------|------------------------------------------------|---------------------------------------------------|
@@ -7430,8 +7192,6 @@ shaders.
 | OP         | [17:16] | Opcode:<br>0: v_interp_p1_f32 : VDST = P10 * VSRC + P0<br>1: v_interp_p2_f32: VDST = P20 * VSRC + VDST<br>2: v_interp_mov_f32: VDST = (P0, P10 or P20 selected by VSRC[1:0]) |
 | VDST       | [25:18] | Destination VGPR                                                                                                                                                             |
 | ENCODING   | [31:26] | Must be: 110101                                                                                                                                                              |
-
-![](assets/_page_274_Picture_12.jpeg)
 
 VSRC must be different from VDST.
 
