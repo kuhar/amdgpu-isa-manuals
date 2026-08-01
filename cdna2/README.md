@@ -627,7 +627,12 @@ There is one 32-bit M0 register per wavefront, which can be used for:
 
 Most scalar ALU instructions set the Scalar Condition Code (SCC) bit, indicating the result of the operation.
 
-Compare operations: 1 = true Arithmetic operations: 1 = carry out Bit/logical operations: 1 = result was not zero Move: does not alter SCC
+```text
+Compare operations:     1 = true
+Arithmetic operations:  1 = carry out
+Bit/logical operations: 1 = result was not zero
+Move:                   does not alter SCC
+```
 
 The SCC can be used as the carry-in for extended-precision integer arithmetic, as well as the selector for conditional moves and branches.
 
@@ -657,7 +662,7 @@ All Trap temporary SGPRs (TTMP\*) are privileged for writes - they can be writte
 
 When a trap is taken (either user initiated, exception or host initiated), the shader hardware generates an S\_TRAP instruction. This loads trap information into a pair of SGPRS:
 
-{TTMP1, TTMP0} = {3'h0, pc\_rewind[3:0], HT[0],trapID[7:0], PC[47:0]}.
+`{TTMP1, TTMP0} = {3'h0, pc_rewind[3:0], HT[0],trapID[7:0], PC[47:0]}.`
 
 HT is set to one for host initiated traps, and zero for user traps (s\_trap) or exceptions. TRAP\_ID is zero for exceptions, or the user/host trapID for those traps. When the trap handler is entered, the PC of the faulting instruction will be: (PC - PC\_rewind\*4).
 
@@ -854,7 +859,42 @@ The register requirements per wavefront are:
 
 This method compares how many of the 64 threads go down the PASS path instead of the FAIL path; then, it selects the path with the fewer number of threads first. This means at most 50% of the threads are active, and this limits the necessary stack depth to Log264 = 6.
 
-**S\_CBRANCH\_G\_FORK** arg0, arg1 // arg1 is an sgpr-pair which holds 64bit (48bit) target address **S\_CBRANCH\_I\_FORK** arg0, #target\_addr\_offset[17:2] // target\_addr\_offset: 16b signed immediate offset // PC: in this pseudo-code is pointing to the cbranch\_\*\_fork instruction mask\_pass = SGPR[arg0] & exec mask\_fail = ~SGPR[arg0] & exec if (mask\_pass == exec) I\_FORK : PC += 4 + target\_addr\_offset G\_FORK: PC = SGPR[arg1] else if (mask\_fail == exec) PC += 4 else if (bitcount(mask\_fail) < bitcount(mask\_pass)) exec = mask\_fail I\_FORK : SGPR[CSP\*4] = { (pc + 4 + target\_addr\_offset), mask\_pass } G\_FORK: SGPR[CSP\*4] = { SGPR[arg1], mask\_pass } CSP++ PC += 4 else exec = mask\_pass SGPR[CSP\*4] = { (pc+4), mask\_fail } CSP++ I\_FORK : PC += 4 + target\_addr\_offset G\_FORK: PC = SGPR[arg1] **S\_CBRANCH\_JOIN arg0** if (CSP == SGPR[arg0]) // SGPR[arg0] holds the CSP value when the FORK started PC += 4 // this is the 2nd time to JOIN: continue with pgm else CSP -- // this is the 1st time to JOIN: jump to other FORK path {PC, EXEC} = SGPR[CSP\*4] // read 128-bits from 4 consecutive SGPRs
+```text
+S_CBRANCH_G_FORK  arg0, arg1
+    // arg1 is an sgpr-pair which holds 64bit (48bit) target address
+
+S_CBRANCH_I_FORK  arg0, #target_addr_offset[17:2]
+    // target_addr_offset: 16b signed immediate offset
+
+// PC: in this pseudo-code is pointing to the cbranch_*_fork instruction
+mask_pass = SGPR[arg0] & exec
+mask_fail = ~SGPR[arg0] & exec
+
+if (mask_pass == exec)
+    I_FORK : PC += 4 + target_addr_offset
+    G_FORK: PC = SGPR[arg1]
+else if (mask_fail == exec)
+    PC += 4
+else if (bitcount(mask_fail) < bitcount(mask_pass))
+    exec = mask_fail
+    I_FORK : SGPR[CSP*4] = { (pc + 4 + target_addr_offset), mask_pass }
+    G_FORK: SGPR[CSP*4] = { SGPR[arg1], mask_pass }
+    CSP++
+    PC += 4
+else
+    exec = mask_pass
+    SGPR[CSP*4] = { (pc+4), mask_fail }
+    CSP++
+    I_FORK : PC += 4 + target_addr_offset
+    G_FORK: PC = SGPR[arg1]
+
+S_CBRANCH_JOIN arg0
+if (CSP == SGPR[arg0]) // SGPR[arg0] holds the CSP value when the FORK started
+    PC += 4 // this is the 2nd time to JOIN: continue with pgm
+else
+    CSP -- // this is the 1st time to JOIN: jump to other FORK path
+    {PC, EXEC} = SGPR[CSP*4] // read 128-bits from 4 consecutive SGPRs
+```
 
 # <span id="page-34-0"></span>**Chapter 5. Scalar ALU Operations**
 
@@ -1063,7 +1103,7 @@ These instructions access hardware internal registers.
 
 The hardware register is specified in the DEST field of the instruction, using the values in the table above. Some bits of the DEST specify which register to read/write, but additional bits specify which bits in the register to read/write:
 
-SIMM16 = {size[4:0], offset[4:0], hwRegId[5:0]}; offset is 0..31, size is 1..32.
+`SIMM16 = {size[4:0], offset[4:0], hwRegId[5:0]}; offset is 0..31, size is 1..32.`
 
 *Table 16. Hardware Register Values*
 
@@ -1401,7 +1441,10 @@ MAI is an extension to CDNA architecture shader instruction set supporting the n
 
 The primary operation of the miSIMD is a 4-way DOT product:
 
- D.f32 = A.f16[0] \* B.f16[0] + A.f16[1] \* B.f16[1] + A.f16[2] \* B.f16[2] + A.f16[3] \* B.f16[3] + C.f32
+```text
+D.f32 = A.f16[0] * B.f16[0] + A.f16[1] * B.f16[1] +
+        A.f16[2] * B.f16[2] + A.f16[3] * B.f16[3] + C.f32
+```
 
 The diagram below illustrates how these new MFMA operations can be used to perform matrix multiplication:
 
@@ -1519,11 +1562,11 @@ These instructions load 1-16 Dwords or store 1-4 Dwords between SGPRs and memory
 
 S\_LOAD / S\_STORE / S\_DACHE\_DISCARD:
 
-ADDR = SGPR[base] + inst\_offset + { M0 or SGPR[offset] or zero }
+`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero}`
 
 S\_SCRATCH\_LOAD / S\_SCRATCH\_STORE:
 
-ADDR = SGPR[base] + inst\_offset + { M0 or SGPR[offset] or zero } \* 64
+`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero} * 64`
 
 Use of offset fields:
 
@@ -1540,7 +1583,7 @@ It is illegal and undefined if the inst\_offset is negative and the resulting (i
 
 Scalar access to private space must either use a buffer constant or manually convert the address:
 
-Addr = Addr - private\_base + private\_base\_addr + scratch\_baseOffset\_for\_this\_wave
+`Addr = Addr - private_base + private_base_addr + scratch_baseOffset_for_this_wave`
 
 "Hidden private base" is not available to the shader through hardware: It must be preloaded into an SGPR or made available through a constant buffer. This is equivalent to what the driver must do to calculate the base address from scratch for buffer constants.
 
@@ -1558,7 +1601,19 @@ The SMEM supplies only a SBASE address (byte) and an offset (byte or Dword). Any
 
 The two LSBs of V#.base and of the final address are ignored to force Dword alignment.
 
-"m\_\*" components come from the buffer constant (V#): offset = IMM ? OFFSET : SGPR[OFFSET] m\_base = { SGPR[SBASE \* 2 +1][15:0], SGPR[SBASE] } m\_stride = SGPR[SBASE \* 2 +1][31:16] m\_num\_records = SGPR[SBASE \* 2 + 2] m\_size = (m\_stride == 0) ? 1 : m\_num\_records m\_addr = (SGPR[SBASE \* 2] + offset) & ~0x3 SGPR[SDST] = read\_Dword\_from\_dcache(m\_base, offset, m\_size) If more than 1 dword is being read, it is returned to SDST+1, SDST+2, etc, and the offset is incremented by 4 bytes per DWORD.
+```text
+"m_*" components come from the buffer constant (V#):
+  offset     = IMM ? OFFSET : SGPR[OFFSET]
+  m_base     = { SGPR[SBASE * 2 +1][15:0], SGPR[SBASE] }
+  m_stride   = SGPR[SBASE * 2 +1][31:16]
+  m_num_records = SGPR[SBASE * 2 + 2]
+  m_size     = (m_stride == 0) ? 1 : m_num_records
+  m_addr     = (SGPR[SBASE * 2] + offset) & ~0x3
+  SGPR[SDST] = read_Dword_from_dcache(m_base, offset, m_size)
+
+  If more than 1 dword is being read, it is returned to SDST+1, SDST+2, etc,
+  and the offset is incremented by 4 bytes per DWORD.
+```
 
 ### <span id="page-59-0"></span>**8.2.2. Scalar Atomic Operations**
 
@@ -1801,7 +1856,23 @@ Used when: AddTID==0 && Stride!=0 && IdxEn==1 Out of Range if: Index(vgpr) >= Nu
 
 Swizzled addressing rearranges the data in the buffer to help provide improved cache locality for arrays of structures. Swizzled addressing also requires Dword-aligned accesses. A single fetch instruction cannot attempt to fetch a unit larger than const-element-size. The buffer's STRIDE must be a multiple of element\_size.
 
-Index = (inst\_idxen ? vgpr\_index : 0) + (const\_add\_tid\_enable ? thread\_id[5:0] : 0) Offset = (inst\_offen ? vgpr\_offset : 0) + inst\_offset index\_msb = index / const\_index\_stride index\_lsb = index % const\_index\_stride offset\_msb = offset / const\_element\_size offset\_lsb = offset % const\_element\_size buffer\_offset = (index\_msb \* const\_stride + offset\_msb \* const\_element\_size) \* const\_index\_stride + index\_lsb \* const\_element\_size + offset\_lsb Final Address = const\_base + sgpr\_offset + buffer\_offset
+```text
+Index = (inst_idxen ? vgpr_index : 0) +
+        (const_add_tid_enable ? thread_id[5:0] : 0)
+
+Offset = (inst_offen ? vgpr_offset : 0) + inst_offset
+
+index_msb = index / const_index_stride
+index_lsb = index % const_index_stride
+offset_msb = offset / const_element_size
+offset_lsb = offset % const_element_size
+
+buffer_offset = (index_msb * const_stride + offset_msb *
+                  const_element_size) * const_index_stride + index_lsb *
+                  const_element_size + offset_lsb
+
+Final Address = const_base + sgpr_offset + buffer_offset
+```
 
 Remember that the "sgpr\_offset" is not a part of the "offset" term in the above equations.
 
@@ -2169,13 +2240,27 @@ Floating point atomics (CMPSWAP, MIN, MAX) flush input denormals only when MODE 
 
 *FP Max Selection Rules:*
 
-if (src0 == SNaN) result = QNaN (src0) else if (src1 == SNaN) result = QNaN (src1) else result = larger of (src0, src1) "Larger" order from smallest to largest: QNaN, -inf, -float, -denorm, -0, +0, +denorm, +float, +inf
+```text
+if (src0 == SNaN) result = QNaN (src0)
+else if (src1 == SNaN) result = QNaN (src1)
+else result = larger of (src0, src1)
+"Larger" order from smallest to largest: QNaN, -inf, -float, -denorm, -0, +0, +denorm, +float, +inf
+```
 
 *FP Min Selection Rules:*
 
-if (src0 == SNaN) result = QNaN (src0) else if (src1 == SNaN) result = QNaN (src1) else result = smaller of (src0, src1) "Smaller" order from smallest to largest: -inf, -float, -denorm, -0, +0, +denorm, +float, +inf, QNaN
+```text
+if (src0 == SNaN) result = QNaN (src0)
+else if (src1 == SNaN) result = QNaN (src1)
+else result = smaller of (src0, src1)
+"Smaller" order from smallest to largest: -inf, -float, -denorm, -0, +0, +denorm, +float, +inf, QNaN
+```
 
-*FP Compare Swap: only swap if the compare condition (==) is true, treating +0 and -0 as equal* doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) // allow +0 == -0
+*FP Compare Swap: only swap if the compare condition (==) is true, treating +0 and -0 as equal*
+
+```text
+doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) // allow +0 == -0
+```
 
 *Float Add rules:*
 
@@ -2287,7 +2372,11 @@ The addresses for the aperture check differ in 32- and 64-bit mode; however, thi
 
 For scratch space, the texture unit takes the address from the VGPR and does the following.
 
-Address = VGPR[addr] + TID\_in\_wave \* Size - private aperture base (in SH\_MEM\_BASES) + offset (from flat\_scratch)
+```text
+Address = VGPR[addr] + TID_in_wave * Size
+          - private aperture base (in SH_MEM_BASES)
+          + offset (from flat_scratch)
+```
 
 ## <span id="page-90-1"></span>**10.3.1. Atomics**
 
@@ -2399,7 +2488,16 @@ LDS Direct reads occur in vector ALU (VALU) instructions and allow the LDS to su
 
 The LDS address and data-type of the data to be read from LDS comes from the M0 register:
 
-LDS\_addr = M0[15:0] (byte address and must be Dword aligned) DataType = M0[18:16] 0 unsigned byte 1 unsigned short 2 Dword 3 unused 4 signed byte 5 signed short
+```text
+LDS_addr = M0[15:0] (byte address and must be Dword aligned)
+DataType = M0[18:16]
+    0 unsigned byte
+    1 unsigned short
+    2 Dword
+    3 unused
+    4 signed byte
+    5 signed short
+```
 
 ### <span id="page-95-1"></span>**11.3.2. Data Share Indexed and Atomic Access**
 
@@ -2442,9 +2540,13 @@ All LDS operations require that M0 be initialized prior to use. M0 contains a si
 
 #### **Single Address Instructions**
 
-LDS\_Addr = LDS\_BASE + VGPR[ADDR] + {InstrOffset1,InstrOffset0}
+`LDS_Addr = LDS_BASE + VGPR[ADDR] + {InstrOffset1,InstrOffset0}`
 
-LDS\_Addr0 = LDS\_BASE + VGPR[ADDR] + InstrOffset0\*ADJ + LDS\_Addr1 = LDS\_BASE + VGPR[ADDR] + InstrOffset1\*ADJ Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
+```text
+LDS_Addr0 = LDS_BASE + VGPR[ADDR] + InstrOffset0*ADJ +
+LDS_Addr1 = LDS_BASE + VGPR[ADDR] + InstrOffset1*ADJ
+   Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
+```
 
 Note that LDS\_ADDR1 is used only for READ2\*, WRITE2\*, and WREXCHG2\*.
 
@@ -3862,7 +3964,49 @@ All instructions with RTN in the name return the value that was in memory before
 
 Dword swizzle, no data is written to LDS memory. Swizzles input thread data based on offset mask and returns; note does not read or write the DS memory banks. Note that reading from an invalid thread results in 0x0. This opcode supports two specific modes, FFT and rotate, plus two basic modes which swizzle in groups of 4 or 32 consecutive threads. The FFT mode (offset >= 0xe000) swizzles the input based on offset[4:0] to support FFT calculation. Example swizzles using input {1, 2, ... 20} are: Offset[4:0]: Swizzle 0x00: {1,11,9,19,5,15,d,1d,3,13,b,1b,7,17,f,1f,2,12,a,1a,6,16,e,1e,4,14,c,1c,8,18,10,20} 0x10: {1,9,5,d,3,b,7,f,2,a,6,e,4,c,8,10,11,19,15,1d,13,1b,17,1f,12,1a,16,1e,14,1c,18,20} 0x1f: No swizzle The rotate mode (offset >= 0xc000 and offset < 0xe000) rotates the input either left (offset[10] == 0) or right (offset[10] == 1) a number of threads equal to offset[9:5]. The rotate mode also uses a mask value which can alter the rotate result. For example, mask == 1 will swap the odd threads across every other even thread (rotate left), or even threads across every other odd thread (rotate right). Offset[9:5]: Swizzle 0x01, mask=0, rotate left: {2,3,4,5,6,7,8,9,a,b,c,d,e,f,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f,20,1} 0x01, mask=0, rotate right: {20,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,10,11,12,13,14,15,16,17,18,19,1a,1b,1c,1d,1e,1f} 0x01, mask=1, rotate left: {2,1,4,7,6,5,8,b,a,9,c,f,e,d,10,13,12,11,14,17,16,15,18,1b,1a,19,1c,1f,1e,1d,20,3} 0x01, mask=1, rotate right: {1e,1,4,3,2,5,8,7,6,9,c,b,a,d,10,f,e,11,14,13,12,15,18,17,16,19,1c,1b,1a,1d,20,1f} If offset < 0xc000, one of the basic swizzle modes is used based on offset[15]. If offset[15] == 1, groups of 4 consecutive threads are swizzled together. If offset[15] == 0, all 32 threads are swizzled together. The first basic swizzle mode (when offset[15] == 1) allows full data sharing between a group of 4 consecutive threads. Any thread within the group of 4 can get data from any other thread within the group of 4, specified by the corresponding offset bits --- [1:0] for the first thread, [3:2] for the second thread, [5:4] for the third thread, [7:6] for the fourth thread. Note that the offset bits apply to all groups of 4 within a wavefront; thus if offset[1:0] == 1, then thread0 will grab thread1, thread4 will grab thread5, etc. The second basic swizzle mode (when offset[15] == 0) allows limited data sharing between 32 consecutive threads. In this case, the offset is used to specify a 5-bit xor-mask, 5-bit or-mask, and 5-bit and-mask used to generate a thread mapping. Note that the offset bits apply to each group of 32 within a wavefront. The details of the thread mapping are listed below. Some example usages: SWAPX16 : xor\_mask = 0x10, or\_mask = 0x00, and\_mask = 0x1f SWAPX8 : xor\_mask = 0x08, or\_mask = 0x00, and\_mask = 0x1f SWAPX4 : xor\_mask = 0x04, or\_mask = 0x00, and\_mask = 0x1f SWAPX2 : xor\_mask = 0x02, or\_mask = 0x00, and\_mask = 0x1f SWAPX1 : xor\_mask = 0x01, or\_mask = 0x00, and\_mask = 0x1f REVERSEX32 : xor\_mask = 0x1f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX16 : xor\_mask = 0x0f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX8 : xor\_mask = 0x07, or\_mask = 0x00, and\_mask = 0x1f REVERSEX4 : xor\_mask = 0x03, or\_mask = 0x00, and\_mask = 0x1f REVERSEX2 : xor\_mask = 0x01 or\_mask = 0x00, and\_mask = 0x1f BCASTX32: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x00 BCASTX16: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x10 BCASTX8: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x18 BCASTX4: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1c BCASTX2: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1e Pseudocode follows: offset = offset1:offset0;
 
-if (offset >= 0xe000) { // FFT decomposition mask = offset[4:0]; for (i = 0; i < 64; i++) { j = reverse\_bits(i & 0x1f); j = (j >> count\_ones(mask)); j \|= (i & mask); j \|= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } } else if (offset >= 0xc000) { // rotate rotate = offset[9:5]; mask = offset[4:0]; if (offset[10]) { rotate = -rotate; } for (i = 0; i < 64; i++) { j = (i & mask) \| ((i + rotate) & ~mask); j \|= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } } else if (offset[15]) { // full data sharing within 4 consecutive threads for (i = 0; i < 64; i+=4) { thread\_out[i+0] = thread\_valid[i+offset[1:0]]?thread\_in[i+offset[1:0]]:0; thread\_out[i+1] = thread\_valid[i+offset[3:2]]?thread\_in[i+offset[3:2]]:0; thread\_out[i+2] = thread\_valid[i+offset[5:4]]?thread\_in[i+offset[5:4]]:0; thread\_out[i+3] = thread\_valid[i+offset[7:6]]?thread\_in[i+offset[7:6]]:0; } } else { // offset[15] == 0 // limited data sharing within 32 consecutive threads xor\_mask = offset[14:10]; or\_mask = offset[9:5]; and\_mask = offset[4:0]; for (i = 0; i < 64; i++) { j = (((i & 0x1f) & and\_mask) \| or\_mask) ^ xor\_mask; j \|= (i & 0x20); // which group of 32 thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } }
+```text
+if (offset >= 0xe000) {
+     // FFT decomposition
+     mask = offset[4:0];
+     for (i = 0; i < 64; i++) {
+         j = reverse_bits(i & 0x1f);
+         j = (j >> count_ones(mask));
+         j \|= (i & mask);
+         j \|= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+} else if (offset >= 0xc000) {
+     // rotate
+     rotate = offset[9:5];
+     mask = offset[4:0];
+     if (offset[10]) {
+         rotate = -rotate;
+     }
+     for (i = 0; i < 64; i++) {
+         j = (i & mask) \| ((i + rotate) & ~mask);
+         j \|= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+} else if (offset[15]) {
+     // full data sharing within 4 consecutive threads
+     for (i = 0; i < 64; i+=4) {
+         thread_out[i+0] = thread_valid[i+offset[1:0]]?thread_in[i+offset[1:0]]:0;
+         thread_out[i+1] = thread_valid[i+offset[3:2]]?thread_in[i+offset[3:2]]:0;
+         thread_out[i+2] = thread_valid[i+offset[5:4]]?thread_in[i+offset[5:4]]:0;
+         thread_out[i+3] = thread_valid[i+offset[7:6]]?thread_in[i+offset[7:6]]:0;
+     }
+} else { // offset[15] == 0
+     // limited data sharing within 32 consecutive threads
+     xor_mask = offset[14:10];
+     or_mask = offset[9:5];
+     and_mask = offset[4:0];
+     for (i = 0; i < 64; i++) {
+         j = (((i & 0x1f) & and_mask) \| or_mask) ^ xor_mask;
+         j \|= (i & 0x20); // which group of 32
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+}
+```
 
 # <span id="page-189-0"></span>**12.13. MUBUF Instructions**
 
