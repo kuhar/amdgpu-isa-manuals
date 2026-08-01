@@ -6100,13 +6100,23 @@ Instructions in this format may use a 32-bit literal constant that occurs immedi
 
 Add two unsigned 32-bit integer inputs, store the result into a scalar register and store the carry-out bit into SCC.
 
-tmp = 64'U(S0.u32) + 64'U(S1.u32); SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow or carry-out for S\_ADDC\_U32. D0.u32 = tmp.u32
+```text
+tmp = 64'U(S0.u32) + 64'U(S1.u32);
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow or carry-out for S_ADDC_U32.
+D0.u32 = tmp.u32
+```
 
 #### **S\_SUB\_U32 1**
 
 Subtract the second unsigned 32-bit integer input from the first input, store the result into a scalar register and store the carry-out bit into SCC.
 
-tmp = S0.u32 - S1.u32; SCC = S1.u32 > S0.u32 ? 1'1U : 1'0U; // unsigned overflow or carry-out for S\_SUBB\_U32. D0.u32 = tmp.u32
+```text
+tmp = S0.u32 - S1.u32;
+SCC = S1.u32 > S0.u32 ? 1'1U : 1'0U;
+// unsigned overflow or carry-out for S_SUBB_U32.
+D0.u32 = tmp.u32
+```
 
 #### **S\_ADD\_I32 2**
 
@@ -6143,89 +6153,153 @@ This opcode is not suitable for use with S\_SUBB\_U32 for implementing 64-bit op
 
 Add two unsigned 32-bit integer inputs and a carry-in bit from SCC, store the result into a scalar register and store the carry-out bit into SCC.
 
-tmp = 64'U(S0.u32) + 64'U(S1.u32) + SCC.u64; SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow or carry-out for S\_ADDC\_U32. D0.u32 = tmp.u32
+```text
+tmp = 64'U(S0.u32) + 64'U(S1.u32) + SCC.u64;
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow or carry-out for S_ADDC_U32.
+D0.u32 = tmp.u32
+```
 
 #### **S\_SUBB\_U32 5**
 
 Subtract the second unsigned 32-bit integer input from the first input, subtract the carry-in bit, store the result into a scalar register and store the carry-out bit into SCC.
 
-tmp = S0.u32 - S1.u32 - SCC.u32; SCC = 64'U(S1.u32) + SCC.u64 > 64'U(S0.u32) ? 1'1U : 1'0U; // unsigned overflow or carry-out for S\_SUBB\_U32. D0.u32 = tmp.u32
+```text
+tmp = S0.u32 - S1.u32 - SCC.u32;
+SCC = 64'U(S1.u32) + SCC.u64 > 64'U(S0.u32) ? 1'1U : 1'0U;
+// unsigned overflow or carry-out for S_SUBB_U32.
+D0.u32 = tmp.u32
+```
 
 #### **S\_ABSDIFF\_I32 6**
 
 Calculate the absolute value of difference between two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.i32 = S0.i32 - S1.i32; if D0.i32 < 0 then D0.i32 = -D0.i32 endif; SCC = D0.i32 != 0
+```text
+D0.i32 = S0.i32 - S1.i32;
+if D0.i32 < 0 then
+      D0.i32 = -D0.i32
+endif;
+SCC = D0.i32 != 0
+```
 
 Functional examples:
 
-S\_ABSDIFF\_I32(0x00000002, 0x00000005) => 0x00000003 S\_ABSDIFF\_I32(0xffffffff, 0x00000000) => 0x00000001 S\_ABSDIFF\_I32(0x80000000, 0x00000000) => 0x80000000 // Note: result is negative! S\_ABSDIFF\_I32(0x80000000, 0x00000001) => 0x7fffffff S\_ABSDIFF\_I32(0x80000000, 0xffffffff) => 0x7fffffff S\_ABSDIFF\_I32(0x80000000, 0xfffffffe) => 0x7ffffffe
+```text
+S_ABSDIFF_I32(0x00000002, 0x00000005) => 0x00000003
+S_ABSDIFF_I32(0xffffffff, 0x00000000) => 0x00000001
+S_ABSDIFF_I32(0x80000000, 0x00000000) => 0x80000000          // Note: result is negative!
+S_ABSDIFF_I32(0x80000000, 0x00000001) => 0x7fffffff
+S_ABSDIFF_I32(0x80000000, 0xffffffff) => 0x7fffffff
+S_ABSDIFF_I32(0x80000000, 0xfffffffe) => 0x7ffffffe
+```
 
 #### **S\_LSHL\_B32 8**
 
 Given a shift count in the second scalar input, calculate the logical shift left of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u32 = (S0.u32 << S1[4 : 0].u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = (S0.u32 << S1[4 : 0].u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_LSHL\_B64 9**
 
 Given a shift count in the second scalar input, calculate the logical shift left of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = (S0.u64 << S1[5 : 0].u32); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 << S1[5 : 0].u32);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_LSHR\_B32 10**
 
 Given a shift count in the second scalar input, calculate the logical shift right of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u32 = (S0.u32 >> S1[4 : 0].u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = (S0.u32 >> S1[4 : 0].u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_LSHR\_B64 11**
 
 Given a shift count in the second scalar input, calculate the logical shift right of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = (S0.u64 >> S1[5 : 0].u32); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 >> S1[5 : 0].u32);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_ASHR\_I32 12**
 
 Given a shift count in the second scalar input, calculate the arithmetic shift right (preserving sign bit) of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.i32 = 32'I(signext(S0.i32) >> S1[4 : 0].u32); SCC = D0.i32 != 0
+```text
+D0.i32 = 32'I(signext(S0.i32) >> S1[4 : 0].u32);
+SCC = D0.i32 != 0
+```
 
 #### **S\_ASHR\_I64 13**
 
 Given a shift count in the second scalar input, calculate the arithmetic shift right (preserving sign bit) of the first scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.i64 = (signext(S0.i64) >> S1[5 : 0].u32); SCC = D0.i64 != 0LL
+```text
+D0.i64 = (signext(S0.i64) >> S1[5 : 0].u32);
+SCC = D0.i64 != 0LL
+```
 
 #### **S\_LSHL1\_ADD\_U32 14**
 
 Calculate the logical shift left of the first input by 1, then add the second input, store the result into a scalar register and set SCC iff the summation results in an unsigned overflow.
 
-tmp = (64'U(S0.u32) << 1U) + 64'U(S1.u32); SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow. D0.u32 = tmp.u32
+```text
+tmp = (64'U(S0.u32) << 1U) + 64'U(S1.u32);
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow.
+D0.u32 = tmp.u32
+```
 
 #### **S\_LSHL2\_ADD\_U32 15**
 
 Calculate the logical shift left of the first input by 2, then add the second input, store the result into a scalar register and set SCC iff the summation results in an unsigned overflow.
 
-tmp = (64'U(S0.u32) << 2U) + 64'U(S1.u32); SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow. D0.u32 = tmp.u32
+```text
+tmp = (64'U(S0.u32) << 2U) + 64'U(S1.u32);
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow.
+D0.u32 = tmp.u32
+```
 
 #### **S\_LSHL3\_ADD\_U32 16**
 
 Calculate the logical shift left of the first input by 3, then add the second input, store the result into a scalar register and set SCC iff the summation results in an unsigned overflow.
 
-tmp = (64'U(S0.u32) << 3U) + 64'U(S1.u32); SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow. D0.u32 = tmp.u32
+```text
+tmp = (64'U(S0.u32) << 3U) + 64'U(S1.u32);
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow.
+D0.u32 = tmp.u32
+```
 
 #### **S\_LSHL4\_ADD\_U32 17**
 
 Calculate the logical shift left of the first input by 4, then add the second input, store the result into a scalar register and set SCC iff the summation results in an unsigned overflow.
 
-tmp = (64'U(S0.u32) << 4U) + 64'U(S1.u32); SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // unsigned overflow. D0.u32 = tmp.u32
+```text
+tmp = (64'U(S0.u32) << 4U) + 64'U(S1.u32);
+SCC = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// unsigned overflow.
+D0.u32 = tmp.u32
+```
 
 #### **S\_MIN\_I32 18**
 
 Select the minimum of two signed 32-bit integer inputs, store the selected value into a scalar register and set SCC iff the first value is selected.
 
-SCC = S0.i32 < S1.i32; D0.i32 = SCC ? S0.i32 : S1.i32
+```text
+SCC = S0.i32 < S1.i32;
+D0.i32 = SCC ? S0.i32 : S1.i32
+```
 
 #### **S\_MIN\_U32 19**
 
@@ -6250,19 +6324,28 @@ D0.i32 = SCC ? S0.i32 : S1.i32
 
 Select the maximum of two unsigned 32-bit integer inputs, store the selected value into a scalar register and set SCC iff the first value is selected.
 
-SCC = S0.u32 >= S1.u32; D0.u32 = SCC ? S0.u32 : S1.u32
+```text
+SCC = S0.u32 >= S1.u32;
+D0.u32 = SCC ? S0.u32 : S1.u32
+```
 
 #### **S\_AND\_B32 22**
 
 Calculate bitwise AND on two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u32 = (S0.u32 & S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = (S0.u32 & S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_AND\_B64 23**
 
 Calculate bitwise AND on two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = (S0.u64 & S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 & S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_OR\_B32 24**
 
@@ -6272,49 +6355,73 @@ Calculate bitwise OR on two scalar inputs, store the result into a scalar regist
 
 Calculate bitwise OR on two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = (S0.u64 | S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 | S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_XOR\_B32 26**
 
 Calculate bitwise XOR on two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u32 = (S0.u32 ^ S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = (S0.u32 ^ S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_XOR\_B64 27**
 
 Calculate bitwise XOR on two scalar inputs, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = (S0.u64 ^ S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 ^ S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_NAND\_B32 28**
 
 Calculate bitwise NAND on two scalar inputs, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u32 = ~(S0.u32 & S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = ~(S0.u32 & S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_NAND\_B64 29**
 
 Calculate bitwise NAND on two scalar inputs, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u64 = ~(S0.u64 & S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = ~(S0.u64 & S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_NOR\_B32 30**
 
 Calculate bitwise NOR on two scalar inputs, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u32 = ~(S0.u32 | S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = ~(S0.u32 | S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_NOR\_B64 31**
 
 Calculate bitwise NOR on two scalar inputs, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u64 = ~(S0.u64 | S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = ~(S0.u64 | S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_XNOR\_B32 32**
 
 Calculate bitwise XNOR on two scalar inputs, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u32 = ~(S0.u32 ^ S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = ~(S0.u32 ^ S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_XNOR\_B64 33**
 
@@ -6339,19 +6446,28 @@ SCC = D0.u32 != 0U
 
 Calculate bitwise AND with the first input and the negation of the second input, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u64 = (S0.u64 & ~S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 & ~S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_OR\_NOT1\_B32 36**
 
 Calculate bitwise OR with the first input and the negation of the second input, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u32 = (S0.u32 | ~S1.u32); SCC = D0.u32 != 0U
+```text
+D0.u32 = (S0.u32 | ~S1.u32);
+SCC = D0.u32 != 0U
+```
 
 #### **S\_OR\_NOT1\_B64 37**
 
 Calculate bitwise OR with the first input and the negation of the second input, store the result into a scalar register and set SCC if the result is nonzero.
 
-D0.u64 = (S0.u64 | ~S1.u64); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = (S0.u64 | ~S1.u64);
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_BFE\_U32 38**
 
@@ -6361,25 +6477,36 @@ Extract an unsigned bitfield from the first input using field offset and size en
 
 Extract a signed bitfield from the first input using field offset and size encoded in the second input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp.i32 = ((S0.i32 >> S1[4 : 0].u32) & ((1 << S1[22 : 16].u32) - 1)); D0.i32 = signext\_from\_bit(tmp.i32, S1[22 : 16].u32); SCC = D0.i32 != 0
+```text
+tmp.i32 = ((S0.i32 >> S1[4 : 0].u32) & ((1 << S1[22 : 16].u32) - 1));
+D0.i32 = signext_from_bit(tmp.i32, S1[22 : 16].u32);
+SCC = D0.i32 != 0
+```
 
 #### **S\_BFE\_U64 40**
 
 Extract an unsigned bitfield from the first input using field offset and size encoded in the second input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = ((S0.u64 >> S1[5 : 0].u32) & ((1ULL << S1[22 : 16].u32) - 1ULL)); SCC = D0.u64 != 0ULL
+```text
+D0.u64 = ((S0.u64 >> S1[5 : 0].u32) & ((1ULL << S1[22 : 16].u32) - 1ULL));
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_BFE\_I64 41**
 
 Extract a signed bitfield from the first input using field offset and size encoded in the second input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp.i64 = ((S0.i64 >> S1[5 : 0].u32) & ((1LL << S1[22 : 16].u32) - 1LL)); D0.i64 = signext\_from\_bit(tmp.i64, S1[22 : 16].u32); SCC = D0.i64 != 0LL
+```text
+tmp.i64 = ((S0.i64 >> S1[5 : 0].u32) & ((1LL << S1[22 : 16].u32) - 1LL));
+D0.i64 = signext_from_bit(tmp.i64, S1[22 : 16].u32);
+SCC = D0.i64 != 0LL
+```
 
 #### **S\_BFM\_B32 42**
 
 Calculate a bitfield mask given a field offset and size and store the result in a scalar register.
 
-D0.u32 = (((1U << S0[4 : 0].u32) - 1U) << S1[4 : 0].u32)
+`D0.u32 = (((1U << S0[4 : 0].u32) - 1U) << S1[4 : 0].u32)`
 
 #### **S\_BFM\_B64 43**
 
@@ -6389,25 +6516,25 @@ Calculate a bitfield mask given a field offset and size and store the result in 
 
 Multiply two signed 32-bit integer inputs and store the result into a scalar register.
 
-D0.i32 = S0.i32 \* S1.i32
+`D0.i32 = S0.i32 * S1.i32`
 
 #### **S\_MUL\_HI\_U32 45**
 
 Multiply two unsigned integers and store the high 32 bits of the result into a scalar register.
 
-D0.u32 = 32'U((64'U(S0.u32) \* 64'U(S1.u32)) >> 32U)
+`D0.u32 = 32'U((64'U(S0.u32) * 64'U(S1.u32)) >> 32U)`
 
 #### **S\_MUL\_HI\_I32 46**
 
 Multiply two signed integers and store the high 32 bits of the result into a scalar register.
 
-D0.i32 = 32'I((64'I(S0.i32) \* 64'I(S1.i32)) >> 32U)
+`D0.i32 = 32'I((64'I(S0.i32) * 64'I(S1.i32)) >> 32U)`
 
 #### **S\_CSELECT\_B32 48**
 
 Select the first input if SCC is true otherwise select the second input, then store the selected input into a scalar register.
 
-D0.u32 = SCC ? S0.u32 : S1.u32
+`D0.u32 = SCC ? S0.u32 : S1.u32`
 
 #### **S\_CSELECT\_B64 49**
 
@@ -6430,25 +6557,25 @@ D0 = { S1[15 : 0].u16, S0[15 : 0].u16 }
 
 Pack two 16-bit scalar values into a scalar register.
 
-D0 = { S1[31 : 16].u16, S0[15 : 0].u16 }
+`D0 = { S1[31 : 16].u16, S0[15 : 0].u16 }`
 
 #### **S\_PACK\_HH\_B32\_B16 52**
 
 Pack two 16-bit scalar values into a scalar register.
 
-D0 = { S1[31 : 16].u16, S0[31 : 16].u16 }
+`D0 = { S1[31 : 16].u16, S0[31 : 16].u16 }`
 
 #### **S\_PACK\_HL\_B32\_B16 53**
 
 Pack two 16-bit scalar values into a scalar register.
 
-D0 = { S1[15 : 0].u16, S0[31 : 16].u16 }
+`D0 = { S1[15 : 0].u16, S0[31 : 16].u16 }`
 
 #### **S\_ADD\_F32 64**
 
 Add two floating point inputs and store the result into a scalar register.
 
-D0.f32 = S0.f32 + S1.f32
+`D0.f32 = S0.f32 + S1.f32`
 
 #### **S\_SUB\_F32 65**
 
@@ -6458,27 +6585,91 @@ Subtract the second floating point input from the first input and store the resu
 
 Select the minimum of two single-precision float inputs and store the result into a scalar register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+    ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+    if isSignalNAN(64'F(S0.f32)) then
+         D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+    elsif isSignalNAN(64'F(S1.f32)) then
+         D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+    elsif isQuietNAN(64'F(S1.f32)) then
+         D0.f32 = S0.f32
+    elsif isQuietNAN(64'F(S0.f32)) then
+         D0.f32 = S1.f32
+    elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+         // NOTE: -0<+0 is TRUE in this comparison
+         D0.f32 = S0.f32
+    else
+         D0.f32 = S1.f32
+    endif
+else
+    if isNAN(64'F(S1.f32)) then
+         D0.f32 = S0.f32
+    elsif isNAN(64'F(S0.f32)) then
+         D0.f32 = S1.f32
+    elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+         // NOTE: -0<+0 is TRUE in this comparison
+         D0.f32 = S0.f32
+    else
+         D0.f32 = S1.f32
+    endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **S\_MAX\_F32 67**
 
 Select the maximum of two single-precision float inputs and store the result into a scalar register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32
-
- elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+    ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+    if isSignalNAN(64'F(S0.f32)) then
+         D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+    elsif isSignalNAN(64'F(S1.f32)) then
+         D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+    elsif isQuietNAN(64'F(S1.f32)) then
+         D0.f32 = S0.f32
+    elsif isQuietNAN(64'F(S0.f32)) then
+         D0.f32 = S1.f32
+    elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+         // NOTE: +0>-0 is TRUE in this comparison
+         D0.f32 = S0.f32
+    else
+         D0.f32 = S1.f32
+    endif
+else
+    if isNAN(64'F(S1.f32)) then
+         D0.f32 = S0.f32
+    elsif isNAN(64'F(S0.f32)) then
+         D0.f32 = S1.f32
+    elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+         // NOTE: +0>-0 is TRUE in this comparison
+         D0.f32 = S0.f32
+    else
+         D0.f32 = S1.f32
+    endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **S\_MUL\_F32 68**
 
 Multiply two floating point inputs and store the result into a scalar register.
 
-D0.f32 = S0.f32 \* S1.f32
+`D0.f32 = S0.f32 * S1.f32`
 
 #### **S\_FMAAK\_F32 69**
 
 Multiply two floating point inputs and add a literal constant using fused multiply add, and store the result into a scalar register.
 
-D0.f32 = fma(S0.f32, S1.f32, SIMM32.f32)
+`D0.f32 = fma(S0.f32, S1.f32, SIMM32.f32)`
 
 #### **S\_FMAMK\_F32 70**
 
@@ -6488,53 +6679,123 @@ Multiply a floating point input with a literal constant and add a second floatin
 
 Compute the fused multiply add of floating point inputs and accumulate with the destination operand, and store the result into the destination.
 
-D0.f32 = fma(S0.f32, S1.f32, D0.f32)
+`D0.f32 = fma(S0.f32, S1.f32, D0.f32)`
 
 #### **S\_CVT\_PK\_RTZ\_F16\_F32 72**
 
 Convert two single-precision float inputs into a packed half-precision float result using round toward zero semantics (ignore the current rounding mode), and store the result into a scalar register.
 
-prev\_mode = ROUND\_MODE; ROUND\_MODE = ROUND\_TOWARD\_ZERO; tmp[15 : 0].f16 = f32\_to\_f16(S0.f32); tmp[31 : 16].f16 = f32\_to\_f16(S1.f32); D0 = tmp.b32; ROUND\_MODE = prev\_mode; // Round-toward-zero regardless of current round mode setting in hardware.
+```text
+prev_mode = ROUND_MODE;
+ROUND_MODE = ROUND_TOWARD_ZERO;
+tmp[15 : 0].f16 = f32_to_f16(S0.f32);
+tmp[31 : 16].f16 = f32_to_f16(S1.f32);
+D0 = tmp.b32;
+ROUND_MODE = prev_mode;
+// Round-toward-zero regardless of current round mode setting in hardware.
+```
 
 #### **S\_ADD\_F16 73**
 
 Add two floating point inputs and store the result into a scalar register.
 
-D0.f16 = S0.f16 + S1.f16
+`D0.f16 = S0.f16 + S1.f16`
 
 #### **S\_SUB\_F16 74**
 
 Subtract the second floating point input from the first input and store the result in a scalar register.
 
-D0.f16 = S0.f16 - S1.f16
+`D0.f16 = S0.f16 - S1.f16`
 
 #### **S\_MIN\_F16 75**
 
 Select the minimum of two half-precision float inputs and store the result into a scalar register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE
-
-if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else if isNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+    ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+    if isSignalNAN(64'F(S0.f16)) then
+         D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+    elsif isSignalNAN(64'F(S1.f16)) then
+         D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+    elsif isQuietNAN(64'F(S1.f16)) then
+         D0.f16 = S0.f16
+    elsif isQuietNAN(64'F(S0.f16)) then
+         D0.f16 = S1.f16
+    elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+         // NOTE: -0<+0 is TRUE in this comparison
+         D0.f16 = S0.f16
+    else
+         D0.f16 = S1.f16
+    endif
+else
+    if isNAN(64'F(S1.f16)) then
+         D0.f16 = S0.f16
+    elsif isNAN(64'F(S0.f16)) then
+         D0.f16 = S1.f16
+    elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+         // NOTE: -0<+0 is TRUE in this comparison
+         D0.f16 = S0.f16
+    else
+         D0.f16 = S1.f16
+    endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **S\_MAX\_F16 76**
 
 Select the maximum of two half-precision float inputs and store the result into a scalar register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else if isNAN(64'F(S1.f16)) then
-
- D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+    ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+    if isSignalNAN(64'F(S0.f16)) then
+         D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+    elsif isSignalNAN(64'F(S1.f16)) then
+         D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+    elsif isQuietNAN(64'F(S1.f16)) then
+         D0.f16 = S0.f16
+    elsif isQuietNAN(64'F(S0.f16)) then
+         D0.f16 = S1.f16
+    elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+         // NOTE: +0>-0 is TRUE in this comparison
+         D0.f16 = S0.f16
+    else
+         D0.f16 = S1.f16
+    endif
+else
+    if isNAN(64'F(S1.f16)) then
+         D0.f16 = S0.f16
+    elsif isNAN(64'F(S0.f16)) then
+         D0.f16 = S1.f16
+    elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+         // NOTE: +0>-0 is TRUE in this comparison
+         D0.f16 = S0.f16
+    else
+         D0.f16 = S1.f16
+    endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **S\_MUL\_F16 77**
 
 Multiply two floating point inputs and store the result into a scalar register.
 
-D0.f16 = S0.f16 \* S1.f16
+`D0.f16 = S0.f16 * S1.f16`
 
 #### **S\_FMAC\_F16 78**
 
 Compute the fused multiply add of floating point inputs and accumulate with the destination operand, and store the result into the destination.
 
-D0.f16 = fma(S0.f16, S1.f16, D0.f16)
+`D0.f16 = fma(S0.f16, S1.f16, D0.f16)`
 
 # <span id="page-215-0"></span>**16.2. SOPK Instructions**
 
@@ -6544,7 +6805,7 @@ Instructions in this format may not use a 32-bit literal constant that occurs im
 
 Sign extend a literal 16-bit constant and store the result into a scalar register.
 
-D0.i32 = 32'I(signext(SIMM16.i16))
+`D0.i32 = 32'I(signext(SIMM16.i16))`
 
 #### **S\_VERSION 1**
 
@@ -6560,97 +6821,110 @@ SIMM16[7:0] specifies the microcode version.
 
 SIMM16[15:8] must be set to zero.
 
-nop(); // Do nothing - for use by tools only
+```text
+nop();
+// Do nothing - for use by tools only
+```
 
 #### **S\_CMOVK\_I32 2**
 
 Move the sign extension of a literal 16-bit constant into a scalar register iff SCC is nonzero.
 
-if SCC then D0.i32 = 32'I(signext(SIMM16.i16)) endif
+```text
+if SCC then
+     D0.i32 = 32'I(signext(SIMM16.i16))
+endif
+```
 
 #### **S\_CMPK\_EQ\_I32 3**
 
 Set SCC to 1 iff scalar input is equal to the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) == signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) == signext(SIMM16.i16)`
 
 #### **S\_CMPK\_LG\_I32 4**
 
 Set SCC to 1 iff scalar input is less than or greater than the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) != signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) != signext(SIMM16.i16)`
 
 #### **S\_CMPK\_GT\_I32 5**
 
 Set SCC to 1 iff scalar input is greater than the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) > signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) > signext(SIMM16.i16)`
 
 #### **S\_CMPK\_GE\_I32 6**
 
 Set SCC to 1 iff scalar input is greater than or equal to the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) >= signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) >= signext(SIMM16.i16)`
 
 #### **S\_CMPK\_LT\_I32 7**
 
 Set SCC to 1 iff scalar input is less than the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) < signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) < signext(SIMM16.i16)`
 
 #### **S\_CMPK\_LE\_I32 8**
 
 Set SCC to 1 iff scalar input is less than or equal to the sign extension of a literal 16-bit constant.
 
-SCC = 64'I(S0.i32) <= signext(SIMM16.i16)
+`SCC = 64'I(S0.i32) <= signext(SIMM16.i16)`
 
 #### **S\_CMPK\_EQ\_U32 9**
 
 Set SCC to 1 iff scalar input is equal to the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 == 32'U(SIMM16.u16)
+`SCC = S0.u32 == 32'U(SIMM16.u16)`
 
 #### **S\_CMPK\_LG\_U32 10**
 
 Set SCC to 1 iff scalar input is less than or greater than the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 != 32'U(SIMM16.u16)
+`SCC = S0.u32 != 32'U(SIMM16.u16)`
 
 #### **S\_CMPK\_GT\_U32 11**
 
 Set SCC to 1 iff scalar input is greater than the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 > 32'U(SIMM16.u16)
+`SCC = S0.u32 > 32'U(SIMM16.u16)`
 
 #### **S\_CMPK\_GE\_U32 12**
 
 Set SCC to 1 iff scalar input is greater than or equal to the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 >= 32'U(SIMM16.u16)
+`SCC = S0.u32 >= 32'U(SIMM16.u16)`
 
 #### **S\_CMPK\_LT\_U32 13**
 
 Set SCC to 1 iff scalar input is less than the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 < 32'U(SIMM16.u16)
+`SCC = S0.u32 < 32'U(SIMM16.u16)`
 
 #### **S\_CMPK\_LE\_U32 14**
 
 Set SCC to 1 iff scalar input is less than or equal to the zero extension of a literal 16-bit constant.
 
-SCC = S0.u32 <= 32'U(SIMM16.u16)
+`SCC = S0.u32 <= 32'U(SIMM16.u16)`
 
 #### **S\_ADDK\_I32 15**
 
 Add a scalar input and the sign extension of a literal 16-bit constant, store the result into a scalar register and store the carry-out bit into SCC.
 
-tmp = D0.i32; // save value so we can check sign bits for overflow later. D0.i32 = 32'I(64'I(D0.i32) + signext(SIMM16.i16)); SCC = ((tmp[31] == SIMM16.i16[15]) && (tmp[31] != D0.i32[31])); // signed overflow.
+```text
+tmp = D0.i32;
+// save value so we can check sign bits for overflow later.
+D0.i32 = 32'I(64'I(D0.i32) + signext(SIMM16.i16));
+SCC = ((tmp[31] == SIMM16.i16[15]) && (tmp[31] != D0.i32[31]));
+// signed overflow.
+```
 
 #### **S\_MULK\_I32 16**
 
 Multiply a scalar input with the sign extension of a literal 16-bit constant and store the result into a scalar register.
 
-D0.i32 = 32'I(64'I(D0.i32) \* signext(SIMM16.i16))
+`D0.i32 = 32'I(64'I(D0.i32) * signext(SIMM16.i16))`
 
 #### **S\_GETREG\_B32 17**
 
@@ -6668,7 +6942,14 @@ LSB offset of register bits to access.
 
 Size of register bits to access, minus 1. Set this field to 31 to read/write all bits of the hardware register.
 
-hwRegId = SIMM16.u16[5 : 0]; offset = SIMM16.u16[10 : 6]; size = SIMM16.u16[15 : 11].u32 + 1U; // logical size is in range 1:32 value = HW\_REGISTERS[hwRegId]; D0.u32 = 32'U(32'I(value >> offset.u32) & ((1 << size) - 1))
+```text
+hwRegId = SIMM16.u16[5 : 0];
+offset = SIMM16.u16[10 : 6];
+size = SIMM16.u16[15 : 11].u32 + 1U;
+// logical size is in range 1:32
+value = HW_REGISTERS[hwRegId];
+D0.u32 = 32'U(32'I(value >> offset.u32) & ((1 << size) - 1))
+```
 
 #### **S\_SETREG\_B32 18**
 
@@ -6688,7 +6969,19 @@ LSB offset of register bits to access.
 
 Size of register bits to access, minus 1. Set this field to 31 to read/write all bits of the hardware register.
 
-hwRegId = SIMM16.u16[5 : 0]; offset = SIMM16.u16[10 : 6]; size = SIMM16.u16[15 : 11].u32 + 1U; // logical size is in range 1:32 mask = (1 << size) - 1; mask = (mask & 32'I(writeableBitMask(hwRegId.u32, WAVE\_STATUS.PRIV))); // Mask of bits we are allowed to modify value = ((S0.u32 << offset.u32) & mask.u32); value = (value | 32'U(HW\_REGISTERS[hwRegId].i32 & ~mask)); HW\_REGISTERS[hwRegId] = value.b32; // Side-effects may trigger here if certain bits are modified
+```text
+hwRegId = SIMM16.u16[5 : 0];
+offset = SIMM16.u16[10 : 6];
+size = SIMM16.u16[15 : 11].u32 + 1U;
+// logical size is in range 1:32
+mask = (1 << size) - 1;
+mask = (mask & 32'I(writeableBitMask(hwRegId.u32, WAVE_STATUS.PRIV)));
+// Mask of bits we are allowed to modify
+value = ((S0.u32 << offset.u32) & mask.u32);
+value = (value | 32'U(HW_REGISTERS[hwRegId].i32 & ~mask));
+HW_REGISTERS[hwRegId] = value.b32;
+// Side-effects may trigger here if certain bits are modified
+```
 
 #### **S\_SETREG\_IMM32\_B32 19**
 
@@ -6702,7 +6995,19 @@ LSB offset of register bits to access.
 
 Size of register bits to access, minus 1. Set this field to 31 to read/write all bits of the hardware register.
 
-hwRegId = SIMM16.u16[5 : 0]; offset = SIMM16.u16[10 : 6]; size = SIMM16.u16[15 : 11].u32 + 1U; // logical size is in range 1:32 mask = (1 << size) - 1; mask = (mask & 32'I(writeableBitMask(hwRegId.u32, WAVE\_STATUS.PRIV))); // Mask of bits we are allowed to modify value = ((SIMM32.u32 << offset.u32) & mask.u32); value = (value | 32'U(HW\_REGISTERS[hwRegId].i32 & ~mask)); HW\_REGISTERS[hwRegId] = value.b32; // Side-effects may trigger here if certain bits are modified
+```text
+hwRegId = SIMM16.u16[5 : 0];
+offset = SIMM16.u16[10 : 6];
+size = SIMM16.u16[15 : 11].u32 + 1U;
+// logical size is in range 1:32
+mask = (1 << size) - 1;
+mask = (mask & 32'I(writeableBitMask(hwRegId.u32, WAVE_STATUS.PRIV)));
+// Mask of bits we are allowed to modify
+value = ((SIMM32.u32 << offset.u32) & mask.u32);
+value = (value | 32'U(HW_REGISTERS[hwRegId].i32 & ~mask));
+HW_REGISTERS[hwRegId] = value.b32;
+// Side-effects may trigger here if certain bits are modified
+```
 
 #### **S\_CALL\_B64 20**
 
@@ -6710,7 +7015,10 @@ Store the address of the next instruction to a scalar register and then jump to 
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction. The byte address of the instruction immediately following this instruction is saved to the destination.
 
-D0.i64 = PC + 4LL; PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL
+```text
+D0.i64 = PC + 4LL;
+PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+```
 
 # **Notes**
 
@@ -6736,7 +7044,10 @@ Wait for the VMCNT counter to be at or below the specified level. The VMCNT coun
 
 Waits for the following condition to hold before continuing:
 
- vmcnt <= S0.u[5:0] + S1.u[5:0]. // Comparison is 6 bits, no clamping is applied for add overflow
+```text
+vmcnt <= S0.u[5:0] + S1.u[5:0].
+// Comparison is 6 bits, no clamping is applied for add overflow
+```
 
 To wait on a literal constant only, write 'null' for the GPR argument or use S\_WAITCNT.
 
@@ -6791,19 +7102,23 @@ Instructions in this format may use a 32-bit literal constant that occurs immedi
 
 Move scalar input into a scalar register.
 
-D0.b32 = S0.b32
+`D0.b32 = S0.b32`
 
 #### **S\_MOV\_B64 1**
 
 Move scalar input into a scalar register.
 
-D0.b64 = S0.b64
+`D0.b64 = S0.b64`
 
 #### **S\_CMOV\_B32 2**
 
 Move scalar input into a scalar register iff SCC is nonzero.
 
-if SCC then D0.b32 = S0.b32 endif
+```text
+if SCC then
+    D0.b32 = S0.b32
+endif
+```
 
 #### **S\_CMOV\_B64 3**
 
@@ -6828,19 +7143,36 @@ D0.u32[31 : 0] = S0.u32[0 : 31]
 
 Reverse the order of bits in a scalar input and store the result into a scalar register.
 
-D0.u64[63 : 0] = S0.u64[0 : 63]
+`D0.u64[63 : 0] = S0.u64[0 : 63]`
 
 #### **S\_CTZ\_I32\_B32 8**
 
 Count the number of trailing "0" bits before the first "1" in a scalar input and store the result into a scalar register. Store -1 if there are no "1" bits in the input.
 
-tmp = -1; // Set if no ones are found for i in 0 : 31 do // Search from LSB if S0.u32[i] == 1'1U then tmp = i; break endif endfor; D0.i32 = tmp
+```text
+tmp = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from LSB
+      if S0.u32[i] == 1'1U then
+          tmp = i;
+          break
+      endif
+endfor;
+D0.i32 = tmp
+```
 
 # **Notes**
 
 Functional examples:
 
-S\_CTZ\_I32\_B32(0xaaaaaaaa) => 1 S\_CTZ\_I32\_B32(0x55555555) => 0 S\_CTZ\_I32\_B32(0x00000000) => 0xffffffff S\_CTZ\_I32\_B32(0xffffffff) => 0 S\_CTZ\_I32\_B32(0x00010000) => 16
+```text
+S_CTZ_I32_B32(0xaaaaaaaa) => 1
+S_CTZ_I32_B32(0x55555555) => 0
+S_CTZ_I32_B32(0x00000000) => 0xffffffff
+S_CTZ_I32_B32(0xffffffff) => 0
+S_CTZ_I32_B32(0x00010000) => 16
+```
 
 Compare with V\_CTZ\_I32\_B32, which performs the equivalent operation in the vector ALU.
 
@@ -6848,19 +7180,48 @@ Compare with V\_CTZ\_I32\_B32, which performs the equivalent operation in the ve
 
 Count the number of trailing "0" bits before the first "1" in a scalar input and store the result into a scalar register. Store -1 if there are no "1" bits in the input.
 
-tmp = -1; // Set if no ones are found for i in 0 : 63 do // Search from LSB if S0.u64[i] == 1'1U then tmp = i; break endif endfor; D0.i32 = tmp
+```text
+tmp = -1;
+// Set if no ones are found
+for i in 0 : 63 do
+      // Search from LSB
+      if S0.u64[i] == 1'1U then
+          tmp = i;
+          break
+      endif
+endfor;
+D0.i32 = tmp
+```
 
 #### **S\_CLZ\_I32\_U32 10**
 
 Count the number of leading "0" bits before the first "1" in a scalar input and store the result into a scalar register. Store -1 if there are no "1" bits.
 
-tmp = -1; // Set if no ones are found for i in 0 : 31 do // Search from MSB if S0.u32[31 - i] == 1'1U then tmp = i; break endif endfor; D0.i32 = tmp
+```text
+tmp = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from MSB
+      if S0.u32[31 - i] == 1'1U then
+          tmp = i;
+          break
+      endif
+endfor;
+D0.i32 = tmp
+```
 
 #### **Notes**
 
 Functional examples:
 
-S\_CLZ\_I32\_U32(0x00000000) => 0xffffffff S\_CLZ\_I32\_U32(0x0000cccc) => 16 S\_CLZ\_I32\_U32(0xffff3333) => 0 S\_CLZ\_I32\_U32(0x7fffffff) => 1 S\_CLZ\_I32\_U32(0x80000000) => 0 S\_CLZ\_I32\_U32(0xffffffff) => 0
+```text
+S_CLZ_I32_U32(0x00000000) => 0xffffffff
+S_CLZ_I32_U32(0x0000cccc) => 16
+S_CLZ_I32_U32(0xffff3333) => 0
+S_CLZ_I32_U32(0x7fffffff) => 1
+S_CLZ_I32_U32(0x80000000) => 0
+S_CLZ_I32_U32(0xffffffff) => 0
+```
 
 Compare with V\_CLZ\_I32\_U32, which performs the equivalent operation in the vector ALU.
 
@@ -6874,13 +7235,31 @@ Count the number of leading "0" bits before the first "1" in a scalar input and 
 
 Count the number of leading bits that are the same as the sign bit of a scalar input and store the result into a scalar register. Store -1 if all input bits are the same.
 
-tmp = -1; // Set if all bits are the same for i in 1 : 31 do // Search from MSB if S0.u32[31 - i] != S0.u32[31] then tmp = i; break endif endfor; D0.i32 = tmp
+```text
+tmp = -1;
+// Set if all bits are the same
+for i in 1 : 31 do
+      // Search from MSB
+      if S0.u32[31 - i] != S0.u32[31] then
+          tmp = i;
+          break
+      endif
+endfor;
+D0.i32 = tmp
+```
 
 # **Notes**
 
 Functional examples:
 
-S\_CLS\_I32(0x00000000) => 0xffffffff S\_CLS\_I32(0x0000cccc) => 16 S\_CLS\_I32(0xffff3333) => 16 S\_CLS\_I32(0x7fffffff) => 1 S\_CLS\_I32(0x80000000) => 1 S\_CLS\_I32(0xffffffff) => 0xffffffff
+```text
+S_CLS_I32(0x00000000) => 0xffffffff
+S_CLS_I32(0x0000cccc) => 16
+S_CLS_I32(0xffff3333) => 16
+S_CLS_I32(0x7fffffff) => 1
+S_CLS_I32(0x80000000) => 1
+S_CLS_I32(0xffffffff) => 0xffffffff
+```
 
 Compare with V\_CLS\_I32, which performs the equivalent operation in the vector ALU.
 
@@ -6888,51 +7267,66 @@ Compare with V\_CLS\_I32, which performs the equivalent operation in the vector 
 
 Count the number of leading bits that are the same as the sign bit of a scalar input and store the result into a scalar register. Store -1 if all input bits are the same.
 
-tmp = -1; // Set if all bits are the same for i in 1 : 63 do
-
- // Search from MSB if S0.u64[63 - i] != S0.u64[63] then tmp = i; break endif endfor; D0.i32 = tmp
+```text
+tmp = -1;
+// Set if all bits are the same
+for i in 1 : 63 do
+     // Search from MSB
+     if S0.u64[63 - i] != S0.u64[63] then
+          tmp = i;
+          break
+     endif
+endfor;
+D0.i32 = tmp
+```
 
 #### **S\_SEXT\_I32\_I8 14**
 
 Sign extend a signed 8 bit scalar input to 32 bits and store the result into a scalar register.
 
-D0.i32 = 32'I(signext(S0.i8))
+`D0.i32 = 32'I(signext(S0.i8))`
 
 #### **S\_SEXT\_I32\_I16 15**
 
 Sign extend a signed 16 bit scalar input to 32 bits and store the result into a scalar register.
 
-D0.i32 = 32'I(signext(S0.i16))
+`D0.i32 = 32'I(signext(S0.i16))`
 
 #### **S\_BITSET0\_B32 16**
 
 Given a bit offset in a scalar input, set the indicated bit in the destination scalar register to 0.
 
-D0.u32[S0.u32[4 : 0]] = 1'0U
+`D0.u32[S0.u32[4 : 0]] = 1'0U`
 
 #### **S\_BITSET0\_B64 17**
 
 Given a bit offset in a scalar input, set the indicated bit in the destination scalar register to 0.
 
-D0.u64[S0.u32[5 : 0]] = 1'0U
+`D0.u64[S0.u32[5 : 0]] = 1'0U`
 
 #### **S\_BITSET1\_B32 18**
 
 Given a bit offset in a scalar input, set the indicated bit in the destination scalar register to 1.
 
-D0.u32[S0.u32[4 : 0]] = 1'1U
+`D0.u32[S0.u32[4 : 0]] = 1'1U`
 
 #### **S\_BITSET1\_B64 19**
 
 Given a bit offset in a scalar input, set the indicated bit in the destination scalar register to 1.
 
-D0.u64[S0.u32[5 : 0]] = 1'1U
+`D0.u64[S0.u32[5 : 0]] = 1'1U`
 
 #### **S\_BITREPLICATE\_B64\_B32 20**
 
 Substitute each bit of a 32 bit scalar input with two instances of itself and store the result into a 64 bit scalar register.
 
-tmp = S0.u32; for i in 0 : 31 do D0.u64[i \* 2] = tmp[i]; D0.u64[i \* 2 + 1] = tmp[i] endfor
+```text
+tmp = S0.u32;
+for i in 0 : 31 do
+      D0.u64[i * 2] = tmp[i];
+      D0.u64[i * 2 + 1] = tmp[i]
+endfor
+```
 
 # **Notes**
 
@@ -6946,57 +7340,117 @@ To perform the inverse operation see S\_QUADMASK\_B64.
 
 Compute the absolute value of a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.i32 = S0.i32 < 0 ? -S0.i32 : S0.i32; SCC = D0.i32 != 0
+```text
+D0.i32 = S0.i32 < 0 ? -S0.i32 : S0.i32;
+SCC = D0.i32 != 0
+```
 
-S\_ABS\_I32(0x00000001) => 0x00000001 S\_ABS\_I32(0x7fffffff) => 0x7fffffff S\_ABS\_I32(0x80000000) => 0x80000000 // Note this is negative! S\_ABS\_I32(0x80000001) => 0x7fffffff S\_ABS\_I32(0x80000002) => 0x7ffffffe S\_ABS\_I32(0xffffffff) => 0x00000001
+```text
+S_ABS_I32(0x00000001) => 0x00000001
+S_ABS_I32(0x7fffffff) => 0x7fffffff
+S_ABS_I32(0x80000000) => 0x80000000        // Note this is negative!
+S_ABS_I32(0x80000001) => 0x7fffffff
+S_ABS_I32(0x80000002) => 0x7ffffffe
+S_ABS_I32(0xffffffff) => 0x00000001
+```
 
 #### **S\_BCNT0\_I32\_B32 22**
 
 Count the number of "0" bits in a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0; for i in 0 : 31 do tmp += S0.u32[i] == 1'0U ? 1 : 0 endfor; D0.i32 = tmp; SCC = D0.u32 != 0U
+```text
+tmp = 0;
+for i in 0 : 31 do
+      tmp += S0.u32[i] == 1'0U ? 1 : 0
+endfor;
+D0.i32 = tmp;
+SCC = D0.u32 != 0U
+```
 
 ### **Notes**
 
 Functional examples:
 
-S\_BCNT0\_I32\_B32(0x00000000) => 32 S\_BCNT0\_I32\_B32(0xcccccccc) => 16 S\_BCNT0\_I32\_B32(0xffffffff) => 0
+```text
+S_BCNT0_I32_B32(0x00000000) => 32
+S_BCNT0_I32_B32(0xcccccccc) => 16
+S_BCNT0_I32_B32(0xffffffff) => 0
+```
 
 #### **S\_BCNT0\_I32\_B64 23**
 
 Count the number of "0" bits in a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0; for i in 0 : 63 do tmp += S0.u64[i] == 1'0U ? 1 : 0 endfor; D0.i32 = tmp; SCC = D0.u64 != 0ULL
+```text
+tmp = 0;
+for i in 0 : 63 do
+      tmp += S0.u64[i] == 1'0U ? 1 : 0
+endfor;
+D0.i32 = tmp;
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_BCNT1\_I32\_B32 24**
 
 Count the number of "1" bits in a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0; for i in 0 : 31 do tmp += S0.u32[i] == 1'1U ? 1 : 0 endfor; D0.i32 = tmp; SCC = D0.u32 != 0U
+```text
+tmp = 0;
+for i in 0 : 31 do
+      tmp += S0.u32[i] == 1'1U ? 1 : 0
+endfor;
+D0.i32 = tmp;
+SCC = D0.u32 != 0U
+```
 
 #### **Notes**
 
 Functional examples:
 
-S\_BCNT1\_I32\_B32(0x00000000) => 0 S\_BCNT1\_I32\_B32(0xcccccccc) => 16 S\_BCNT1\_I32\_B32(0xffffffff) => 32
+```text
+S_BCNT1_I32_B32(0x00000000) => 0
+S_BCNT1_I32_B32(0xcccccccc) => 16
+S_BCNT1_I32_B32(0xffffffff) => 32
+```
 
 #### **S\_BCNT1\_I32\_B64 25**
 
 Count the number of "1" bits in a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0; for i in 0 : 63 do tmp += S0.u64[i] == 1'1U ? 1 : 0 endfor; D0.i32 = tmp; SCC = D0.u64 != 0ULL
+```text
+tmp = 0;
+for i in 0 : 63 do
+      tmp += S0.u64[i] == 1'1U ? 1 : 0
+endfor;
+D0.i32 = tmp;
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_QUADMASK\_B32 26**
 
 Reduce a pixel mask from the scalar input into a quad mask, store the result in a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0U; for i in 0 : 7 do tmp[i] = S0.u32[i \* 4 +: 4] != 0U endfor; D0.u32 = tmp; SCC = D0.u32 != 0U
+```text
+tmp = 0U;
+for i in 0 : 7 do
+      tmp[i] = S0.u32[i * 4 +: 4] != 0U
+endfor;
+D0.u32 = tmp;
+SCC = D0.u32 != 0U
+```
 
 #### **S\_QUADMASK\_B64 27**
 
 Reduce a pixel mask from the scalar input into a quad mask, store the result in a scalar register and set SCC iff the result is nonzero.
 
-tmp = 0ULL; for i in 0 : 15 do tmp[i] = S0.u64[i \* 4 +: 4] != 0ULL endfor; D0.u64 = tmp; SCC = D0.u64 != 0ULL
+```text
+tmp = 0ULL;
+for i in 0 : 15 do
+      tmp[i] = S0.u64[i * 4 +: 4] != 0ULL
+endfor;
+D0.u64 = tmp;
+SCC = D0.u64 != 0ULL
+```
 
 #### **Notes**
 
@@ -7008,7 +7462,15 @@ Given an active pixel mask in a scalar input, calculate whole quad mode mask for
 
 In whole quad mode, if any pixel in a quad is active then all pixels of the quad are marked active.
 
-tmp = 0U; declare i : 6'U; for i in 6'0U : 6'31U do tmp[i] = S0.u32[i & 6'60U +: 6'4U] != 0U endfor; D0.u32 = tmp; SCC = D0.u32 != 0U
+```text
+tmp = 0U;
+declare i : 6'U;
+for i in 6'0U : 6'31U do
+      tmp[i] = S0.u32[i & 6'60U +: 6'4U] != 0U
+endfor;
+D0.u32 = tmp;
+SCC = D0.u32 != 0U
+```
 
 #### **S\_WQM\_B64 29**
 
@@ -7022,13 +7484,19 @@ tmp = 0ULL; declare i : 6'U; for i in 6'0U : 6'63U do tmp[i] = S0.u64[i & 6'60U 
 
 Calculate bitwise negation on a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u32 = ~S0.u32; SCC = D0.u32 != 0U
+```text
+D0.u32 = ~S0.u32;
+SCC = D0.u32 != 0U
+```
 
 #### **S\_NOT\_B64 31**
 
 Calculate bitwise negation on a scalar input, store the result into a scalar register and set SCC iff the result is nonzero.
 
-D0.u64 = ~S0.u64; SCC = D0.u64 != 0ULL
+```text
+D0.u64 = ~S0.u64;
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_AND\_SAVEEXEC\_B32 32**
 
@@ -7036,13 +7504,23 @@ Calculate bitwise AND on the scalar input and the EXEC mask, store the calculate
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u32; EXEC.u32 = (S0.u32 & EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (S0.u32 & EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_AND\_SAVEEXEC\_B64 33**
 
 Calculate bitwise AND on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u64; EXEC.u64 = (S0.u64 & EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (S0.u64 & EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_OR\_SAVEEXEC\_B32 34**
 
@@ -7050,7 +7528,12 @@ Calculate bitwise OR on the scalar input and the EXEC mask, store the calculated
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u32; EXEC.u32 = (S0.u32 | EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (S0.u32 | EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_OR\_SAVEEXEC\_B64 35**
 
@@ -7058,7 +7541,12 @@ Calculate bitwise OR on the scalar input and the EXEC mask, store the calculated
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (S0.u64 | EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (S0.u64 | EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_XOR\_SAVEEXEC\_B32 36**
 
@@ -7074,43 +7562,78 @@ Calculate bitwise XOR on the scalar input and the EXEC mask, store the calculate
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (S0.u64 ^ EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (S0.u64 ^ EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_NAND\_SAVEEXEC\_B32 38**
 
 Calculate bitwise NAND on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u32; EXEC.u32 = ~(S0.u32 & EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = ~(S0.u32 & EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_NAND\_SAVEEXEC\_B64 39**
 
 Calculate bitwise NAND on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u64; EXEC.u64 = ~(S0.u64 & EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = ~(S0.u64 & EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_NOR\_SAVEEXEC\_B32 40**
 
 Calculate bitwise NOR on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u32; EXEC.u32 = ~(S0.u32 | EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = ~(S0.u32 | EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_NOR\_SAVEEXEC\_B64 41**
 
 Calculate bitwise NOR on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u64; EXEC.u64 = ~(S0.u64 | EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = ~(S0.u64 | EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_XNOR\_SAVEEXEC\_B32 42**
 
 Calculate bitwise XNOR on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u32; EXEC.u32 = ~(S0.u32 ^ EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = ~(S0.u32 ^ EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_XNOR\_SAVEEXEC\_B64 43**
 
 Calculate bitwise XNOR on the scalar input and the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u64; EXEC.u64 = ~(S0.u64 ^ EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = ~(S0.u64 ^ EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_AND\_NOT0\_SAVEEXEC\_B32 44**
 
@@ -7118,7 +7641,12 @@ Calculate bitwise AND on the EXEC mask and the negation of the scalar input, sto
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u32; EXEC.u32 = (~S0.u32 & EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (~S0.u32 & EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_AND\_NOT0\_SAVEEXEC\_B64 45**
 
@@ -7126,7 +7654,12 @@ Calculate bitwise AND on the EXEC mask and the negation of the scalar input, sto
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (~S0.u64 & EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (~S0.u64 & EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_OR\_NOT0\_SAVEEXEC\_B32 46**
 
@@ -7134,7 +7667,12 @@ Calculate bitwise OR on the EXEC mask and the negation of the scalar input, stor
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u32; EXEC.u32 = (~S0.u32 | EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (~S0.u32 | EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_OR\_NOT0\_SAVEEXEC\_B64 47**
 
@@ -7144,7 +7682,12 @@ scalar destination register.
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (~S0.u64 | EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (~S0.u64 | EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_AND\_NOT1\_SAVEEXEC\_B32 48**
 
@@ -7152,7 +7695,12 @@ Calculate bitwise AND on the scalar input and the negation of the EXEC mask, sto
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u32; EXEC.u32 = (S0.u32 & ~EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (S0.u32 & ~EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_AND\_NOT1\_SAVEEXEC\_B64 49**
 
@@ -7160,13 +7708,23 @@ Calculate bitwise AND on the scalar input and the negation of the EXEC mask, sto
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (S0.u64 & ~EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (S0.u64 & ~EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_OR\_NOT1\_SAVEEXEC\_B32 50**
 
 Calculate bitwise OR on the scalar input and the negation of the EXEC mask, store the calculated result into the EXEC mask, set SCC iff the calculated result is nonzero and store the original value of the EXEC mask into the scalar destination register.
 
-saveexec = EXEC.u32; EXEC.u32 = (S0.u32 | ~EXEC.u32); D0.u32 = saveexec.u32; SCC = EXEC.u32 != 0U
+```text
+saveexec = EXEC.u32;
+EXEC.u32 = (S0.u32 | ~EXEC.u32);
+D0.u32 = saveexec.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_OR\_NOT1\_SAVEEXEC\_B64 51**
 
@@ -7174,7 +7732,12 @@ Calculate bitwise OR on the scalar input and the negation of the EXEC mask, stor
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u64; EXEC.u64 = (S0.u64 | ~EXEC.u64); D0.u64 = saveexec.u64; SCC = EXEC.u64 != 0ULL
+```text
+saveexec = EXEC.u64;
+EXEC.u64 = (S0.u64 | ~EXEC.u64);
+D0.u64 = saveexec.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **S\_AND\_NOT0\_WREXEC\_B32 52**
 
@@ -7182,7 +7745,11 @@ Calculate bitwise AND on the EXEC mask and the negation of the scalar input, sto
 
 Unlike the SAVEEXEC series of opcodes, the value written to destination SGPRs is the result of the bitwise-op result. EXEC and the destination SGPRs have the same value at the end of this instruction. This instruction is intended to help accelerate waterfalling.
 
-EXEC.u32 = (~S0.u32 & EXEC.u32); D0.u32 = EXEC.u32; SCC = EXEC.u32 != 0U
+```text
+EXEC.u32 = (~S0.u32 & EXEC.u32);
+D0.u32 = EXEC.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **S\_AND\_NOT0\_WREXEC\_B64 53**
 
@@ -7196,7 +7763,11 @@ Calculate bitwise AND on the scalar input and the negation of the EXEC mask, sto
 
 Unlike the SAVEEXEC series of opcodes, the value written to destination SGPRs is the result of the bitwise-op result. EXEC and the destination SGPRs have the same value at the end of this instruction. This instruction is intended to help accelerate waterfalling.
 
-EXEC.u32 = (S0.u32 & ~EXEC.u32); D0.u32 = EXEC.u32; SCC = EXEC.u32 != 0U
+```text
+EXEC.u32 = (S0.u32 & ~EXEC.u32);
+D0.u32 = EXEC.u32;
+SCC = EXEC.u32 != 0U
+```
 
 #### **Notes**
 
@@ -7208,21 +7779,47 @@ Calculate bitwise AND on the scalar input and the negation of the EXEC mask, sto
 
 Unlike the SAVEEXEC series of opcodes, the value written to destination SGPRs is the result of the bitwise-op result. EXEC and the destination SGPRs have the same value at the end of this instruction. This instruction is intended to help accelerate waterfalling.
 
-EXEC.u64 = (S0.u64 & ~EXEC.u64); D0.u64 = EXEC.u64; SCC = EXEC.u64 != 0ULL
+```text
+EXEC.u64 = (S0.u64 & ~EXEC.u64);
+D0.u64 = EXEC.u64;
+SCC = EXEC.u64 != 0ULL
+```
 
 #### **Notes**
 
 In particular, the following sequence of waterfall code is optimized by using a WREXEC instead of two separate scalar ops:
 
-// V0 holds the index value per lane // save exec mask for restore at the end s\_mov\_b64 s2, exec // exec mask of remaining (unprocessed) threads s\_mov\_b64 s4, exec loop: // get the index value for the first active lane v\_readfirstlane\_b32 s0, v0 // find all other lanes with same index value
-
-v\_cmpx\_eq s0, v0 <OP> // do the operation using the current EXEC mask. S0 holds the index. // mask out thread that was just executed // s\_andn2\_b64 s4, s4, exec // s\_mov\_b64 exec, s4 s\_andn2\_wrexec\_b64 s4, s4 // replaces above 2 ops // repeat until EXEC==0 s\_cbranch\_scc1 loop s\_mov\_b64 exec, s2
+```text
+// V0 holds the index value per lane
+// save exec mask for restore at the end
+s_mov_b64 s2, exec
+// exec mask of remaining (unprocessed) threads
+s_mov_b64 s4, exec
+loop:
+// get the index value for the first active lane
+v_readfirstlane_b32     s0, v0
+// find all other lanes with same index value
+v_cmpx_eq s0, v0
+<OP>          // do the operation using the current EXEC mask. S0 holds the index.
+// mask out thread that was just executed
+// s_andn2_b64    s4, s4, exec
+// s_mov_b64      exec, s4
+s_andn2_wrexec_b64 s4, s4        // replaces above 2 ops
+// repeat until EXEC==0
+s_cbranch_scc1    loop
+s_mov_b64      exec, s2
+```
 
 #### **S\_MOVRELS\_B32 64**
 
 Move data from a relatively-indexed scalar register into another scalar register.
 
-addr = SRC0.u32; // Raw value from instruction addr += M0.u32[31 : 0]; D0.b32 = SGPR[addr].b32
+```text
+addr = SRC0.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+D0.b32 = SGPR[addr].b32
+```
 
 ### **Notes**
 
@@ -7236,7 +7833,12 @@ Move data from a relatively-indexed scalar register into another scalar register
 
 The index in M0.u and the operand address in SRC0.u must be even for this operation.
 
-addr = SRC0.u32; // Raw value from instruction addr += M0.u32[31 : 0]; D0.b64 = SGPR[addr].b64
+```text
+addr = SRC0.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+D0.b64 = SGPR[addr].b64
+```
 
 #### **S\_MOVRELD\_B32 66**
 
@@ -7256,13 +7858,26 @@ Move data from a scalar input into a relatively-indexed scalar register.
 
 The index in M0.u and the operand address in DST.u must be even for this operation.
 
-addr = DST.u32; // Raw value from instruction addr += M0.u32[31 : 0]; SGPR[addr].b64 = S0.b64
+```text
+addr = DST.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+SGPR[addr].b64 = S0.b64
+```
 
 #### **S\_MOVRELSD\_2\_B32 68**
 
 Move data from a relatively-indexed scalar register into another relatively-indexed scalar register, using different offsets for each index.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32; // Raw value from instruction addrs += M0.u32[9 : 0].u32; addrd += M0.u32[25 : 16].u32; SGPR[addrd].b32 = SGPR[addrs].b32
+```text
+addrs = SRC0.u32;
+// Raw value from instruction
+addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[9 : 0].u32;
+addrd += M0.u32[25 : 16].u32;
+SGPR[addrd].b32 = SGPR[addrs].b32
+```
 
 ### **Notes**
 
@@ -7276,7 +7891,7 @@ Store the address of the next instruction to a scalar register.
 
 The byte address of the instruction immediately following this instruction is saved to the destination.
 
-D0.i64 = PC + 4LL
+`D0.i64 = PC + 4LL`
 
 #### **Notes**
 
@@ -7296,7 +7911,11 @@ Store the address of the next instruction to a scalar register and then jump to 
 
 The argument is a byte address of the instruction to jump to. The byte address of the instruction immediately following this instruction is saved to the destination.
 
-jump\_addr = S0.i64; D0.i64 = PC + 4LL; PC = jump\_addr.i64
+```text
+jump_addr = S0.i64;
+D0.i64 = PC + 4LL;
+PC = jump_addr.i64
+```
 
 #### **Notes**
 
@@ -7310,7 +7929,10 @@ The argument is a byte address of the instruction to jump to; this address is li
 
 This instruction may only be used within a trap handler.
 
-WAVE\_STATUS.PRIV = 1'0U; PC = S0.i64
+```text
+WAVE_STATUS.PRIV = 1'0U;
+PC = S0.i64
+```
 
 #### **S\_SENDMSG\_RTN\_B32 76**
 
@@ -7340,55 +7962,70 @@ If SDST is VCC then VCCZ is undefined.
 
 Round the single-precision float input up to next integer and store the result in floating point format into a scalar register.
 
-D0.f32 = trunc(S0.f32); if ((S0.f32 > 0.0F) && (S0.f32 != D0.f32)) then D0.f32 += 1.0F endif
+```text
+D0.f32 = trunc(S0.f32);
+if ((S0.f32 > 0.0F) && (S0.f32 != D0.f32)) then
+    D0.f32 += 1.0F
+endif
+```
 
 #### **S\_FLOOR\_F32 97**
 
 Round the single-precision float input down to previous integer and store the result in floating point format into a scalar register.
 
-D0.f32 = trunc(S0.f32); if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then D0.f32 += -1.0F endif
+```text
+D0.f32 = trunc(S0.f32);
+if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then
+    D0.f32 += -1.0F
+endif
+```
 
 #### **S\_TRUNC\_F32 98**
 
 Compute the integer part of a single-precision float input using round toward zero semantics and store the result in floating point format into a scalar register.
 
-D0.f32 = trunc(S0.f32)
+`D0.f32 = trunc(S0.f32)`
 
 #### **S\_RNDNE\_F32 99**
 
 Round the single-precision float input to the nearest even integer and store the result in floating point format into a scalar register.
 
-D0.f32 = floor(S0.f32 + 0.5F); if (isEven(64'F(floor(S0.f32))) && (fract(S0.f32) == 0.5F)) then D0.f32 -= 1.0F endif
+```text
+D0.f32 = floor(S0.f32 + 0.5F);
+if (isEven(64'F(floor(S0.f32))) && (fract(S0.f32) == 0.5F)) then
+    D0.f32 -= 1.0F
+endif
+```
 
 #### **S\_CVT\_F32\_I32 100**
 
 Convert from a signed 32-bit integer input to a single-precision float value and store the result into a scalar register.
 
-D0.f32 = i32\_to\_f32(S0.i32)
+`D0.f32 = i32_to_f32(S0.i32)`
 
 #### **S\_CVT\_F32\_U32 101**
 
 Convert from an unsigned 32-bit integer input to a single-precision float value and store the result into a scalar register.
 
-D0.f32 = u32\_to\_f32(S0.u32)
+`D0.f32 = u32_to_f32(S0.u32)`
 
 #### **S\_CVT\_I32\_F32 102**
 
 Convert from a single-precision float input to a signed 32-bit integer value and store the result into a scalar register.
 
-D0.i32 = f32\_to\_i32(S0.f32)
+`D0.i32 = f32_to_i32(S0.f32)`
 
 #### **S\_CVT\_U32\_F32 103**
 
 Convert from a single-precision float input to an unsigned 32-bit integer value and store the result into a scalar register.
 
-D0.u32 = f32\_to\_u32(S0.f32)
+`D0.u32 = f32_to_u32(S0.f32)`
 
 #### **S\_CVT\_F16\_F32 104**
 
 Convert from a single-precision float input to a half-precision float value and store the result into a scalar register.
 
-D0.f16 = f32\_to\_f16(S0.f32)
+`D0.f16 = f32_to_f16(S0.f32)`
 
 #### **S\_CVT\_F32\_F16 105**
 
@@ -7413,27 +8050,40 @@ D0.f32 = f16_to_f32(S0[31 : 16].f16)
 
 Round the half-precision float input up to next integer and store the result in floating point format into a scalar register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += 16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then
+    D0.f16 += 16'1.0
+endif
+```
 
 #### **S\_FLOOR\_F16 108**
 
 Round the half-precision float input down to previous integer and store the result in floating point format into a scalar register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += -16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then
+    D0.f16 += -16'1.0
+endif
+```
 
 #### **S\_TRUNC\_F16 109**
 
 Compute the integer part of a half-precision float input using round toward zero semantics and store the result in floating point format into a scalar register.
 
-D0.f16 = trunc(S0.f16)
+`D0.f16 = trunc(S0.f16)`
 
 #### **S\_RNDNE\_F16 110**
 
 Round the half-precision float input to the nearest even integer and store the result in floating point format into a scalar register.
 
-D0.f16 = floor(S0.f16 + 16'0.5); if (isEven(64'F(floor(S0.f16))) && (fract(S0.f16) == 16'0.5)) then D0.f16 -= 16'1.0
-
+```text
+D0.f16 = floor(S0.f16 + 16'0.5);
+if (isEven(64'F(floor(S0.f16))) && (fract(S0.f16) == 16'0.5)) then
+    D0.f16 -= 16'1.0
 endif
+```
 
 # <span id="page-248-0"></span>**16.4. SOPC Instructions**
 
@@ -7443,7 +8093,7 @@ Instructions in this format may use a 32-bit literal constant that occurs immedi
 
 Set SCC to 1 iff the first scalar input is equal to the second scalar input.
 
-SCC = S0.i32 == S1.i32
+`SCC = S0.i32 == S1.i32`
 
 ### **Notes**
 
@@ -7453,7 +8103,7 @@ Note that S\_CMP\_EQ\_I32 and S\_CMP\_EQ\_U32 are identical opcodes, but both ar
 
 Set SCC to 1 iff the first scalar input is less than or greater than the second scalar input.
 
-SCC = S0.i32 <> S1.i32
+`SCC = S0.i32 <> S1.i32`
 
 #### **Notes**
 
@@ -7463,7 +8113,7 @@ Note that S\_CMP\_LG\_I32 and S\_CMP\_LG\_U32 are identical opcodes, but both ar
 
 Set SCC to 1 iff the first scalar input is greater than the second scalar input.
 
-SCC = S0.i32 > S1.i32
+`SCC = S0.i32 > S1.i32`
 
 #### **S\_CMP\_GE\_I32 3**
 
@@ -7473,19 +8123,19 @@ Set SCC to 1 iff the first scalar input is greater than or equal to the second s
 
 Set SCC to 1 iff the first scalar input is less than the second scalar input.
 
-SCC = S0.i32 < S1.i32
+`SCC = S0.i32 < S1.i32`
 
 #### **S\_CMP\_LE\_I32 5**
 
 Set SCC to 1 iff the first scalar input is less than or equal to the second scalar input.
 
-SCC = S0.i32 <= S1.i32
+`SCC = S0.i32 <= S1.i32`
 
 #### **S\_CMP\_EQ\_U32 6**
 
 Set SCC to 1 iff the first scalar input is equal to the second scalar input.
 
-SCC = S0.u32 == S1.u32
+`SCC = S0.u32 == S1.u32`
 
 #### **Notes**
 
@@ -7495,7 +8145,7 @@ Note that S\_CMP\_EQ\_I32 and S\_CMP\_EQ\_U32 are identical opcodes, but both ar
 
 Set SCC to 1 iff the first scalar input is less than or greater than the second scalar input.
 
-SCC = S0.u32 <> S1.u32
+`SCC = S0.u32 <> S1.u32`
 
 #### **Notes**
 
@@ -7509,25 +8159,25 @@ Set SCC to 1 iff the first scalar input is greater than the second scalar input.
 
 Set SCC to 1 iff the first scalar input is greater than or equal to the second scalar input.
 
-SCC = S0.u32 >= S1.u32
+`SCC = S0.u32 >= S1.u32`
 
 #### **S\_CMP\_LT\_U32 10**
 
 Set SCC to 1 iff the first scalar input is less than the second scalar input.
 
-SCC = S0.u32 < S1.u32
+`SCC = S0.u32 < S1.u32`
 
 #### **S\_CMP\_LE\_U32 11**
 
 Set SCC to 1 iff the first scalar input is less than or equal to the second scalar input.
 
-SCC = S0.u32 <= S1.u32
+`SCC = S0.u32 <= S1.u32`
 
 #### **S\_BITCMP0\_B32 12**
 
 Extract a bit from the first scalar input based on an index in the second scalar input, and set SCC to 1 iff the extracted bit is equal to 0.
 
-SCC = S0.u32[S1.u32[4 : 0]] == 1'0U
+`SCC = S0.u32[S1.u32[4 : 0]] == 1'0U`
 
 #### **S\_BITCMP1\_B32 13**
 
@@ -7550,187 +8200,223 @@ SCC = S0.u64[S1.u32[5 : 0]] == 1'0U
 
 Extract a bit from the first scalar input based on an index in the second scalar input, and set SCC to 1 iff the extracted bit is equal to 1.
 
-SCC = S0.u64[S1.u32[5 : 0]] == 1'1U
+`SCC = S0.u64[S1.u32[5 : 0]] == 1'1U`
 
 #### **S\_CMP\_EQ\_U64 16**
 
 Set SCC to 1 iff the first scalar input is equal to the second scalar input.
 
-SCC = S0.u64 == S1.u64
+`SCC = S0.u64 == S1.u64`
 
 #### **S\_CMP\_LG\_U64 17**
 
 Set SCC to 1 iff the first scalar input is less than or greater than the second scalar input.
 
-SCC = S0.u64 <> S1.u64
+`SCC = S0.u64 <> S1.u64`
 
 #### **S\_CMP\_LT\_F32 65**
 
 Set SCC to 1 iff the first scalar input is less than the second scalar input.
 
-SCC = S0.f32 < S1.f32
+`SCC = S0.f32 < S1.f32`
 
 #### **S\_CMP\_LT\_F16 81**
 
 Set SCC to 1 iff the first scalar input is less than the second scalar input.
 
-SCC = S0.f16 < S1.f16
+`SCC = S0.f16 < S1.f16`
 
 #### **S\_CMP\_EQ\_F32 66**
 
 Set SCC to 1 iff the first scalar input is equal to the second scalar input.
 
-SCC = S0.f32 == S1.f32
+`SCC = S0.f32 == S1.f32`
 
 #### **S\_CMP\_EQ\_F16 82**
 
 Set SCC to 1 iff the first scalar input is equal to the second scalar input.
 
-SCC = S0.f16 == S1.f16
+`SCC = S0.f16 == S1.f16`
 
 #### **S\_CMP\_LE\_F32 67**
 
 Set SCC to 1 iff the first scalar input is less than or equal to the second scalar input.
 
-SCC = S0.f32 <= S1.f32
+`SCC = S0.f32 <= S1.f32`
 
 #### **S\_CMP\_LE\_F16 83**
 
 Set SCC to 1 iff the first scalar input is less than or equal to the second scalar input.
 
-SCC = S0.f16 <= S1.f16
+`SCC = S0.f16 <= S1.f16`
 
 #### **S\_CMP\_GT\_F32 68**
 
 Set SCC to 1 iff the first scalar input is greater than the second scalar input.
 
-SCC = S0.f32 > S1.f32
+`SCC = S0.f32 > S1.f32`
 
 #### **S\_CMP\_GT\_F16 84**
 
 Set SCC to 1 iff the first scalar input is greater than the second scalar input.
 
-SCC = S0.f16 > S1.f16
+`SCC = S0.f16 > S1.f16`
 
 #### **S\_CMP\_LG\_F32 69**
 
 Set SCC to 1 iff the first scalar input is less than or greater than the second scalar input.
 
-SCC = S0.f32 <> S1.f32
+`SCC = S0.f32 <> S1.f32`
 
 #### **S\_CMP\_LG\_F16 85**
 
 Set SCC to 1 iff the first scalar input is less than or greater than the second scalar input.
 
-SCC = S0.f16 <> S1.f16
+`SCC = S0.f16 <> S1.f16`
 
 #### **S\_CMP\_GE\_F32 70**
 
 Set SCC to 1 iff the first scalar input is greater than or equal to the second scalar input.
 
-SCC = S0.f32 >= S1.f32
+`SCC = S0.f32 >= S1.f32`
 
 #### **S\_CMP\_GE\_F16 86**
 
 Set SCC to 1 iff the first scalar input is greater than or equal to the second scalar input.
 
-SCC = S0.f16 >= S1.f16
+`SCC = S0.f16 >= S1.f16`
 
 #### **S\_CMP\_O\_F32 71**
 
 Set SCC to 1 iff the first scalar input is orderable to the second scalar input.
 
-SCC = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))
+`SCC = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))`
 
 #### **S\_CMP\_O\_F16 87**
 
 Set SCC to 1 iff the first scalar input is orderable to the second scalar input.
 
-SCC = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))
+`SCC = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))`
 
 #### **S\_CMP\_U\_F32 72**
 
 Set SCC to 1 iff the first scalar input is not orderable to the second scalar input.
 
-SCC = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)))
+`SCC = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)))`
 
 #### **S\_CMP\_U\_F16 88**
 
 Set SCC to 1 iff the first scalar input is not orderable to the second scalar input.
 
-SCC = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))
+`SCC = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))`
 
 #### **S\_CMP\_NGE\_F32 73**
 
 Set SCC to 1 iff the first scalar input is not greater than or equal to the second scalar input.
 
-SCC = !(S0.f32 >= S1.f32); // With NAN inputs this is not the same operation as <
+```text
+SCC = !(S0.f32 >= S1.f32);
+// With NAN inputs this is not the same operation as <
+```
 
 #### **S\_CMP\_NGE\_F16 89**
 
 Set SCC to 1 iff the first scalar input is not greater than or equal to the second scalar input.
 
-SCC = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same operation as <
+```text
+SCC = !(S0.f16 >= S1.f16);
+// With NAN inputs this is not the same operation as <
+```
 
 #### **S\_CMP\_NLG\_F32 74**
 
 Set SCC to 1 iff the first scalar input is not less than or greater than the second scalar input.
 
-SCC = !(S0.f32 <> S1.f32); // With NAN inputs this is not the same operation as ==
+```text
+SCC = !(S0.f32 <> S1.f32);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **S\_CMP\_NLG\_F16 90**
 
 Set SCC to 1 iff the first scalar input is not less than or greater than the second scalar input.
 
-SCC = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same operation as ==
+```text
+SCC = !(S0.f16 <> S1.f16);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **S\_CMP\_NGT\_F32 75**
 
 Set SCC to 1 iff the first scalar input is not greater than the second scalar input.
 
-SCC = !(S0.f32 > S1.f32); // With NAN inputs this is not the same operation as <=
+```text
+SCC = !(S0.f32 > S1.f32);
+// With NAN inputs this is not the same operation as <=
+```
 
 #### **S\_CMP\_NGT\_F16 91**
 
 Set SCC to 1 iff the first scalar input is not greater than the second scalar input.
 
-SCC = !(S0.f16 > S1.f16); // With NAN inputs this is not the same operation as <=
+```text
+SCC = !(S0.f16 > S1.f16);
+// With NAN inputs this is not the same operation as <=
+```
 
 #### **S\_CMP\_NLE\_F32 76**
 
 Set SCC to 1 iff the first scalar input is not less than or equal to the second scalar input.
 
-SCC = !(S0.f32 <= S1.f32); // With NAN inputs this is not the same operation as >
+```text
+SCC = !(S0.f32 <= S1.f32);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **S\_CMP\_NLE\_F16 92**
 
 Set SCC to 1 iff the first scalar input is not less than or equal to the second scalar input.
 
-SCC = !(S0.f16 <= S1.f16); // With NAN inputs this is not the same operation as >
+```text
+SCC = !(S0.f16 <= S1.f16);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **S\_CMP\_NEQ\_F32 77**
 
 Set SCC to 1 iff the first scalar input is not equal to the second scalar input.
 
-SCC = !(S0.f32 == S1.f32); // With NAN inputs this is not the same operation as !=
+```text
+SCC = !(S0.f32 == S1.f32);
+// With NAN inputs this is not the same operation as !=
+```
 
 #### **S\_CMP\_NEQ\_F16 93**
 
 Set SCC to 1 iff the first scalar input is not equal to the second scalar input.
 
-SCC = !(S0.f16 == S1.f16); // With NAN inputs this is not the same operation as !=
+```text
+SCC = !(S0.f16 == S1.f16);
+// With NAN inputs this is not the same operation as !=
+```
 
 #### **S\_CMP\_NLT\_F32 78**
 
 Set SCC to 1 iff the first scalar input is not less than the second scalar input.
 
-SCC = !(S0.f32 < S1.f32); // With NAN inputs this is not the same operation as >=
+```text
+SCC = !(S0.f32 < S1.f32);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **S\_CMP\_NLT\_F16 94**
 
 Set SCC to 1 iff the first scalar input is not less than the second scalar input.
 
-SCC = !(S0.f16 < S1.f16); // With NAN inputs this is not the same operation as >=
+```text
+SCC = !(S0.f16 < S1.f16);
+// With NAN inputs this is not the same operation as >=
+```
 
 # <span id="page-257-0"></span>**16.5. SOPP Instructions**
 
@@ -7740,13 +8426,20 @@ Do nothing. Delay issue of next instruction by a small, fixed amount.
 
 Insert 0..15 wait states based on SIMM16[3:0]. 0x0 means the next instruction can issue on the next clock, 0xf means the next instruction can issue 16 clocks later.
 
-for i in 0U : SIMM16.u16[3 : 0].u32 do nop() endfor
+```text
+for i in 0U : SIMM16.u16[3 : 0].u32 do
+      nop()
+endfor
+```
 
 #### **Notes**
 
 Examples:
 
- s\_nop 0 // Wait 1 cycle. s\_nop 0xf // Wait 16 cycles.
+```text
+s_nop 0           // Wait 1 cycle.
+s_nop 0xf         // Wait 16 cycles.
+```
 
 #### **S\_SETKILL 1**
 
@@ -7774,7 +8467,11 @@ The wave sleeps for (64\*(SIMM16[6:0]-1) .. 64\*SIMM16[6:0]) clocks. The exact a
 
 Examples:
 
- s\_sleep 0 // Wait for 0 clocks. s\_sleep 1 // Wait for 1-64 clocks. s\_sleep 2 // Wait for 65-128 clocks.
+```text
+s_sleep 0         // Wait for 0 clocks.
+s_sleep 1         // Wait for 1-64 clocks.
+s_sleep 2         // Wait for 65-128 clocks.
+```
 
 #### **S\_SET\_INST\_PREFETCH\_DISTANCE 4**
 
@@ -7788,15 +8485,15 @@ Reserved, do not use.
 
 # **PREFETCH\_1\_LINE (0x1)**
 
-Prefetch 1 cache line ahead of PC; keep 2 lines behind PC.
+`Prefetch 1 cache line ahead of PC; keep 2 lines behind PC.`
 
 # **PREFETCH\_2\_LINES (0x2)**
 
-Prefetch 2 cache lines ahead of PC; keep 1 line behind PC.
+`Prefetch 2 cache lines ahead of PC; keep 1 line behind PC.`
 
 # **PREFETCH\_3\_LINES (0x3)**
 
-Prefetch 3 cache lines ahead of PC; keep 0 lines behind PC.
+`Prefetch 3 cache lines ahead of PC; keep 0 lines behind PC.`
 
 SIMM16[15:2] must be set to zero.
 
@@ -7840,7 +8537,11 @@ This field is set to the logical number of instructions in the clause, minus 1 (
 
 # **BREAK\_SPAN = SIMM16[11:8]**
 
-This field is set to the number of instructions to issue before each clause break. If set to zero then there are no clause breaks. If set to nonzero value then the maximum number of instructions between clause breaks is 15.
+```text
+This field is set to the number of instructions to issue before each clause break. If set to zero then there are
+no clause breaks. If set to nonzero value then the maximum number of instructions between clause breaks
+is 15.
+```
 
 The following instruction types cannot appear in a clause:
 
@@ -7864,7 +8565,9 @@ The SIMM16 argument is encoded as:
 
 # **INSTID0 = SIMM16[3:0]**
 
+```text
 Hazard to delay for with the next VALU instruction.
+```
 
 # **INSTSKIP = SIMM16[6:4]**
 
@@ -7872,7 +8575,9 @@ Identify the VALU instruction that the second delay condition applies to.
 
 # **INSTID1 = SIMM16[10:7]**
 
+```text
 Hazard to delay for with the VALU instruction identified by INSTSKIP.
+```
 
 Legal values for the InstID0 and InstID1 fields are:
 
@@ -7910,19 +8615,27 @@ Dependent on previous TRANS32 instruction, 3 instruction(s) back.
 
 # **INSTID\_FMA\_ACCUM\_CYCLE\_1 (0x8)**
 
+```text
 Single cycle penalty for FMA accumulation (reserved).
+```
 
 # **INSTID\_SALU\_CYCLE\_1 (0x9)**
 
+```text
 1 cycle penalty for a prior SALU instruction.
+```
 
 # **INSTID\_SALU\_CYCLE\_2 (0xa)**
 
+```text
 2 cycle penalty for a prior SALU instruction.
+```
 
 # **INSTID\_SALU\_CYCLE\_3 (0xb)**
 
+```text
 3 cycle penalty for a prior SALU instruction.
+```
 
 Legal values for the InstSkip field are:
 
@@ -7962,7 +8675,17 @@ To reduce instruction stream overhead the S\_DELAY\_ALU instructions packs two d
 
 S\_DELAY\_ALU is illegal inside of a clause created by S\_CLAUSE.
 
-v\_mov\_b32 v3, v0 v\_lshlrev\_b32 v30, 1, v31 v\_lshlrev\_b32 v24, 1, v25 s\_delay\_alu instid0(INSTID\_VALU\_DEP\_3) | instskip(INSTSKIP\_SKIP\_1) | instid1(INSTID\_VALU\_DEP\_1) // 1 cycle delay here v\_add\_f32 v0, v1, v3 v\_sub\_f32 v11, v9, v9 // 2 cycles delay here v\_mul\_f32 v10, v13, v11
+```text
+v_mov_b32 v3, v0
+v_lshlrev_b32     v30, 1, v31
+v_lshlrev_b32     v24, 1, v25
+s_delay_alu instid0(INSTID_VALU_DEP_3) | instskip(INSTSKIP_SKIP_1) | instid1(INSTID_VALU_DEP_1)
+    // 1 cycle delay here
+v_add_f32   v0, v1, v3
+v_sub_f32   v11, v9, v9
+    // 2 cycles delay here
+v_mul_f32   v10, v13, v11
+```
 
 #### **S\_WAITCNT 9**
 
@@ -7984,7 +8707,11 @@ VM wait count. 0x3f means do not wait on VMCNT.
 
 Waits for all of the following conditions to hold before continuing:
 
- expcnt <= WaitEXPCNT lgkmcnt <= WaitLGKMCNT vmcnt <= WaitVMCNT
+```text
+expcnt <= WaitEXPCNT
+lgkmcnt <= WaitLGKMCNT
+vmcnt <= WaitVMCNT
+```
 
 VMCNT only counts vector memory loads, image sample instructions, and vector memory atomics that return data. Contrast with the VSCNT counter.
 
@@ -8000,7 +8727,10 @@ Wait for an event to occur or a condition to be satisfied before continuing. The
 
 # **DONT\_WAIT\_EXPORT\_READY = SIMM16[0]**
 
-If this value is ZERO then sleep until the export\_ready bit is 1. If the export\_ready bit is already 1, no sleep occurs. Effect is the same as the export\_ready check performed before issuing an export instruction.
+```text
+If this value is ZERO then sleep until the export_ready bit is 1. If the export_ready bit is already 1, no sleep
+occurs. Effect is the same as the export_ready check performed before issuing an export instruction.
+```
 
 No wait occurs if this value is ONE.
 
@@ -8012,7 +8742,16 @@ Enter the trap handler.
 
 This instruction may be generated internally as well in response to a host trap (HT = 1) or an exception. TrapID 0 is reserved for hardware use and should not be used in a shader-generated trap.
 
-TrapID = SIMM16.u16[7 : 0]; "Wait for all instructions to complete"; // PC passed into trap handler points to S\_TRAP itself, // \*not\* to the next instruction. { TTMP[1], TTMP[0] } = { 7'0, HT[0], TrapID[7 : 0], PC[47 : 0] }; PC = TBA.i64; // trap base address WAVE\_STATUS.PRIV = 1'1U
+```text
+TrapID = SIMM16.u16[7 : 0];
+"Wait for all instructions to complete";
+// PC passed into trap handler points to S_TRAP itself,
+// *not* to the next instruction.
+{ TTMP[1], TTMP[0] } = { 7'0, HT[0], TrapID[7 : 0], PC[47 : 0] };
+PC = TBA.i64;
+// trap base address
+WAVE_STATUS.PRIV = 1'1U
+```
 
 #### **S\_ROUND\_MODE 17**
 
@@ -8038,7 +8777,15 @@ In short: do not embed this opcode in the middle of a valid shader program. DO u
 
 Example:
 
- ... s\_endpgm // last real instruction in shader buffer s\_code\_end // 1 s\_code\_end // 2 s\_code\_end // 3 s\_code\_end // 4 s\_code\_end // done!
+```text
+...
+s_endpgm       // last real instruction in shader buffer
+s_code_end        // 1
+s_code_end        // 2
+s_code_end        // 3
+s_code_end        // 4
+s_code_end        // done!
+```
 
 #### **S\_BRANCH 32**
 
@@ -8086,7 +8833,13 @@ If SCC is 1 then jump to a constant offset relative to the current PC.
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if SCC == 1'1U then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if SCC == 1'1U then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_VCCZ 35**
 
@@ -8094,7 +8847,13 @@ If VCCZ is 1 then jump to a constant offset relative to the current PC.
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if VCCZ.u1 == 1'1U then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if VCCZ.u1 == 1'1U then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_VCCNZ 36**
 
@@ -8102,9 +8861,13 @@ If VCCZ is 0 then jump to a constant offset relative to the current PC.
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if VCCZ.u1 == 1'0U then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else
-
- PC = PC + 4LL endif
+```text
+if VCCZ.u1 == 1'0U then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_EXECZ 37**
 
@@ -8112,7 +8875,13 @@ If EXECZ is 1 then jump to a constant offset relative to the current PC.
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if EXECZ.u1 == 1'1U then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if EXECZ.u1 == 1'1U then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_EXECNZ 38**
 
@@ -8120,7 +8889,13 @@ If EXECZ is 0 then jump to a constant offset relative to the current PC.
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if EXECZ.u1 == 1'0U then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if EXECZ.u1 == 1'0U then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_CDBGSYS 39**
 
@@ -8157,7 +8932,13 @@ If either the system debug flag or the user debug flag is set then jump to a con
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if (WAVE\_STATUS.COND\_DBG\_SYS || WAVE\_STATUS.COND\_DBG\_USER) then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if (WAVE_STATUS.COND_DBG_SYS || WAVE_STATUS.COND_DBG_USER) then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_CBRANCH\_CDBGSYS\_AND\_USER 42**
 
@@ -8165,7 +8946,13 @@ If both the system debug flag and the user debug flag are set then jump to a con
 
 The literal argument is a signed DWORD offset relative to the PC of the next instruction.
 
-if (WAVE\_STATUS.COND\_DBG\_SYS && WAVE\_STATUS.COND\_DBG\_USER) then PC = PC + signext(SIMM16.i16 \* 16'4) + 4LL else PC = PC + 4LL endif
+```text
+if (WAVE_STATUS.COND_DBG_SYS && WAVE_STATUS.COND_DBG_USER) then
+    PC = PC + signext(SIMM16.i16 * 16'4) + 4LL
+else
+    PC = PC + 4LL
+endif
+```
 
 #### **S\_ENDPGM 48**
 
@@ -8201,7 +8988,10 @@ Change wave user priority.
 
 User settable wave priority is set to SIMM16[1:0]. 0 is the lowest priority and 3 is the highest. The overall wave priority is:
 
-Priority = {SysUserPrio[1:0], WaveAge[3:0]} SysUserPrio = MIN(3, SysPrio[1:0] + UserPrio[1:0]).
+```text
+Priority = {SysUserPrio[1:0], WaveAge[3:0]}
+SysUserPrio = MIN(3, SysPrio[1:0] + UserPrio[1:0]).
+```
 
 #### **S\_SENDMSG 54**
 
@@ -8241,7 +9031,7 @@ Barrier instructions do not wait for any counters to go to zero before issuing. 
 
 Load 32 bits of data from the scalar memory into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32
+`SDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **Notes**
 
@@ -8253,7 +9043,10 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 64 bits of data from the scalar memory into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32
+```
 
 # **Notes**
 
@@ -8265,7 +9058,12 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 128 bits of data from the scalar memory into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 If the offset is specified as an immediate 21-bit constant, the constant is a SIGNED BYTE offset.
 
@@ -8273,7 +9071,16 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 256 bits of data from the scalar memory into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32; SDATA[159 : 128] = MEM[ADDR + 16U].b32; SDATA[191 : 160] = MEM[ADDR + 20U].b32; SDATA[223 : 192] = MEM[ADDR + 24U].b32; SDATA[255 : 224] = MEM[ADDR + 28U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32;
+SDATA[159 : 128] = MEM[ADDR + 16U].b32;
+SDATA[191 : 160] = MEM[ADDR + 20U].b32;
+SDATA[223 : 192] = MEM[ADDR + 24U].b32;
+SDATA[255 : 224] = MEM[ADDR + 28U].b32
+```
 
 # **Notes**
 
@@ -8285,7 +9092,24 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 512 bits of data from the scalar memory into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32; SDATA[159 : 128] = MEM[ADDR + 16U].b32; SDATA[191 : 160] = MEM[ADDR + 20U].b32; SDATA[223 : 192] = MEM[ADDR + 24U].b32; SDATA[255 : 224] = MEM[ADDR + 28U].b32; SDATA[287 : 256] = MEM[ADDR + 32U].b32; SDATA[319 : 288] = MEM[ADDR + 36U].b32; SDATA[351 : 320] = MEM[ADDR + 40U].b32; SDATA[383 : 352] = MEM[ADDR + 44U].b32; SDATA[415 : 384] = MEM[ADDR + 48U].b32; SDATA[447 : 416] = MEM[ADDR + 52U].b32; SDATA[479 : 448] = MEM[ADDR + 56U].b32; SDATA[511 : 480] = MEM[ADDR + 60U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32;
+SDATA[159 : 128] = MEM[ADDR + 16U].b32;
+SDATA[191 : 160] = MEM[ADDR + 20U].b32;
+SDATA[223 : 192] = MEM[ADDR + 24U].b32;
+SDATA[255 : 224] = MEM[ADDR + 28U].b32;
+SDATA[287 : 256] = MEM[ADDR + 32U].b32;
+SDATA[319 : 288] = MEM[ADDR + 36U].b32;
+SDATA[351 : 320] = MEM[ADDR + 40U].b32;
+SDATA[383 : 352] = MEM[ADDR + 44U].b32;
+SDATA[415 : 384] = MEM[ADDR + 48U].b32;
+SDATA[447 : 416] = MEM[ADDR + 52U].b32;
+SDATA[479 : 448] = MEM[ADDR + 56U].b32;
+SDATA[511 : 480] = MEM[ADDR + 60U].b32
+```
 
 # **Notes**
 
@@ -8295,7 +9119,7 @@ If the offset is specified as an SGPR, the SGPR contains an UNSIGNED BYTE offset
 
 Load 32 bits of data from a scalar buffer surface into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32
+`SDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **Notes**
 
@@ -8307,7 +9131,10 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 64 bits of data from a scalar buffer surface into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32
+```
 
 ### **Notes**
 
@@ -8319,7 +9146,12 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 128 bits of data from a scalar buffer surface into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 # **Notes**
 
@@ -8331,7 +9163,16 @@ If the offset is specified as an immediate 21-bit constant, the constant is a SI
 
 Load 256 bits of data from a scalar buffer surface into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32; SDATA[159 : 128] = MEM[ADDR + 16U].b32; SDATA[191 : 160] = MEM[ADDR + 20U].b32; SDATA[223 : 192] = MEM[ADDR + 24U].b32; SDATA[255 : 224] = MEM[ADDR + 28U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32;
+SDATA[159 : 128] = MEM[ADDR + 16U].b32;
+SDATA[191 : 160] = MEM[ADDR + 20U].b32;
+SDATA[223 : 192] = MEM[ADDR + 24U].b32;
+SDATA[255 : 224] = MEM[ADDR + 28U].b32
+```
 
 ### **Notes**
 
@@ -8341,7 +9182,24 @@ If the offset is specified as an SGPR, the SGPR contains an UNSIGNED BYTE offset
 
 Load 512 bits of data from a scalar buffer surface into a scalar register.
 
-SDATA[31 : 0] = MEM[ADDR].b32; SDATA[63 : 32] = MEM[ADDR + 4U].b32; SDATA[95 : 64] = MEM[ADDR + 8U].b32; SDATA[127 : 96] = MEM[ADDR + 12U].b32; SDATA[159 : 128] = MEM[ADDR + 16U].b32; SDATA[191 : 160] = MEM[ADDR + 20U].b32; SDATA[223 : 192] = MEM[ADDR + 24U].b32; SDATA[255 : 224] = MEM[ADDR + 28U].b32; SDATA[287 : 256] = MEM[ADDR + 32U].b32; SDATA[319 : 288] = MEM[ADDR + 36U].b32; SDATA[351 : 320] = MEM[ADDR + 40U].b32; SDATA[383 : 352] = MEM[ADDR + 44U].b32; SDATA[415 : 384] = MEM[ADDR + 48U].b32; SDATA[447 : 416] = MEM[ADDR + 52U].b32; SDATA[479 : 448] = MEM[ADDR + 56U].b32; SDATA[511 : 480] = MEM[ADDR + 60U].b32
+```text
+SDATA[31 : 0] = MEM[ADDR].b32;
+SDATA[63 : 32] = MEM[ADDR + 4U].b32;
+SDATA[95 : 64] = MEM[ADDR + 8U].b32;
+SDATA[127 : 96] = MEM[ADDR + 12U].b32;
+SDATA[159 : 128] = MEM[ADDR + 16U].b32;
+SDATA[191 : 160] = MEM[ADDR + 20U].b32;
+SDATA[223 : 192] = MEM[ADDR + 24U].b32;
+SDATA[255 : 224] = MEM[ADDR + 28U].b32;
+SDATA[287 : 256] = MEM[ADDR + 32U].b32;
+SDATA[319 : 288] = MEM[ADDR + 36U].b32;
+SDATA[351 : 320] = MEM[ADDR + 40U].b32;
+SDATA[383 : 352] = MEM[ADDR + 44U].b32;
+SDATA[415 : 384] = MEM[ADDR + 48U].b32;
+SDATA[447 : 416] = MEM[ADDR + 52U].b32;
+SDATA[479 : 448] = MEM[ADDR + 56U].b32;
+SDATA[511 : 480] = MEM[ADDR + 60U].b32
+```
 
 #### **Notes**
 
@@ -8365,7 +9223,7 @@ Instructions in this format may use a 32-bit literal constant or DPP that occurs
 
 Copy data from one of two inputs based on the per-lane condition code and store the result into a vector register.
 
-D0.u32 = VCC.u64[laneId] ? S1.u32 : S0.u32
+`D0.u32 = VCC.u64[laneId] ? S1.u32 : S0.u32`
 
 # **Notes**
 
@@ -8377,13 +9235,18 @@ Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit 
 
 Compute the dot product of two packed 2-D half-precision float inputs in the single-precision float domain and accumulate the resulting single-precision float value into the destination vector register.
 
-tmp = D0.f32; tmp += f16\_to\_f32(S0[15 : 0].f16) \* f16\_to\_f32(S1[15 : 0].f16); tmp += f16\_to\_f32(S0[31 : 16].f16) \* f16\_to\_f32(S1[31 : 16].f16); D0.f32 = tmp
+```text
+tmp = D0.f32;
+tmp += f16_to_f32(S0[15 : 0].f16) * f16_to_f32(S1[15 : 0].f16);
+tmp += f16_to_f32(S0[31 : 16].f16) * f16_to_f32(S1[31 : 16].f16);
+D0.f32 = tmp
+```
 
 #### **V\_ADD\_F32 3**
 
 Add two floating point inputs and store the result into a vector register.
 
-D0.f32 = S0.f32 + S1.f32
+`D0.f32 = S0.f32 + S1.f32`
 
 #### **Notes**
 
@@ -8391,7 +9254,7 @@ D0.f32 = S0.f32 + S1.f32
 
 Subtract the second floating point input from the first input and store the result into a vector register.
 
-D0.f32 = S0.f32 - S1.f32
+`D0.f32 = S0.f32 - S1.f32`
 
 #### **Notes**
 
@@ -8401,7 +9264,7 @@ D0.f32 = S0.f32 - S1.f32
 
 Subtract the first floating point input from the second input and store the result into a vector register.
 
-D0.f32 = S1.f32 - S0.f32
+`D0.f32 = S1.f32 - S0.f32`
 
 # **Notes**
 
@@ -8411,7 +9274,14 @@ D0.f32 = S1.f32 - S0.f32
 
 Multiply two single-precision values and accumulate the result with the destination. Follows DX9 rules where 0.0 times anything produces 0.0.
 
-if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then // DX9 rules, 0.0 \* x = 0.0 D0.f32 = S2.f32 else D0.f32 = fma(S0.f32, S1.f32, D0.f32) endif
+```text
+if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then
+      // DX9 rules, 0.0 * x = 0.0
+      D0.f32 = S2.f32
+else
+      D0.f32 = fma(S0.f32, S1.f32, D0.f32)
+endif
+```
 
 #### **V\_MUL\_DX9\_ZERO\_F32 7**
 
@@ -8423,7 +9293,7 @@ if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then // DX9 rules, 0.0 \* x 
 
 Multiply two floating point inputs and store the result into a vector register.
 
-D0.f32 = S0.f32 \* S1.f32
+`D0.f32 = S0.f32 * S1.f32`
 
 #### **Notes**
 
@@ -8433,7 +9303,7 @@ D0.f32 = S0.f32 \* S1.f32
 
 Multiply two signed 24-bit integer inputs and store the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I(S0.i24) \* 32'I(S1.i24)
+`D0.i32 = 32'I(S0.i24) * 32'I(S1.i24)`
 
 #### **Notes**
 
@@ -8443,7 +9313,7 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I((64'I(S0.i24) \* 64'I(S1.i24)) >> 32U)
+`D0.i32 = 32'I((64'I(S0.i24) * 64'I(S1.i24)) >> 32U)`
 
 #### **Notes**
 
@@ -8453,7 +9323,7 @@ See also V\_MUL\_I32\_I24.
 
 Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector register.
 
-D0.u32 = 32'U(S0.u24) \* 32'U(S1.u24)
+`D0.u32 = 32'U(S0.u24) * 32'U(S1.u24)`
 
 ### **Notes**
 
@@ -8463,7 +9333,7 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Multiply two unsigned 24-bit integer inputs and store the high 32 bits of the result as an unsigned 32-bit integer into a vector register.
 
-D0.u32 = 32'U((64'U(S0.u24) \* 64'U(S1.u24)) >> 32U)
+`D0.u32 = 32'U((64'U(S0.u24) * 64'U(S1.u24)) >> 32U)`
 
 ### **Notes**
 
@@ -8473,9 +9343,40 @@ See also V\_MUL\_U32\_U24.
 
 Select the minimum of two single-precision float inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32
-
- else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+      elsif isSignalNAN(64'F(S1.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+      elsif isQuietNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isQuietNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+else
+      if isNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **Notes**
 
@@ -8487,7 +9388,40 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the maximum of two single-precision float inputs and store the result into a vector register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+      ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+      elsif isSignalNAN(64'F(S1.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+      elsif isQuietNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isQuietNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+else
+      if isNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 IEEE compliant. Supports denormals, round mode, exception flags, saturation.
 
@@ -8497,31 +9431,31 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the minimum of two signed 32-bit integer inputs and store the selected value into a vector register.
 
-D0.i32 = S0.i32 < S1.i32 ? S0.i32 : S1.i32
+`D0.i32 = S0.i32 < S1.i32 ? S0.i32 : S1.i32`
 
 #### **V\_MAX\_I32 18**
 
 Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register.
 
-D0.i32 = S0.i32 >= S1.i32 ? S0.i32 : S1.i32
+`D0.i32 = S0.i32 >= S1.i32 ? S0.i32 : S1.i32`
 
 #### **V\_MIN\_U32 19**
 
 Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = S0.u32 < S1.u32 ? S0.u32 : S1.u32
+`D0.u32 = S0.u32 < S1.u32 ? S0.u32 : S1.u32`
 
 #### **V\_MAX\_U32 20**
 
 Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = S0.u32 >= S1.u32 ? S0.u32 : S1.u32
+`D0.u32 = S0.u32 >= S1.u32 ? S0.u32 : S1.u32`
 
 #### **V\_LSHLREV\_B32 24**
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
-D0.u32 = (S1.u32 << S0[4 : 0].u32)
+`D0.u32 = (S1.u32 << S0[4 : 0].u32)`
 
 #### **Notes**
 
@@ -8531,7 +9465,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the logical shift right of the second vector input and store the result into a vector register.
 
-D0.u32 = (S1.u32 >> S0[4 : 0].u32)
+`D0.u32 = (S1.u32 >> S0[4 : 0].u32)`
 
 #### **Notes**
 
@@ -8541,7 +9475,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
-D0.i32 = (S1.i32 >> S0[4 : 0].u32)
+`D0.i32 = (S1.i32 >> S0[4 : 0].u32)`
 
 #### **Notes**
 
@@ -8576,7 +9510,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise XOR on two vector inputs and store the result into a vector register.
 
-D0.u32 = (S0.u32 ^ S1.u32)
+`D0.u32 = (S0.u32 ^ S1.u32)`
 
 #### **Notes**
 
@@ -8586,7 +9520,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise XNOR on two vector inputs and store the result into a vector register.
 
-D0.u32 = ~(S0.u32 ^ S1.u32)
+`D0.u32 = ~(S0.u32 ^ S1.u32)`
 
 #### **Notes**
 
@@ -8596,7 +9530,12 @@ Input and output modifiers not supported.
 
 Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = 64'U(S0.u32) + 64'U(S1.u32) + VCC.u64[laneId].u64; VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_ADD\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = 64'U(S0.u32) + 64'U(S1.u32) + VCC.u64[laneId].u64;
+VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_ADD_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 S2.u.
 
@@ -8606,7 +9545,12 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = S0.u32 - S1.u32 - VCC.u64[laneId].u32; VCC.u64[laneId] = 64'U(S1.u32) + VCC.u64[laneId].u64 > 64'U(S0.u32) ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_SUB\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = S0.u32 - S1.u32 - VCC.u64[laneId].u32;
+VCC.u64[laneId] = 64'U(S1.u32) + VCC.u64[laneId].u64 > 64'U(S0.u32) ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_SUB_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 #### **Notes**
 
@@ -8618,7 +9562,12 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = S1.u32 - S0.u32 - VCC.u64[laneId].u32; VCC.u64[laneId] = 64'U(S0.u32) + VCC.u64[laneId].u64 > 64'U(S1.u32) ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_SUB\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = S1.u32 - S0.u32 - VCC.u64[laneId].u32;
+VCC.u64[laneId] = 64'U(S0.u32) + VCC.u64[laneId].u64 > 64'U(S1.u32) ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_SUB_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 #### **Notes**
 
@@ -8630,7 +9579,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Add two unsigned 32-bit integer inputs and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u32 = S0.u32 + S1.u32
+`D0.u32 = S0.u32 + S1.u32`
 
 #### **Notes**
 
@@ -8640,7 +9589,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the second unsigned 32-bit integer input from the first input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u32 = S0.u32 - S1.u32
+`D0.u32 = S0.u32 - S1.u32`
 
 #### **Notes**
 
@@ -8650,7 +9599,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u32 = S1.u32 - S0.u32
+`D0.u32 = S1.u32 - S0.u32`
 
 #### **Notes**
 
@@ -8660,13 +9609,13 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Multiply two floating point inputs and accumulate the result into the destination register using fused multiply add.
 
-D0.f32 = fma(S0.f32, S1.f32, D0.f32)
+`D0.f32 = fma(S0.f32, S1.f32, D0.f32)`
 
 #### **V\_FMAMK\_F32 44**
 
 Multiply a single-precision float input with a literal constant and add a second single-precision float input using fused multiply add, and store the result into a vector register.
 
-D0.f32 = fma(S0.f32, SIMM32.f32, S1.f32)
+`D0.f32 = fma(S0.f32, SIMM32.f32, S1.f32)`
 
 #### **Notes**
 
@@ -8676,7 +9625,7 @@ This opcode cannot use the VOP3 encoding and cannot use input/output modifiers.
 
 Multiply two single-precision float inputs and add a literal constant using fused multiply add, and store the result into a vector register.
 
-D0.f32 = fma(S0.f32, S1.f32, SIMM32.f32)
+`D0.f32 = fma(S0.f32, S1.f32, SIMM32.f32)`
 
 #### **Notes**
 
@@ -8686,7 +9635,15 @@ This opcode cannot use the VOP3 encoding and cannot use input/output modifiers.
 
 Convert two single-precision float inputs to a packed half-precision float value using round toward zero semantics (ignore the current rounding mode), and store the result into a vector register.
 
-prev\_mode = ROUND\_MODE; ROUND\_MODE = ROUND\_TOWARD\_ZERO; tmp[15 : 0].f16 = f32\_to\_f16(S0.f32); tmp[31 : 16].f16 = f32\_to\_f16(S1.f32); D0 = tmp.b32; ROUND\_MODE = prev\_mode; // Round-toward-zero regardless of current round mode setting in hardware.
+```text
+prev_mode = ROUND_MODE;
+ROUND_MODE = ROUND_TOWARD_ZERO;
+tmp[15 : 0].f16 = f32_to_f16(S0.f32);
+tmp[31 : 16].f16 = f32_to_f16(S1.f32);
+D0 = tmp.b32;
+ROUND_MODE = prev_mode;
+// Round-toward-zero regardless of current round mode setting in hardware.
+```
 
 #### **Notes**
 
@@ -8694,7 +9651,7 @@ prev\_mode = ROUND\_MODE; ROUND\_MODE = ROUND\_TOWARD\_ZERO; tmp[15 : 0].f16 = f
 
 Add two floating point inputs and store the result into a vector register.
 
-D0.f16 = S0.f16 + S1.f16
+`D0.f16 = S0.f16 + S1.f16`
 
 # **Notes**
 
@@ -8702,7 +9659,7 @@ D0.f16 = S0.f16 + S1.f16
 
 Subtract the second floating point input from the first input and store the result into a vector register.
 
-D0.f16 = S0.f16 - S1.f16
+`D0.f16 = S0.f16 - S1.f16`
 
 #### **Notes**
 
@@ -8712,7 +9669,7 @@ D0.f16 = S0.f16 - S1.f16
 
 Subtract the first floating point input from the second input and store the result into a vector register.
 
-D0.f16 = S1.f16 - S0.f16
+`D0.f16 = S1.f16 - S0.f16`
 
 # **Notes**
 
@@ -8722,7 +9679,7 @@ D0.f16 = S1.f16 - S0.f16
 
 Multiply two floating point inputs and store the result into a vector register.
 
-D0.f16 = S0.f16 \* S1.f16
+`D0.f16 = S0.f16 * S1.f16`
 
 ### **Notes**
 
@@ -8732,13 +9689,13 @@ D0.f16 = S0.f16 \* S1.f16
 
 Multiply two floating point inputs and accumulate the result into the destination register using fused multiply add.
 
-D0.f16 = fma(S0.f16, S1.f16, D0.f16)
+`D0.f16 = fma(S0.f16, S1.f16, D0.f16)`
 
 #### **V\_FMAMK\_F16 55**
 
 Multiply a half-precision float input with a literal constant and add a second half-precision float input using fused multiply add, and store the result into a vector register.
 
-D0.f16 = fma(S0.f16, SIMM32.f16, S1.f16)
+`D0.f16 = fma(S0.f16, SIMM32.f16, S1.f16)`
 
 #### **Notes**
 
@@ -8748,7 +9705,7 @@ This opcode cannot use the VOP3 encoding and cannot use input/output modifiers.
 
 Multiply two half-precision float inputs and add a literal constant using fused multiply add, and store the result into a vector register.
 
-D0.f16 = fma(S0.f16, S1.f16, SIMM32.f16)
+`D0.f16 = fma(S0.f16, S1.f16, SIMM32.f16)`
 
 #### **Notes**
 
@@ -8758,9 +9715,40 @@ This opcode cannot use the VOP3 encoding and cannot use input/output modifiers.
 
 Select the maximum of two half-precision float inputs and store the result into a vector register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else
-
- if isNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+      ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+      elsif isSignalNAN(64'F(S1.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+      elsif isQuietNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isQuietNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+else
+      if isNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 # **Notes**
 
@@ -8772,9 +9760,40 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the minimum of two half-precision float inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else if isNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16
-
- else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+      elsif isSignalNAN(64'F(S1.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+      elsif isQuietNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isQuietNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+else
+      if isNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **Notes**
 
@@ -8786,7 +9805,7 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Multiply the first input, a floating point value, by an integral power of 2 specified in the second input, a signed integer value, and store the floating point result into a vector register.
 
-D0.f16 = S0.f16 \* 16'F(2.0F \*\* 32'I(S1.i16))
+`D0.f16 = S0.f16 * 16'F(2.0F ** 32'I(S1.i16))`
 
 #### **Notes**
 
@@ -8796,7 +9815,10 @@ Compare with the ldexp() function in C.
 
 Multiply two packed half-precision float inputs component-wise and accumulate the result into the destination register using fused multiply add.
 
-D0[31 : 16].f16 = fma(S0[31 : 16].f16, S1[31 : 16].f16, D0[31 : 16].f16); D0[15 : 0].f16 = fma(S0[15 : 0].f16, S1[15 : 0].f16, D0[15 : 0].f16)
+```text
+D0[31 : 16].f16 = fma(S0[31 : 16].f16, S1[31 : 16].f16, D0[31 : 16].f16);
+D0[15 : 0].f16 = fma(S0[15 : 0].f16, S1[15 : 0].f16, D0[15 : 0].f16)
+```
 
 #### **Notes**
 
@@ -8818,7 +9840,7 @@ Do nothing.
 
 Move 32-bit data from a vector input into a vector register.
 
-D0.b32 = S0.b32
+`D0.b32 = S0.b32`
 
 #### **Notes**
 
@@ -8826,15 +9848,39 @@ Floating-point modifiers are valid for this instruction if S0 is a 32-bit floati
 
 Functional examples:
 
- v\_mov\_b32 v0, v1 // Move into v0 from v1 v\_mov\_b32 v0, -v1 // Set v0 to the negation of v1 v\_mov\_b32 v0, abs(v1) // Set v0 to the absolute value of v1
+```text
+v_mov_b32 v0, v1    // Move into v0 from v1
+v_mov_b32 v0, -v1   // Set v0 to the negation of v1
+v_mov_b32 v0, abs(v1)    // Set v0 to the absolute value of v1
+```
 
 #### **V\_READFIRSTLANE\_B32 2**
 
 Read the scalar value in the lowest active lane of the input vector register and store it into a scalar register.
 
-declare lane : 32'U; if WAVE64 then // 64 lanes if EXEC == 0x0LL then lane = 0U; // Force lane 0 if all lanes are disabled else lane = 32'U(s\_ff1\_i32\_b64(EXEC)); // Lowest active lane endif else
-
- // 32 lanes if EXEC\_LO.i32 == 0 then lane = 0U; // Force lane 0 if all lanes are disabled else lane = 32'U(s\_ff1\_i32\_b32(EXEC\_LO)); // Lowest active lane endif endif; D0.b32 = VGPR[lane][SRC0.u32]
+```text
+declare lane : 32'U;
+if WAVE64 then
+      // 64 lanes
+      if EXEC == 0x0LL then
+          lane = 0U;
+          // Force lane 0 if all lanes are disabled
+      else
+          lane = 32'U(s_ff1_i32_b64(EXEC));
+          // Lowest active lane
+      endif
+else
+      // 32 lanes
+      if EXEC_LO.i32 == 0 then
+          lane = 0U;
+          // Force lane 0 if all lanes are disabled
+      else
+          lane = 32'U(s_ff1_i32_b32(EXEC_LO));
+          // Lowest active lane
+      endif
+endif;
+D0.b32 = VGPR[lane][SRC0.u32]
+```
 
 #### **Notes**
 
@@ -8844,7 +9890,7 @@ Overrides EXEC mask for the VGPR read. Input and output modifiers not supported;
 
 Convert from a double-precision float input to a signed 32-bit integer value and store the result into a vector register.
 
-D0.i32 = f64\_to\_i32(S0.f64)
+`D0.i32 = f64_to_i32(S0.f64)`
 
 # **Notes**
 
@@ -8883,7 +9929,7 @@ D0.f32 = i32_to_f32(S0.i32)
 
 Convert from an unsigned 32-bit integer input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0.u32)
+`D0.f32 = u32_to_f32(S0.u32)`
 
 #### **Notes**
 
@@ -8893,7 +9939,7 @@ D0.f32 = u32\_to\_f32(S0.u32)
 
 Convert from a single-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
-D0.u32 = f32\_to\_u32(S0.f32)
+`D0.u32 = f32_to_u32(S0.f32)`
 
 #### **Notes**
 
@@ -8905,7 +9951,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a single-precision float input to a signed 32-bit integer value and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(S0.f32)
+`D0.i32 = f32_to_i32(S0.f32)`
 
 1ULP accuracy, out-of-range floating point values (including infinity) saturate. NAN is converted to 0.
 
@@ -8915,7 +9961,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a single-precision float input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = f32\_to\_f16(S0.f32)
+`D0.f16 = f32_to_f16(S0.f32)`
 
 #### **Notes**
 
@@ -8925,7 +9971,7 @@ D0.f16 = f32\_to\_f16(S0.f32)
 
 Convert from a half-precision float input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = f16\_to\_f32(S0.f16)
+`D0.f32 = f16_to_f32(S0.f16)`
 
 #### **Notes**
 
@@ -8935,7 +9981,7 @@ D0.f32 = f16\_to\_f32(S0.f16)
 
 Convert from a single-precision float input to a signed 32-bit integer value using round to nearest integer semantics (ignore the default rounding mode) and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(floor(S0.f32 + 0.5F))
+`D0.i32 = f32_to_i32(floor(S0.f32 + 0.5F))`
 
 # **Notes**
 
@@ -8945,7 +9991,7 @@ D0.i32 = f32\_to\_i32(floor(S0.f32 + 0.5F))
 
 Convert from a single-precision float input to a signed 32-bit integer value using round-down semantics (ignore the default rounding mode) and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(floor(S0.f32))
+`D0.i32 = f32_to_i32(floor(S0.f32))`
 
 #### **Notes**
 
@@ -8961,13 +10007,18 @@ S0 binary Result
 
 1000 -0.5000f 1001 -0.4375f 1010 -0.3750f 1011 -0.3125f 1100 -0.2500f 1101 -0.1875f 1110 -0.1250f 1111 -0.0625f 0000 +0.0000f 0001 +0.0625f 0010 +0.1250f 0011 +0.1875f 0100 +0.2500f 0101 +0.3125f 0110 +0.3750f 0111 +0.4375f
 
-> declare CVT\_OFF\_TABLE : 32'F[16]; D0.f32 = CVT\_OFF\_TABLE[S0.u32[3 : 0]]
+>
+
+```text
+declare CVT_OFF_TABLE : 32'F[16];
+D0.f32 = CVT_OFF_TABLE[S0.u32[3 : 0]]
+```
 
 #### **V\_CVT\_F32\_F64 15**
 
 Convert from a double-precision float input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = f64\_to\_f32(S0.f64)
+`D0.f32 = f64_to_f32(S0.f64)`
 
 #### **Notes**
 
@@ -8977,7 +10028,7 @@ D0.f32 = f64\_to\_f32(S0.f64)
 
 Convert from a single-precision float input to a double-precision float value and store the result into a vector register.
 
-D0.f64 = f32\_to\_f64(S0.f32)
+`D0.f64 = f32_to_f64(S0.f32)`
 
 #### **Notes**
 
@@ -8987,13 +10038,13 @@ D0.f64 = f32\_to\_f64(S0.f32)
 
 Convert an unsigned byte in byte 0 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[7 : 0].u32)
+`D0.f32 = u32_to_f32(S0[7 : 0].u32)`
 
 #### **V\_CVT\_F32\_UBYTE1 18**
 
 Convert an unsigned byte in byte 1 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[15 : 8].u32)
+`D0.f32 = u32_to_f32(S0[15 : 8].u32)`
 
 #### **V\_CVT\_F32\_UBYTE2 19**
 
@@ -9003,13 +10054,13 @@ Convert an unsigned byte in byte 2 of the input to a single-precision float valu
 
 Convert an unsigned byte in byte 3 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[31 : 24].u32)
+`D0.f32 = u32_to_f32(S0[31 : 24].u32)`
 
 #### **V\_CVT\_U32\_F64 21**
 
 Convert from a double-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
-D0.u32 = f64\_to\_u32(S0.f64)
+`D0.u32 = f64_to_u32(S0.f64)`
 
 # **Notes**
 
@@ -9021,7 +10072,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from an unsigned 32-bit integer input to a double-precision float value and store the result into a vector register.
 
-D0.f64 = u32\_to\_f64(S0.u32)
+`D0.f64 = u32_to_f64(S0.u32)`
 
 # **Notes**
 
@@ -9035,19 +10086,34 @@ Compute the integer part of a double-precision float input using round toward ze
 
 Round the double-precision float input up to next integer and store the result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64); if ((S0.f64 > 0.0) && (S0.f64 != D0.f64)) then D0.f64 += 1.0 endif
+```text
+D0.f64 = trunc(S0.f64);
+if ((S0.f64 > 0.0) && (S0.f64 != D0.f64)) then
+    D0.f64 += 1.0
+endif
+```
 
 #### **V\_RNDNE\_F64 25**
 
 Round the double-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
-D0.f64 = floor(S0.f64 + 0.5); if (isEven(floor(S0.f64)) && (fract(S0.f64) == 0.5)) then D0.f64 -= 1.0 endif
+```text
+D0.f64 = floor(S0.f64 + 0.5);
+if (isEven(floor(S0.f64)) && (fract(S0.f64) == 0.5)) then
+    D0.f64 -= 1.0
+endif
+```
 
 #### **V\_FLOOR\_F64 26**
 
 Round the double-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64); if ((S0.f64 < 0.0) && (S0.f64 != D0.f64)) then D0.f64 += -1.0 endif
+```text
+D0.f64 = trunc(S0.f64);
+if ((S0.f64 < 0.0) && (S0.f64 != D0.f64)) then
+    D0.f64 += -1.0
+endif
+```
 
 #### **V\_PIPEFLUSH 27**
 
@@ -9063,7 +10129,7 @@ Floating-point modifiers are valid for this instruction if S0 is a 16-bit floati
 
 Compute the fractional portion of a single-precision float input and store the result in floating point format into a vector register.
 
-D0.f32 = S0.f32 + -floor(S0.f32)
+`D0.f32 = S0.f32 + -floor(S0.f32)`
 
 #### **Notes**
 
@@ -9077,7 +10143,7 @@ Obey round mode, result clamped to 0x3f7fffff.
 
 Compute the integer part of a single-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-D0.f32 = trunc(S0.f32)
+`D0.f32 = trunc(S0.f32)`
 
 #### **V\_CEIL\_F32 34**
 
@@ -9106,13 +10172,18 @@ endif
 
 Round the single-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f32 = trunc(S0.f32); if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then D0.f32 += -1.0F endif
+```text
+D0.f32 = trunc(S0.f32);
+if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then
+      D0.f32 += -1.0F
+endif
+```
 
 #### **V\_EXP\_F32 37**
 
 Calculate 2 raised to the power of the single-precision float input and store the result into a vector register.
 
-D0.f32 = pow(2.0F, S0.f32)
+`D0.f32 = pow(2.0F, S0.f32)`
 
 # **Notes**
 
@@ -9120,7 +10191,11 @@ D0.f32 = pow(2.0F, S0.f32)
 
 Functional examples:
 
-V\_EXP\_F32(0xff800000) => 0x00000000 // exp(-INF) = 0 V\_EXP\_F32(0x80000000) => 0x3f800000 // exp(-0.0) = 1 V\_EXP\_F32(0x7f800000) => 0x7f800000 // exp(+INF) = +INF
+```text
+V_EXP_F32(0xff800000) => 0x00000000        // exp(-INF) = 0
+V_EXP_F32(0x80000000) => 0x3f800000        // exp(-0.0) = 1
+V_EXP_F32(0x7f800000) => 0x7f800000        // exp(+INF) = +INF
+```
 
 #### **V\_LOG\_F32 39**
 
@@ -9130,13 +10205,20 @@ Calculate the base 2 logarithm of the single-precision float input and store the
 
 Functional examples:
 
-V\_LOG\_F32(0xff800000) => 0xffc00000 // log(-INF) = NAN V\_LOG\_F32(0xbf800000) => 0xffc00000 // log(-1.0) = NAN V\_LOG\_F32(0x80000000) => 0xff800000 // log(-0.0) = -INF V\_LOG\_F32(0x00000000) => 0xff800000 // log(+0.0) = -INF V\_LOG\_F32(0x3f800000) => 0x00000000 // log(+1.0) = 0 V\_LOG\_F32(0x7f800000) => 0x7f800000 // log(+INF) = +INF
+```text
+V_LOG_F32(0xff800000) => 0xffc00000       // log(-INF) = NAN
+V_LOG_F32(0xbf800000) => 0xffc00000       // log(-1.0) = NAN
+V_LOG_F32(0x80000000) => 0xff800000       // log(-0.0) = -INF
+V_LOG_F32(0x00000000) => 0xff800000       // log(+0.0) = -INF
+V_LOG_F32(0x3f800000) => 0x00000000       // log(+1.0) = 0
+V_LOG_F32(0x7f800000) => 0x7f800000       // log(+INF) = +INF
+```
 
 #### **V\_RCP\_F32 42**
 
 Calculate the reciprocal of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = 1.0F / S0.f32
+`D0.f32 = 1.0F / S0.f32`
 
 #### **Notes**
 
@@ -9144,13 +10226,22 @@ D0.f32 = 1.0F / S0.f32
 
 Functional examples:
 
-V\_RCP\_F32(0xff800000) => 0x80000000 // rcp(-INF) = -0 V\_RCP\_F32(0xc0000000) => 0xbf000000 // rcp(-2.0) = -0.5 V\_RCP\_F32(0x80000000) => 0xff800000 // rcp(-0.0) = -INF V\_RCP\_F32(0x00000000) => 0x7f800000 // rcp(+0.0) = +INF V\_RCP\_F32(0x7f800000) => 0x00000000 // rcp(+INF) = +0
+```text
+V_RCP_F32(0xff800000) => 0x80000000       // rcp(-INF) = -0
+V_RCP_F32(0xc0000000) => 0xbf000000       // rcp(-2.0) = -0.5
+V_RCP_F32(0x80000000) => 0xff800000       // rcp(-0.0) = -INF
+V_RCP_F32(0x00000000) => 0x7f800000       // rcp(+0.0) = +INF
+V_RCP_F32(0x7f800000) => 0x00000000       // rcp(+INF) = +0
+```
 
 #### **V\_RCP\_IFLAG\_F32 43**
 
 Calculate the reciprocal of the vector float input in a manner suitable for integer division and store the result into a vector register. This opcode is intended for use as part of an integer division macro.
 
-D0.f32 = 1.0F / S0.f32; // Can only raise integer DIV\_BY\_ZERO exception
+```text
+D0.f32 = 1.0F / S0.f32;
+// Can only raise integer DIV_BY_ZERO exception
+```
 
 reciprocal macro by the compiler with one of the sequences listed below (depending on signed or unsigned operation).
 
@@ -9162,7 +10253,7 @@ Signed usage: CVT\_F32\_I32 RCP\_IFLAG\_F32 MUL\_F32 (2\*\*31 - 1) CVT\_I32\_F32
 
 Calculate the reciprocal of the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = 1.0F / sqrt(S0.f32)
+`D0.f32 = 1.0F / sqrt(S0.f32)`
 
 # **Notes**
 
@@ -9170,19 +10261,25 @@ D0.f32 = 1.0F / sqrt(S0.f32)
 
 Functional examples:
 
-V\_RSQ\_F32(0xff800000) => 0xffc00000 // rsq(-INF) = NAN V\_RSQ\_F32(0x80000000) => 0xff800000 // rsq(-0.0) = -INF V\_RSQ\_F32(0x00000000) => 0x7f800000 // rsq(+0.0) = +INF V\_RSQ\_F32(0x40800000) => 0x3f000000 // rsq(+4.0) = +0.5 V\_RSQ\_F32(0x7f800000) => 0x00000000 // rsq(+INF) = +0
+```text
+V_RSQ_F32(0xff800000) => 0xffc00000       // rsq(-INF) = NAN
+V_RSQ_F32(0x80000000) => 0xff800000       // rsq(-0.0) = -INF
+V_RSQ_F32(0x00000000) => 0x7f800000       // rsq(+0.0) = +INF
+V_RSQ_F32(0x40800000) => 0x3f000000       // rsq(+4.0) = +0.5
+V_RSQ_F32(0x7f800000) => 0x00000000       // rsq(+INF) = +0
+```
 
 #### **V\_RCP\_F64 47**
 
 Calculate the reciprocal of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = 1.0 / S0.f64
+`D0.f64 = 1.0 / S0.f64`
 
 #### **V\_RSQ\_F64 49**
 
 Calculate the reciprocal of the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = 1.0 / sqrt(S0.f64)
+`D0.f64 = 1.0 / sqrt(S0.f64)`
 
 #### **Notes**
 
@@ -9192,7 +10289,7 @@ This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
 Calculate the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = sqrt(S0.f32)
+`D0.f32 = sqrt(S0.f32)`
 
 #### **Notes**
 
@@ -9200,13 +10297,19 @@ D0.f32 = sqrt(S0.f32)
 
 Functional examples:
 
-V\_SQRT\_F32(0xff800000) => 0xffc00000 // sqrt(-INF) = NAN V\_SQRT\_F32(0x80000000) => 0x80000000 // sqrt(-0.0) = -0 V\_SQRT\_F32(0x00000000) => 0x00000000 // sqrt(+0.0) = +0 V\_SQRT\_F32(0x40800000) => 0x40000000 // sqrt(+4.0) = +2.0 V\_SQRT\_F32(0x7f800000) => 0x7f800000 // sqrt(+INF) = +INF
+```text
+V_SQRT_F32(0xff800000) => 0xffc00000       // sqrt(-INF) = NAN
+V_SQRT_F32(0x80000000) => 0x80000000       // sqrt(-0.0) = -0
+V_SQRT_F32(0x00000000) => 0x00000000       // sqrt(+0.0) = +0
+V_SQRT_F32(0x40800000) => 0x40000000       // sqrt(+4.0) = +2.0
+V_SQRT_F32(0x7f800000) => 0x7f800000       // sqrt(+INF) = +INF
+```
 
 #### **V\_SQRT\_F64 52**
 
 Calculate the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = sqrt(S0.f64)
+`D0.f64 = sqrt(S0.f64)`
 
 #### **Notes**
 
@@ -9214,7 +10317,7 @@ D0.f64 = sqrt(S0.f64)
 
 Calculate the trigonometric sine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f32 = sin(S0.f32 \* 32'F(PI \* 2.0))
+`D0.f32 = sin(S0.f32 * 32'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -9222,13 +10325,19 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_SIN\_F32(0xff800000) => 0xffc00000 // sin(-INF) = NAN V\_SIN\_F32(0xff7fffff) => 0x00000000 // -MaxFloat, finite V\_SIN\_F32(0x80000000) => 0x80000000 // sin(-0.0) = -0 V\_SIN\_F32(0x3e800000) => 0x3f800000 // sin(0.25) = 1 V\_SIN\_F32(0x7f800000) => 0xffc00000 // sin(+INF) = NAN
+```text
+V_SIN_F32(0xff800000) => 0xffc00000       // sin(-INF) = NAN
+V_SIN_F32(0xff7fffff) => 0x00000000       // -MaxFloat, finite
+V_SIN_F32(0x80000000) => 0x80000000       // sin(-0.0) = -0
+V_SIN_F32(0x3e800000) => 0x3f800000       // sin(0.25) = 1
+V_SIN_F32(0x7f800000) => 0xffc00000       // sin(+INF) = NAN
+```
 
 #### **V\_COS\_F32 54**
 
 Calculate the trigonometric cosine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f32 = cos(S0.f32 \* 32'F(PI \* 2.0))
+`D0.f32 = cos(S0.f32 * 32'F(PI * 2.0))`
 
 # **Notes**
 
@@ -9236,13 +10345,19 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_COS\_F32(0xff800000) => 0xffc00000 // cos(-INF) = NAN V\_COS\_F32(0xff7fffff) => 0x3f800000 // -MaxFloat, finite V\_COS\_F32(0x80000000) => 0x3f800000 // cos(-0.0) = 1 V\_COS\_F32(0x3e800000) => 0x00000000 // cos(0.25) = 0 V\_COS\_F32(0x7f800000) => 0xffc00000 // cos(+INF) = NAN
+```text
+V_COS_F32(0xff800000) => 0xffc00000       // cos(-INF) = NAN
+V_COS_F32(0xff7fffff) => 0x3f800000       // -MaxFloat, finite
+V_COS_F32(0x80000000) => 0x3f800000       // cos(-0.0) = 1
+V_COS_F32(0x3e800000) => 0x00000000       // cos(0.25) = 0
+V_COS_F32(0x7f800000) => 0xffc00000       // cos(+INF) = NAN
+```
 
 #### **V\_NOT\_B32 55**
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u32 = ~S0.u32
+`D0.u32 = ~S0.u32`
 
 #### **Notes**
 
@@ -9252,7 +10367,7 @@ Input and output modifiers not supported.
 
 Reverse the order of bits in a vector input and store the result into a vector register.
 
-D0.u32[31 : 0] = S0.u32[0 : 31]
+`D0.u32[31 : 0] = S0.u32[0 : 31]`
 
 #### **Notes**
 
@@ -9262,7 +10377,17 @@ Input and output modifiers not supported.
 
 Count the number of leading "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits.
 
-D0.i32 = -1; // Set if no ones are found for i in 0 : 31 do // Search from MSB if S0.u32[31 - i] == 1'1U then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from MSB
+      if S0.u32[31 - i] == 1'1U then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 ### **Notes**
 
@@ -9270,13 +10395,29 @@ Compare with S\_CLZ\_I32\_U32, which performs the equivalent operation in the sc
 
 Functional examples:
 
-V\_CLZ\_I32\_U32(0x00000000) => 0xffffffff V\_CLZ\_I32\_U32(0x800000ff) => 0 V\_CLZ\_I32\_U32(0x100000ff) => 3 V\_CLZ\_I32\_U32(0x0000ffff) => 16 V\_CLZ\_I32\_U32(0x00000001) => 31
+```text
+V_CLZ_I32_U32(0x00000000) => 0xffffffff
+V_CLZ_I32_U32(0x800000ff) => 0
+V_CLZ_I32_U32(0x100000ff) => 3
+V_CLZ_I32_U32(0x0000ffff) => 16
+V_CLZ_I32_U32(0x00000001) => 31
+```
 
 #### **V\_CTZ\_I32\_B32 58**
 
 Count the number of trailing "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits in the input.
 
-D0.i32 = -1; // Set if no ones are found for i in 0 : 31 do // Search from LSB if S0.u32[i] == 1'1U then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from LSB
+      if S0.u32[i] == 1'1U then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 ### **Notes**
 
@@ -9284,25 +10425,55 @@ Compare with S\_CTZ\_I32\_B32, which performs the equivalent operation in the sc
 
 Functional examples:
 
-V\_CTZ\_I32\_B32(0x00000000) => 0xffffffff V\_CTZ\_I32\_B32(0xff000001) => 0 V\_CTZ\_I32\_B32(0xff000008) => 3 V\_CTZ\_I32\_B32(0xffff0000) => 16 V\_CTZ\_I32\_B32(0x80000000) => 31
+```text
+V_CTZ_I32_B32(0x00000000) => 0xffffffff
+V_CTZ_I32_B32(0xff000001) => 0
+V_CTZ_I32_B32(0xff000008) => 3
+V_CTZ_I32_B32(0xffff0000) => 16
+V_CTZ_I32_B32(0x80000000) => 31
+```
 
 #### **V\_CLS\_I32 59**
 
 Count the number of leading bits that are the same as the sign bit of a vector input and store the result into a vector register. Store -1 if all input bits are the same.
 
-D0.i32 = -1; // Set if all bits are the same for i in 1 : 31 do // Search from MSB if S0.i32[31 - i] != S0.i32[31] then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if all bits are the same
+for i in 1 : 31 do
+      // Search from MSB
+      if S0.i32[31 - i] != S0.i32[31] then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 # **Notes**
 
 Compare with S\_CLS\_I32, which performs the equivalent operation in the scalar ALU.
 
-V\_CLS\_I32(0x00000000) => 0xffffffff V\_CLS\_I32(0x40000000) => 1 V\_CLS\_I32(0x80000000) => 1 V\_CLS\_I32(0x0fffffff) => 4 V\_CLS\_I32(0xffff0000) => 16 V\_CLS\_I32(0xfffffffe) => 31 V\_CLS\_I32(0xffffffff) => 0xffffffff
+```text
+V_CLS_I32(0x00000000) => 0xffffffff
+V_CLS_I32(0x40000000) => 1
+V_CLS_I32(0x80000000) => 1
+V_CLS_I32(0x0fffffff) => 4
+V_CLS_I32(0xffff0000) => 16
+V_CLS_I32(0xfffffffe) => 31
+V_CLS_I32(0xffffffff) => 0xffffffff
+```
 
 #### **V\_FREXP\_EXP\_I32\_F64 60**
 
 Extract the exponent of a double-precision float input and store the result as a signed 32-bit integer into a vector register.
 
-if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then D0.i32 = 0 else D0.i32 = exponent(S0.f64) - 1023 + 1 endif
+```text
+if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then
+      D0.i32 = 0
+else
+      D0.i32 = exponent(S0.f64) - 1023 + 1
+endif
+```
 
 # **Notes**
 
@@ -9312,7 +10483,13 @@ This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent)
 
 Extract the binary significand, or mantissa, of a double-precision float input and store the result as a doubleprecision float into a vector register.
 
-if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then D0.f64 = S0.f64 else D0.f64 = mantissa(S0.f64) endif
+```text
+if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then
+      D0.f64 = S0.f64
+else
+      D0.f64 = mantissa(S0.f64)
+endif
+```
 
 # **Notes**
 
@@ -9322,7 +10499,7 @@ This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent)
 
 Compute the fractional portion of a double-precision float input and store the result in floating point format into a vector register.
 
-D0.f64 = S0.f64 + -floor(S0.f64)
+`D0.f64 = S0.f64 + -floor(S0.f64)`
 
 #### **Notes**
 
@@ -9336,7 +10513,13 @@ Obey round mode, result clamped to 0x3fefffffffffffff.
 
 Extract the exponent of a single-precision float input and store the result as a signed 32-bit integer into a vector register.
 
-if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then D0.i32 = 0 else D0.i32 = exponent(S0.f32) - 127 + 1 endif
+```text
+if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then
+      D0.i32 = 0
+else
+      D0.i32 = exponent(S0.f32) - 127 + 1
+endif
+```
 
 #### **Notes**
 
@@ -9346,7 +10529,13 @@ This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent)
 
 Extract the binary significand, or mantissa, of a single-precision float input and store the result as a singleprecision float into a vector register.
 
-if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then D0.f32 = S0.f32 else D0.f32 = mantissa(S0.f32) endif
+```text
+if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then
+      D0.f32 = S0.f32
+else
+      D0.f32 = mantissa(S0.f32)
+endif
+```
 
 # **Notes**
 
@@ -9358,7 +10547,12 @@ frexp() for more information.
 
 Move data from a vector input into a relatively-indexed vector register.
 
-addr = DST.u32; // Raw value from instruction addr += M0.u32[31 : 0]; VGPR[laneId][addr].b32 = S0.b32
+```text
+addr = DST.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+VGPR[laneId][addr].b32 = S0.b32
+```
 
 #### **Notes**
 
@@ -9370,7 +10564,12 @@ Example: The following instruction sequence performs the move v15 <= v7:
 
 Move data from a relatively-indexed vector register into another vector register.
 
-addr = SRC0.u32; // Raw value from instruction addr += M0.u32[31 : 0]; D0.b32 = VGPR[laneId][addr].b32
+```text
+addr = SRC0.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+D0.b32 = VGPR[laneId][addr].b32
+```
 
 #### **Notes**
 
@@ -9382,9 +10581,15 @@ Example: The following instruction sequence performs the move v5 <= v17:
 
 Move data from a relatively-indexed vector register into another relatively-indexed vector register.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32;
-
-// Raw value from instruction addrs += M0.u32[31 : 0]; addrd += M0.u32[31 : 0]; VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```text
+addrs = SRC0.u32;
+ // Raw value from instruction
+ addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[31 : 0];
+addrd += M0.u32[31 : 0];
+VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```
 
 ### **Notes**
 
@@ -9396,7 +10601,15 @@ Example: The following instruction sequence performs the move v15 <= v17:
 
 Move data from a relatively-indexed vector register into another relatively-indexed vector register, using different offsets for each index.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32; // Raw value from instruction addrs += M0.u32[9 : 0].u32; addrd += M0.u32[25 : 16].u32; VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```text
+addrs = SRC0.u32;
+// Raw value from instruction
+addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[9 : 0].u32;
+addrd += M0.u32[25 : 16].u32;
+VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```
 
 #### **Notes**
 
@@ -9408,7 +10621,7 @@ Example: The following instruction sequence performs the move v25 <= v17:
 
 Convert from an unsigned 16-bit integer input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = u16\_to\_f16(S0.u16)
+`D0.f16 = u16_to_f16(S0.u16)`
 
 # **Notes**
 
@@ -9416,7 +10629,7 @@ D0.f16 = u16\_to\_f16(S0.u16)
 
 Convert from a signed 16-bit integer input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = i16\_to\_f16(S0.i16)
+`D0.f16 = i16_to_f16(S0.i16)`
 
 #### **Notes**
 
@@ -9426,7 +10639,7 @@ D0.f16 = i16\_to\_f16(S0.i16)
 
 Convert from a half-precision float input to an unsigned 16-bit integer value and store the result into a vector register.
 
-D0.u16 = f16\_to\_u16(S0.f16)
+`D0.u16 = f16_to_u16(S0.f16)`
 
 #### **Notes**
 
@@ -9438,7 +10651,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a half-precision float input to a signed 16-bit integer value and store the result into a vector register.
 
-D0.i16 = f16\_to\_i16(S0.f16)
+`D0.i16 = f16_to_i16(S0.f16)`
 
 # **Notes**
 
@@ -9450,7 +10663,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Calculate the reciprocal of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = 16'1.0 / S0.f16
+`D0.f16 = 16'1.0 / S0.f16`
 
 #### **Notes**
 
@@ -9458,13 +10671,19 @@ D0.f16 = 16'1.0 / S0.f16
 
 Functional examples:
 
-V\_RCP\_F16(0xfc00) => 0x8000 // rcp(-INF) = -0 V\_RCP\_F16(0xc000) => 0xb800 // rcp(-2.0) = -0.5 V\_RCP\_F16(0x8000) => 0xfc00 // rcp(-0.0) = -INF V\_RCP\_F16(0x0000) => 0x7c00 // rcp(+0.0) = +INF V\_RCP\_F16(0x7c00) => 0x0000 // rcp(+INF) = +0
+```text
+V_RCP_F16(0xfc00) => 0x8000        // rcp(-INF) = -0
+V_RCP_F16(0xc000) => 0xb800        // rcp(-2.0) = -0.5
+V_RCP_F16(0x8000) => 0xfc00        // rcp(-0.0) = -INF
+V_RCP_F16(0x0000) => 0x7c00        // rcp(+0.0) = +INF
+V_RCP_F16(0x7c00) => 0x0000        // rcp(+INF) = +0
+```
 
 #### **V\_SQRT\_F16 85**
 
 Calculate the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = sqrt(S0.f16)
+`D0.f16 = sqrt(S0.f16)`
 
 # **Notes**
 
@@ -9472,13 +10691,19 @@ D0.f16 = sqrt(S0.f16)
 
 Functional examples:
 
-V\_SQRT\_F16(0xfc00) => 0xfe00 // sqrt(-INF) = NAN V\_SQRT\_F16(0x8000) => 0x8000 // sqrt(-0.0) = -0 V\_SQRT\_F16(0x0000) => 0x0000 // sqrt(+0.0) = +0 V\_SQRT\_F16(0x4400) => 0x4000 // sqrt(+4.0) = +2.0 V\_SQRT\_F16(0x7c00) => 0x7c00 // sqrt(+INF) = +INF
+```text
+V_SQRT_F16(0xfc00) => 0xfe00           // sqrt(-INF) = NAN
+V_SQRT_F16(0x8000) => 0x8000           // sqrt(-0.0) = -0
+V_SQRT_F16(0x0000) => 0x0000           // sqrt(+0.0) = +0
+V_SQRT_F16(0x4400) => 0x4000           // sqrt(+4.0) = +2.0
+V_SQRT_F16(0x7c00) => 0x7c00           // sqrt(+INF) = +INF
+```
 
 #### **V\_RSQ\_F16 86**
 
 Calculate the reciprocal of the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = 16'1.0 / sqrt(S0.f16)
+`D0.f16 = 16'1.0 / sqrt(S0.f16)`
 
 #### **Notes**
 
@@ -9486,13 +10711,19 @@ D0.f16 = 16'1.0 / sqrt(S0.f16)
 
 Functional examples:
 
-V\_RSQ\_F16(0xfc00) => 0xfe00 // rsq(-INF) = NAN V\_RSQ\_F16(0x8000) => 0xfc00 // rsq(-0.0) = -INF V\_RSQ\_F16(0x0000) => 0x7c00 // rsq(+0.0) = +INF V\_RSQ\_F16(0x4400) => 0x3800 // rsq(+4.0) = +0.5 V\_RSQ\_F16(0x7c00) => 0x0000 // rsq(+INF) = +0
+```text
+V_RSQ_F16(0xfc00) => 0xfe00        // rsq(-INF) = NAN
+V_RSQ_F16(0x8000) => 0xfc00        // rsq(-0.0) = -INF
+V_RSQ_F16(0x0000) => 0x7c00        // rsq(+0.0) = +INF
+V_RSQ_F16(0x4400) => 0x3800        // rsq(+4.0) = +0.5
+V_RSQ_F16(0x7c00) => 0x0000        // rsq(+INF) = +0
+```
 
 #### **V\_LOG\_F16 87**
 
 Calculate the base 2 logarithm of the half-precision float input and store the result into a vector register.
 
-D0.f16 = log2(S0.f16)
+`D0.f16 = log2(S0.f16)`
 
 #### **Notes**
 
@@ -9500,23 +10731,40 @@ D0.f16 = log2(S0.f16)
 
 Functional examples:
 
-V\_LOG\_F16(0xfc00) => 0xfe00 // log(-INF) = NAN V\_LOG\_F16(0xbc00) => 0xfe00 // log(-1.0) = NAN V\_LOG\_F16(0x8000) => 0xfc00 // log(-0.0) = -INF V\_LOG\_F16(0x0000) => 0xfc00 // log(+0.0) = -INF V\_LOG\_F16(0x3c00) => 0x0000 // log(+1.0) = 0 V\_LOG\_F16(0x7c00) => 0x7c00 // log(+INF) = +INF
+```text
+V_LOG_F16(0xfc00) => 0xfe00        // log(-INF) = NAN
+V_LOG_F16(0xbc00) => 0xfe00        // log(-1.0) = NAN
+V_LOG_F16(0x8000) => 0xfc00        // log(-0.0) = -INF
+V_LOG_F16(0x0000) => 0xfc00        // log(+0.0) = -INF
+V_LOG_F16(0x3c00) => 0x0000        // log(+1.0) = 0
+V_LOG_F16(0x7c00) => 0x7c00        // log(+INF) = +INF
+```
 
 #### **V\_EXP\_F16 88**
 
 Calculate 2 raised to the power of the half-precision float input and store the result into a vector register.
 
-D0.f16 = pow(16'2.0, S0.f16)
+`D0.f16 = pow(16'2.0, S0.f16)`
 
 Functional examples:
 
-V\_EXP\_F16(0xfc00) => 0x0000 // exp(-INF) = 0 V\_EXP\_F16(0x8000) => 0x3c00 // exp(-0.0) = 1 V\_EXP\_F16(0x7c00) => 0x7c00 // exp(+INF) = +INF
+```text
+V_EXP_F16(0xfc00) => 0x0000        // exp(-INF) = 0
+V_EXP_F16(0x8000) => 0x3c00        // exp(-0.0) = 1
+V_EXP_F16(0x7c00) => 0x7c00        // exp(+INF) = +INF
+```
 
 #### **V\_FREXP\_MANT\_F16 89**
 
 Extract the binary significand, or mantissa, of a half-precision float input and store the result as a halfprecision float into a vector register.
 
-if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then D0.f16 = S0.f16 else D0.f16 = mantissa(S0.f16) endif
+```text
+if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then
+      D0.f16 = S0.f16
+else
+      D0.f16 = mantissa(S0.f16)
+endif
+```
 
 #### **Notes**
 
@@ -9526,7 +10774,13 @@ This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent)
 
 Extract the exponent of a half-precision float input and store the result as a signed 16-bit integer into a vector register.
 
-if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then D0.i16 = 16'0 else D0.i16 = 16'I(exponent(S0.f16) - 15 + 1) endif
+```text
+if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then
+      D0.i16 = 16'0
+else
+      D0.i16 = 16'I(exponent(S0.f16) - 15 + 1)
+endif
+```
 
 # **Notes**
 
@@ -9536,25 +10790,40 @@ This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent)
 
 Round the half-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += -16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then
+    D0.f16 += -16'1.0
+endif
+```
 
 #### **V\_CEIL\_F16 92**
 
 Round the half-precision float input up to next integer and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += 16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then
+    D0.f16 += 16'1.0
+endif
+```
 
 #### **V\_TRUNC\_F16 93**
 
 Compute the integer part of a half-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16)
+`D0.f16 = trunc(S0.f16)`
 
 #### **V\_RNDNE\_F16 94**
 
 Round the half-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
-D0.f16 = floor(S0.f16 + 16'0.5); if (isEven(64'F(floor(S0.f16))) && (fract(S0.f16) == 16'0.5)) then D0.f16 -= 16'1.0 endif
+```text
+D0.f16 = floor(S0.f16 + 16'0.5);
+if (isEven(64'F(floor(S0.f16))) && (fract(S0.f16) == 16'0.5)) then
+    D0.f16 -= 16'1.0
+endif
+```
 
 #### **V\_FRACT\_F16 95**
 
@@ -9568,7 +10837,7 @@ This is intended to comply with the DX specification of fract where the function
 
 Calculate the trigonometric sine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f16 = sin(S0.f16 \* 16'F(PI \* 2.0))
+`D0.f16 = sin(S0.f16 * 16'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -9576,13 +10845,20 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_SIN\_F16(0xfc00) => 0xfe00 // sin(-INF) = NAN V\_SIN\_F16(0xfbff) => 0x0000 // Most negative finite FP16 V\_SIN\_F16(0x8000) => 0x8000 // sin(-0.0) = -0 V\_SIN\_F16(0x3400) => 0x3c00 // sin(0.25) = 1 V\_SIN\_F16(0x7bff) => 0x0000 // Most positive finite FP16 V\_SIN\_F16(0x7c00) => 0xfe00 // sin(+INF) = NAN
+```text
+V_SIN_F16(0xfc00) => 0xfe00        // sin(-INF) = NAN
+V_SIN_F16(0xfbff) => 0x0000        // Most negative finite FP16
+V_SIN_F16(0x8000) => 0x8000        // sin(-0.0) = -0
+V_SIN_F16(0x3400) => 0x3c00        // sin(0.25) = 1
+V_SIN_F16(0x7bff) => 0x0000        // Most positive finite FP16
+V_SIN_F16(0x7c00) => 0xfe00        // sin(+INF) = NAN
+```
 
 #### **V\_COS\_F16 97**
 
 Calculate the trigonometric cosine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f16 = cos(S0.f16 \* 16'F(PI \* 2.0))
+`D0.f16 = cos(S0.f16 * 16'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -9590,15 +10866,30 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_COS\_F16(0xfc00) => 0xfe00 // cos(-INF) = NAN V\_COS\_F16(0xfbff) => 0x3c00 // Most negative finite FP16 V\_COS\_F16(0x8000) => 0x3c00 // cos(-0.0) = 1 V\_COS\_F16(0x3400) => 0x0000 // cos(0.25) = 0
-
-V\_COS\_F16(0x7bff) => 0x3c00 // Most positive finite FP16 V\_COS\_F16(0x7c00) => 0xfe00 // cos(+INF) = NAN
+```text
+V_COS_F16(0xfc00) => 0xfe00        // cos(-INF) = NAN
+V_COS_F16(0xfbff) => 0x3c00        // Most negative finite FP16
+V_COS_F16(0x8000) => 0x3c00        // cos(-0.0) = 1
+V_COS_F16(0x3400) => 0x0000        // cos(0.25) = 0
+V_COS_F16(0x7bff) => 0x3c00        // Most positive finite FP16
+V_COS_F16(0x7c00) => 0xfe00        // cos(+INF) = NAN
+```
 
 #### **V\_SAT\_PK\_U8\_I16 98**
 
 Given two 16-bit signed integer inputs, saturate each input over an 8-bit unsigned range, pack the resulting values into a 16-bit word and store the result into a vector register.
 
-SAT8 = lambda(n) ( if n.i32 <= 0 then return 8'0U elsif n >= 16'I(0xff) then return 8'255U else return n[7 : 0].u8 endif); D0.b16 = { SAT8(S0[31 : 16].i16), SAT8(S0[15 : 0].i16) }
+```text
+SAT8 = lambda(n) (
+      if n.i32 <= 0 then
+          return 8'0U
+      elsif n >= 16'I(0xff) then
+          return 8'255U
+      else
+          return n[7 : 0].u8
+      endif);
+D0.b16 = { SAT8(S0[31 : 16].i16), SAT8(S0[15 : 0].i16) }
+```
 
 # **Notes**
 
@@ -9608,7 +10899,7 @@ Used for 4x16bit data packed as 4x8bit data.
 
 Convert from a half-precision float input to a signed normalized short and store the result into a vector register.
 
-D0.i16 = f16\_to\_snorm(S0.f16)
+`D0.i16 = f16_to_snorm(S0.f16)`
 
 ### **Notes**
 
@@ -9618,13 +10909,17 @@ D0.i16 = f16\_to\_snorm(S0.f16)
 
 Convert from a half-precision float input to an unsigned normalized short and store the result into a vector register.
 
-D0.u16 = f16\_to\_unorm(S0.f16)
+`D0.u16 = f16_to_unorm(S0.f16)`
 
 #### **V\_SWAP\_B32 101**
 
 Swap the values in two vector registers.
 
-tmp = D0.b32; D0.b32 = S0.b32; S0.b32 = tmp
+```text
+tmp = D0.b32;
+D0.b32 = S0.b32;
+S0.b32 = tmp
+```
 
 #### **Notes**
 
@@ -9634,7 +10929,11 @@ Input and output modifiers not supported; this is an untyped operation.
 
 Swap the values in two vector registers.
 
-tmp = D0.b16; D0.b16 = S0.b16; S0.b16 = tmp
+```text
+tmp = D0.b16;
+D0.b16 = S0.b16;
+S0.b16 = tmp
+```
 
 ### **Notes**
 
@@ -9644,9 +10943,26 @@ Input and output modifiers not supported; this is an untyped operation.
 
 Perform a specific permutation across lanes where the high half and low half of a wave64 are swapped. Performs no operation in wave32 mode.
 
-declare tmp : 32'B[64]; declare lane : 32'U; if WAVE32 then // Supported in wave64 ONLY; treated as scalar NOP in wave32 s\_nop(16'0U) else for lane in 0U : 63U do // Copy original S0 in case D==S0 tmp[lane] = VGPR[lane][SRC0.u32] endfor; for lane in 0U : 63U do altlane = { ~lane[5], lane[4 : 0] }; // 0<->32, ..., 31<->63 if EXEC[lane].u1 then VGPR[lane][VDST.u32] = tmp[altlane] endif
-
- endfor endif
+```text
+declare tmp : 32'B[64];
+declare lane : 32'U;
+if WAVE32 then
+      // Supported in wave64 ONLY; treated as scalar NOP in wave32
+      s_nop(16'0U)
+else
+      for lane in 0U : 63U do
+          // Copy original S0 in case D==S0
+          tmp[lane] = VGPR[lane][SRC0.u32]
+      endfor;
+      for lane in 0U : 63U do
+          altlane = { ~lane[5], lane[4 : 0] };
+          // 0<->32, ..., 31<->63
+          if EXEC[lane].u1 then
+                VGPR[lane][VDST.u32] = tmp[altlane]
+          endif
+      endfor
+endif
+```
 
 #### **Notes**
 
@@ -9662,7 +10978,17 @@ ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
 Swap the values in two relatively-indexed vector registers.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32; // Raw value from instruction addrs += M0.u32[9 : 0].u32; addrd += M0.u32[25 : 16].u32; tmp = VGPR[laneId][addrd].b32; VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32; VGPR[laneId][addrs].b32 = tmp
+```text
+addrs = SRC0.u32;
+// Raw value from instruction
+addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[9 : 0].u32;
+addrd += M0.u32[25 : 16].u32;
+tmp = VGPR[laneId][addrd].b32;
+VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32;
+VGPR[laneId][addrs].b32 = tmp
+```
 
 # **Notes**
 
@@ -9676,7 +11002,7 @@ Example: The following instruction sequence swaps v25 and v17:
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u16 = ~S0.u16
+`D0.u16 = ~S0.u16`
 
 Input and output modifiers not supported.
 
@@ -9684,7 +11010,7 @@ Input and output modifiers not supported.
 
 Convert from a signed 16-bit integer input to a signed 32-bit integer value using sign extension and store the result into a vector register.
 
-D0.i32 = 32'I(signext(S0.i16))
+`D0.i32 = 32'I(signext(S0.i16))`
 
 #### **Notes**
 
@@ -9694,7 +11020,7 @@ To convert in the other direction (from 32-bit to 16-bit integer) use V\_MOV\_B1
 
 Convert from an unsigned 16-bit integer input to an unsigned 32-bit integer value using zero extension and store the result into a vector register.
 
-D0 = { 16'0, S0.u16 }
+`D0 = { 16'0, S0.u16 }`
 
 #### **Notes**
 
@@ -9708,7 +11034,12 @@ Instructions in this format may also be encoded as VOP3. VOP3 allows access to t
 
 The bitfield map for VOPC is:
 
- SRC0 = First operand for instruction. VSRC1 = Second operand for instruction. OP = Instruction opcode. All VOPC instructions can alternatively be encoded in the VOP3 format.
+```text
+SRC0   = First operand for instruction.
+VSRC1 = Second operand for instruction.
+OP     = Instruction opcode.
+All VOPC instructions can alternatively be encoded in the VOP3 format.
+```
 
 Compare instructions perform the same compare operation on each lane (work-Item or thread) using that lane's private data, and producing a 1 bit result per lane into VCC or EXEC.
 
@@ -9816,7 +11147,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 == S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 == S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9826,7 +11160,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 <= S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 <= S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9836,7 +11173,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 > S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 > S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -9844,7 +11184,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 <> S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 <> S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9854,7 +11197,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 >= S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 >= S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9891,7 +11237,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same operation as < // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 >= S1.f16);
+// With NAN inputs this is not the same operation as <
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9901,7 +11251,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same operation as == // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 <> S1.f16);
+// With NAN inputs this is not the same operation as ==
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9921,7 +11275,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 <= S1.f16); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 <= S1.f16);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -9931,7 +11289,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 == S1.f16); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 == S1.f16);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9941,7 +11303,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 < S1.f16); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 < S1.f16);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -9949,7 +11315,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9959,7 +11328,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -9998,7 +11370,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 <= S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 <= S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10008,7 +11383,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 > S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 > S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10018,7 +11396,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 <> S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 <> S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10026,7 +11407,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 >= S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 >= S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10036,7 +11420,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32))); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10074,7 +11461,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 <> S1.f32); // With NAN inputs this is not the same operation as == // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 <> S1.f32);
+// With NAN inputs this is not the same operation as ==
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10084,7 +11475,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 > S1.f32); // With NAN inputs this is not the same operation as <= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 > S1.f32);
+// With NAN inputs this is not the same operation as <=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10094,7 +11489,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 <= S1.f32); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 <= S1.f32);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10104,7 +11503,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 == S1.f32); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 == S1.f32);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10114,7 +11517,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 < S1.f32); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 < S1.f32);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10124,7 +11531,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10132,7 +11542,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10142,7 +11555,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 < S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 < S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -10152,7 +11568,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 == S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 == S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10162,7 +11581,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 <= S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 <= S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10172,7 +11594,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 > S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 > S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10182,7 +11607,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 <> S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 <> S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10192,7 +11620,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 >= S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 >= S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10200,7 +11631,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64)); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64));
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10210,7 +11644,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64)); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10249,7 +11686,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 > S1.f64); // With NAN inputs this is not the same operation as <= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 > S1.f64);
+// With NAN inputs this is not the same operation as <=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10259,7 +11700,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 <= S1.f64); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 <= S1.f64);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10269,7 +11714,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 == S1.f64); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 == S1.f64);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -10279,7 +11728,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 < S1.f64); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 < S1.f64);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10289,7 +11742,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -10299,7 +11755,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 < S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 < S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10307,7 +11766,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 == S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 == S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10317,7 +11779,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 <= S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 <= S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10356,7 +11821,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 >= S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 >= S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10366,7 +11834,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 < S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 < S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10376,7 +11847,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 == S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 == S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10384,7 +11858,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 <= S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 <= S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10394,7 +11871,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 > S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 > S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10431,7 +11911,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10441,7 +11924,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 < S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 < S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10451,7 +11937,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 == S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 == S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10459,7 +11948,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 <= S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 <= S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10469,7 +11961,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 > S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 > S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10506,7 +12001,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10516,7 +12014,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10526,7 +12027,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 < S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 < S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10534,7 +12038,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 == S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 == S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10544,7 +12051,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 <= S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 <= S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10583,7 +12093,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 >= S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 >= S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10593,7 +12106,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10603,7 +12119,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10611,7 +12130,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 < S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 < S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10621,7 +12143,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 == S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 == S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10660,7 +12185,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 <> S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 <> S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10670,7 +12198,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 >= S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 >= S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10680,7 +12211,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10688,7 +12222,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10698,7 +12235,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 < S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 < S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -10708,7 +12248,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 == S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 == S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10718,7 +12261,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 <= S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 <= S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10728,7 +12274,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 > S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 > S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10738,7 +12287,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 <> S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 <> S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10748,7 +12300,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 >= S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 >= S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10756,7 +12311,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -10770,9 +12328,28 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f16)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f16)) then result = S1.u32[1] elsif exponent(S0.f16) == 31 then // +-INF result = S1.u32[sign(S0.f16) ? 2 : 9] elsif exponent(S0.f16) > 0 then // +-normal value result = S1.u32[sign(S0.f16) ? 3 : 8] elsif 64'F(abs(S0.f16)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f16) ? 4 : 7] else
-
- // +-0.0 result = S1.u32[sign(S0.f16) ? 5 : 6] endif; D0.u64[laneId] = result; // D0 = VCC in VOPC encoding.
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f16)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f16)) then
+      result = S1.u32[1]
+elsif exponent(S0.f16) == 31 then
+      // +-INF
+      result = S1.u32[sign(S0.f16) ? 2 : 9]
+elsif exponent(S0.f16) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f16) ? 3 : 8]
+elsif 64'F(abs(S0.f16)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f16) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f16) ? 5 : 6]
+endif;
+D0.u64[laneId] = result;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10786,7 +12363,28 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f32)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f32)) then result = S1.u32[1] elsif exponent(S0.f32) == 255 then // +-INF result = S1.u32[sign(S0.f32) ? 2 : 9] elsif exponent(S0.f32) > 0 then // +-normal value result = S1.u32[sign(S0.f32) ? 3 : 8] elsif 64'F(abs(S0.f32)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f32) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f32) ? 5 : 6] endif; D0.u64[laneId] = result; // D0 = VCC in VOPC encoding.
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f32)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f32)) then
+      result = S1.u32[1]
+elsif exponent(S0.f32) == 255 then
+      // +-INF
+      result = S1.u32[sign(S0.f32) ? 2 : 9]
+elsif exponent(S0.f32) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f32) ? 3 : 8]
+elsif 64'F(abs(S0.f32)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f32) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f32) ? 5 : 6]
+endif;
+D0.u64[laneId] = result;
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10798,7 +12396,28 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(S0.f64) then result = S1.u32[0] elsif isQuietNAN(S0.f64) then result = S1.u32[1] elsif exponent(S0.f64) == 2047 then // +-INF result = S1.u32[sign(S0.f64) ? 2 : 9] elsif exponent(S0.f64) > 0 then // +-normal value result = S1.u32[sign(S0.f64) ? 3 : 8] elsif abs(S0.f64) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f64) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f64) ? 5 : 6] endif; D0.u64[laneId] = result; // D0 = VCC in VOPC encoding.
+```text
+declare result : 1'U;
+if isSignalNAN(S0.f64) then
+      result = S1.u32[0]
+elsif isQuietNAN(S0.f64) then
+      result = S1.u32[1]
+elsif exponent(S0.f64) == 2047 then
+      // +-INF
+      result = S1.u32[sign(S0.f64) ? 2 : 9]
+elsif exponent(S0.f64) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f64) ? 3 : 8]
+elsif abs(S0.f64) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f64) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f64) ? 5 : 6]
+endif;
+D0.u64[laneId] = result;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -10808,7 +12427,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -10818,7 +12437,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 < S1.f16
+`EXEC.u64[laneId] = S0.f16 < S1.f16`
 
 # **Notes**
 
@@ -10828,7 +12447,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 == S1.f16
+`EXEC.u64[laneId] = S0.f16 == S1.f16`
 
 #### **Notes**
 
@@ -10838,7 +12457,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 <= S1.f16
+`EXEC.u64[laneId] = S0.f16 <= S1.f16`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -10846,7 +12465,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 > S1.f16
+`EXEC.u64[laneId] = S0.f16 > S1.f16`
 
 #### **Notes**
 
@@ -10856,7 +12475,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 <> S1.f16
+`EXEC.u64[laneId] = S0.f16 <> S1.f16`
 
 #### **Notes**
 
@@ -10866,7 +12485,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 >= S1.f16
+`EXEC.u64[laneId] = S0.f16 >= S1.f16`
 
 #### **Notes**
 
@@ -10876,7 +12495,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))
+`EXEC.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))`
 
 #### **Notes**
 
@@ -10886,7 +12505,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))
+`EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))`
 
 #### **Notes**
 
@@ -10896,7 +12515,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same operation as <
+```text
+EXEC.u64[laneId] = !(S0.f16 >= S1.f16);
+// With NAN inputs this is not the same operation as <
+```
 
 ## **Notes**
 
@@ -10906,7 +12528,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same operation as ==
+```text
+EXEC.u64[laneId] = !(S0.f16 <> S1.f16);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **Notes**
 
@@ -10914,7 +12539,10 @@ EXEC.u64[laneId] = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same 
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 > S1.f16); // With NAN inputs this is not the same operation as <=
+```text
+EXEC.u64[laneId] = !(S0.f16 > S1.f16);
+// With NAN inputs this is not the same operation as <=
+```
 
 #### **Notes**
 
@@ -10924,7 +12552,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 <= S1.f16); // With NAN inputs this is not the same operation as >
+```text
+EXEC.u64[laneId] = !(S0.f16 <= S1.f16);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **Notes**
 
@@ -10934,7 +12565,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 == S1.f16); // With NAN inputs this is not the same operation as !=
+```text
+EXEC.u64[laneId] = !(S0.f16 == S1.f16);
+// With NAN inputs this is not the same operation as !=
+```
 
 #### **Notes**
 
@@ -10944,7 +12578,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 < S1.f16); // With NAN inputs this is not the same operation as >=
+```text
+EXEC.u64[laneId] = !(S0.f16 < S1.f16);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **Notes**
 
@@ -10954,7 +12591,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -10964,7 +12601,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -10999,7 +12636,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 <= S1.f32
+`EXEC.u64[laneId] = S0.f32 <= S1.f32`
 
 #### **Notes**
 
@@ -11009,7 +12646,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 > S1.f32
+`EXEC.u64[laneId] = S0.f32 > S1.f32`
 
 #### **Notes**
 
@@ -11019,13 +12656,13 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 <> S1.f32
+`EXEC.u64[laneId] = S0.f32 <> S1.f32`
 
 #### **V\_CMPX\_GE\_F32 150**
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 >= S1.f32
+`EXEC.u64[laneId] = S0.f32 >= S1.f32`
 
 #### **Notes**
 
@@ -11035,7 +12672,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))
+`EXEC.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))`
 
 #### **Notes**
 
@@ -11045,7 +12682,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)))
+`EXEC.u64[laneId] = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)))`
 
 #### **Notes**
 
@@ -11063,7 +12700,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 <> S1.f32); // With NAN inputs this is not the same operation as ==
+```text
+EXEC.u64[laneId] = !(S0.f32 <> S1.f32);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **Notes**
 
@@ -11073,7 +12713,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 > S1.f32); // With NAN inputs this is not the same operation as <=
+```text
+EXEC.u64[laneId] = !(S0.f32 > S1.f32);
+// With NAN inputs this is not the same operation as <=
+```
 
 ### **Notes**
 
@@ -11083,7 +12726,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 <= S1.f32); // With NAN inputs this is not the same operation as >
+```text
+EXEC.u64[laneId] = !(S0.f32 <= S1.f32);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **Notes**
 
@@ -11091,7 +12737,10 @@ EXEC.u64[laneId] = !(S0.f32 <= S1.f32); // With NAN inputs this is not the same 
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 == S1.f32); // With NAN inputs this is not the same operation as !=
+```text
+EXEC.u64[laneId] = !(S0.f32 == S1.f32);
+// With NAN inputs this is not the same operation as !=
+```
 
 #### **Notes**
 
@@ -11101,7 +12750,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 < S1.f32); // With NAN inputs this is not the same operation as >=
+```text
+EXEC.u64[laneId] = !(S0.f32 < S1.f32);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **Notes**
 
@@ -11111,7 +12763,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -11127,7 +12779,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 < S1.f64
+`EXEC.u64[laneId] = S0.f64 < S1.f64`
 
 #### **Notes**
 
@@ -11137,7 +12789,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 == S1.f64
+`EXEC.u64[laneId] = S0.f64 == S1.f64`
 
 #### **Notes**
 
@@ -11147,7 +12799,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 <= S1.f64
+`EXEC.u64[laneId] = S0.f64 <= S1.f64`
 
 #### **Notes**
 
@@ -11157,7 +12809,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 > S1.f64
+`EXEC.u64[laneId] = S0.f64 > S1.f64`
 
 #### **Notes**
 
@@ -11167,7 +12819,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 <> S1.f64
+`EXEC.u64[laneId] = S0.f64 <> S1.f64`
 
 #### **Notes**
 
@@ -11177,7 +12829,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 >= S1.f64
+`EXEC.u64[laneId] = S0.f64 >= S1.f64`
 
 #### **Notes**
 
@@ -11187,7 +12839,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64))
+`EXEC.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64))`
 
 # **Notes**
 
@@ -11197,7 +12849,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64))
+`EXEC.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64))`
 
 #### **Notes**
 
@@ -11207,7 +12859,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 >= S1.f64); // With NAN inputs this is not the same operation as <
+```text
+EXEC.u64[laneId] = !(S0.f64 >= S1.f64);
+// With NAN inputs this is not the same operation as <
+```
 
 #### **Notes**
 
@@ -11217,7 +12872,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 <> S1.f64); // With NAN inputs this is not the same operation as ==
+```text
+EXEC.u64[laneId] = !(S0.f64 <> S1.f64);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **Notes**
 
@@ -11235,7 +12893,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 <= S1.f64); // With NAN inputs this is not the same operation as >
+```text
+EXEC.u64[laneId] = !(S0.f64 <= S1.f64);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **Notes**
 
@@ -11245,7 +12906,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 == S1.f64); // With NAN inputs this is not the same operation as !=
+```text
+EXEC.u64[laneId] = !(S0.f64 == S1.f64);
+// With NAN inputs this is not the same operation as !=
+```
 
 #### **Notes**
 
@@ -11255,7 +12919,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 < S1.f64); // With NAN inputs this is not the same operation as >=
+```text
+EXEC.u64[laneId] = !(S0.f64 < S1.f64);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **Notes**
 
@@ -11263,7 +12930,7 @@ EXEC.u64[laneId] = !(S0.f64 < S1.f64); // With NAN inputs this is not the same o
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -11273,7 +12940,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 < S1.i16
+`EXEC.u64[laneId] = S0.i16 < S1.i16`
 
 ### **Notes**
 
@@ -11283,7 +12950,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 == S1.i16
+`EXEC.u64[laneId] = S0.i16 == S1.i16`
 
 #### **Notes**
 
@@ -11293,7 +12960,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 <= S1.i16
+`EXEC.u64[laneId] = S0.i16 <= S1.i16`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -11301,7 +12968,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 > S1.i16
+`EXEC.u64[laneId] = S0.i16 > S1.i16`
 
 #### **Notes**
 
@@ -11311,7 +12978,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 <> S1.i16
+`EXEC.u64[laneId] = S0.i16 <> S1.i16`
 
 #### **Notes**
 
@@ -11321,7 +12988,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 >= S1.i16
+`EXEC.u64[laneId] = S0.i16 >= S1.i16`
 
 #### **Notes**
 
@@ -11331,7 +12998,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 < S1.u16
+`EXEC.u64[laneId] = S0.u16 < S1.u16`
 
 #### **Notes**
 
@@ -11341,7 +13008,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 == S1.u16
+`EXEC.u64[laneId] = S0.u16 == S1.u16`
 
 #### **Notes**
 
@@ -11351,7 +13018,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 <= S1.u16
+`EXEC.u64[laneId] = S0.u16 <= S1.u16`
 
 #### **Notes**
 
@@ -11361,7 +13028,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 > S1.u16
+`EXEC.u64[laneId] = S0.u16 > S1.u16`
 
 # **Notes**
 
@@ -11371,7 +13038,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 <> S1.u16
+`EXEC.u64[laneId] = S0.u16 <> S1.u16`
 
 #### **Notes**
 
@@ -11381,7 +13048,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 >= S1.u16
+`EXEC.u64[laneId] = S0.u16 >= S1.u16`
 
 #### **Notes**
 
@@ -11391,7 +13058,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -11401,7 +13068,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 < S1.i32
+`EXEC.u64[laneId] = S0.i32 < S1.i32`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -11409,7 +13076,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 == S1.i32
+`EXEC.u64[laneId] = S0.i32 == S1.i32`
 
 #### **Notes**
 
@@ -11419,7 +13086,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 <= S1.i32
+`EXEC.u64[laneId] = S0.i32 <= S1.i32`
 
 #### **Notes**
 
@@ -11429,7 +13096,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 > S1.i32
+`EXEC.u64[laneId] = S0.i32 > S1.i32`
 
 #### **Notes**
 
@@ -11439,7 +13106,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 <> S1.i32
+`EXEC.u64[laneId] = S0.i32 <> S1.i32`
 
 #### **Notes**
 
@@ -11449,7 +13116,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 >= S1.i32
+`EXEC.u64[laneId] = S0.i32 >= S1.i32`
 
 #### **Notes**
 
@@ -11459,7 +13126,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -11494,7 +13161,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 == S1.u32
+`EXEC.u64[laneId] = S0.u32 == S1.u32`
 
 #### **Notes**
 
@@ -11504,7 +13171,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 <= S1.u32
+`EXEC.u64[laneId] = S0.u32 <= S1.u32`
 
 #### **Notes**
 
@@ -11514,13 +13181,13 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 > S1.u32
+`EXEC.u64[laneId] = S0.u32 > S1.u32`
 
 #### **V\_CMPX\_NE\_U32 205**
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 <> S1.u32
+`EXEC.u64[laneId] = S0.u32 <> S1.u32`
 
 #### **Notes**
 
@@ -11530,7 +13197,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 >= S1.u32
+`EXEC.u64[laneId] = S0.u32 >= S1.u32`
 
 #### **Notes**
 
@@ -11540,7 +13207,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -11550,7 +13217,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -11558,7 +13225,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 < S1.i64
+`EXEC.u64[laneId] = S0.i64 < S1.i64`
 
 #### **Notes**
 
@@ -11568,7 +13235,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 == S1.i64
+`EXEC.u64[laneId] = S0.i64 == S1.i64`
 
 #### **Notes**
 
@@ -11578,7 +13245,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 <= S1.i64
+`EXEC.u64[laneId] = S0.i64 <= S1.i64`
 
 #### **Notes**
 
@@ -11588,7 +13255,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 > S1.i64
+`EXEC.u64[laneId] = S0.i64 > S1.i64`
 
 #### **Notes**
 
@@ -11598,7 +13265,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 <> S1.i64
+`EXEC.u64[laneId] = S0.i64 <> S1.i64`
 
 #### **Notes**
 
@@ -11608,7 +13275,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 >= S1.i64
+`EXEC.u64[laneId] = S0.i64 >= S1.i64`
 
 #### **Notes**
 
@@ -11643,7 +13310,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 < S1.u64
+`EXEC.u64[laneId] = S0.u64 < S1.u64`
 
 #### **Notes**
 
@@ -11653,7 +13320,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 == S1.u64
+`EXEC.u64[laneId] = S0.u64 == S1.u64`
 
 #### **Notes**
 
@@ -11663,7 +13330,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 <= S1.u64
+`EXEC.u64[laneId] = S0.u64 <= S1.u64`
 
 # **Notes**
 
@@ -11671,7 +13338,7 @@ EXEC.u64[laneId] = S0.u64 <= S1.u64
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 > S1.u64
+`EXEC.u64[laneId] = S0.u64 > S1.u64`
 
 #### **Notes**
 
@@ -11681,7 +13348,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 <> S1.u64
+`EXEC.u64[laneId] = S0.u64 <> S1.u64`
 
 #### **Notes**
 
@@ -11691,7 +13358,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 >= S1.u64
+`EXEC.u64[laneId] = S0.u64 >= S1.u64`
 
 #### **Notes**
 
@@ -11701,7 +13368,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -11713,7 +13380,27 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f16)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f16)) then result = S1.u32[1] elsif exponent(S0.f16) == 31 then // +-INF result = S1.u32[sign(S0.f16) ? 2 : 9] elsif exponent(S0.f16) > 0 then // +-normal value result = S1.u32[sign(S0.f16) ? 3 : 8] elsif 64'F(abs(S0.f16)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f16) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f16) ? 5 : 6] endif; EXEC.u64[laneId] = result
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f16)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f16)) then
+      result = S1.u32[1]
+elsif exponent(S0.f16) == 31 then
+      // +-INF
+      result = S1.u32[sign(S0.f16) ? 2 : 9]
+elsif exponent(S0.f16) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f16) ? 3 : 8]
+elsif 64'F(abs(S0.f16)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f16) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f16) ? 5 : 6]
+endif;
+EXEC.u64[laneId] = result
+```
 
 #### **Notes**
 
@@ -11725,7 +13412,27 @@ Evaluate the IEEE numeric class function specified as a 10 bit mask in the secon
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f32)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f32)) then result = S1.u32[1] elsif exponent(S0.f32) == 255 then // +-INF result = S1.u32[sign(S0.f32) ? 2 : 9] elsif exponent(S0.f32) > 0 then // +-normal value result = S1.u32[sign(S0.f32) ? 3 : 8] elsif 64'F(abs(S0.f32)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f32) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f32) ? 5 : 6] endif; EXEC.u64[laneId] = result
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f32)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f32)) then
+      result = S1.u32[1]
+elsif exponent(S0.f32) == 255 then
+      // +-INF
+      result = S1.u32[sign(S0.f32) ? 2 : 9]
+elsif exponent(S0.f32) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f32) ? 3 : 8]
+elsif 64'F(abs(S0.f32)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f32) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f32) ? 5 : 6]
+endif;
+EXEC.u64[laneId] = result
+```
 
 ### **Notes**
 
@@ -11739,7 +13446,27 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(S0.f64) then result = S1.u32[0] elsif isQuietNAN(S0.f64) then result = S1.u32[1] elsif exponent(S0.f64) == 2047 then // +-INF result = S1.u32[sign(S0.f64) ? 2 : 9] elsif exponent(S0.f64) > 0 then // +-normal value result = S1.u32[sign(S0.f64) ? 3 : 8] elsif abs(S0.f64) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f64) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f64) ? 5 : 6] endif; EXEC.u64[laneId] = result
+```text
+declare result : 1'U;
+if isSignalNAN(S0.f64) then
+      result = S1.u32[0]
+elsif isQuietNAN(S0.f64) then
+      result = S1.u32[1]
+elsif exponent(S0.f64) == 2047 then
+      // +-INF
+      result = S1.u32[sign(S0.f64) ? 2 : 9]
+elsif exponent(S0.f64) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f64) ? 3 : 8]
+elsif abs(S0.f64) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f64) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f64) ? 5 : 6]
+endif;
+EXEC.u64[laneId] = result
+```
 
 # **Notes**
 
@@ -11763,19 +13490,31 @@ When the CLAMP microcode bit is set to 1, these compare instructions signal an e
 
 Multiply two packed signed 16-bit integer inputs component-wise, add a packed signed 16-bit integer value from a third input component-wise, and store the result into a vector register.
 
-tmp[31 : 16].i16 = S0[31 : 16].i16 \* S1[31 : 16].i16 + S2[31 : 16].i16; tmp[15 : 0].i16 = S0[15 : 0].i16 \* S1[15 : 0].i16 + S2[15 : 0].i16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].i16 = S0[31 : 16].i16 * S1[31 : 16].i16 + S2[31 : 16].i16;
+tmp[15 : 0].i16 = S0[15 : 0].i16 * S1[15 : 0].i16 + S2[15 : 0].i16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MUL\_LO\_U16 1**
 
 Multiply two packed unsigned 16-bit integer inputs component-wise and store the low bits of each resulting component into a vector register.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 \* S1[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 \* S1[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 * S1[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 * S1[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_ADD\_I16 2**
 
 Add two packed signed 16-bit integer inputs component-wise and store the result into a vector register. No carry-in or carry-out support.
 
-tmp[31 : 16].i16 = S0[31 : 16].i16 + S1[31 : 16].i16; tmp[15 : 0].i16 = S0[15 : 0].i16 + S1[15 : 0].i16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].i16 = S0[31 : 16].i16 + S1[31 : 16].i16;
+tmp[15 : 0].i16 = S0[15 : 0].i16 + S1[15 : 0].i16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_SUB\_I16 3**
 
@@ -11785,73 +13524,122 @@ Subtract the second packed signed 16-bit integer input from the first input comp
 
 Given a packed shift count in the first vector input, calculate the component-wise logical shift left of the second packed vector input and store the result into a vector register.
 
-tmp[31 : 16].u16 = (S1[31 : 16].u16 << S0.u32[19 : 16].u32); tmp[15 : 0].u16 = (S1[15 : 0].u16 << S0.u32[3 : 0].u32); D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = (S1[31 : 16].u16 << S0.u32[19 : 16].u32);
+tmp[15 : 0].u16 = (S1[15 : 0].u16 << S0.u32[3 : 0].u32);
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_LSHRREV\_B16 5**
 
 Given a packed shift count in the first vector input, calculate the component-wise logical shift right of the second packed vector input and store the result into a vector register.
 
-tmp[31 : 16].u16 = (S1[31 : 16].u16 >> S0.u32[19 : 16].u32); tmp[15 : 0].u16 = (S1[15 : 0].u16 >> S0.u32[3 : 0].u32); D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = (S1[31 : 16].u16 >> S0.u32[19 : 16].u32);
+tmp[15 : 0].u16 = (S1[15 : 0].u16 >> S0.u32[3 : 0].u32);
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_ASHRREV\_I16 6**
 
 Given a packed shift count in the first vector input, calculate the component-wise arithmetic shift right (preserving sign bit) of the second packed vector input and store the result into a vector register.
 
-tmp[31 : 16].i16 = (S1[31 : 16].i16 >> S0.u32[19 : 16].u32); tmp[15 : 0].i16 = (S1[15 : 0].i16 >> S0.u32[3 : 0].u32); D0.b32 = tmp.b32
+```text
+tmp[31 : 16].i16 = (S1[31 : 16].i16 >> S0.u32[19 : 16].u32);
+tmp[15 : 0].i16 = (S1[15 : 0].i16 >> S0.u32[3 : 0].u32);
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MAX\_I16 7**
 
 Select the component-wise maximum of two packed signed 16-bit integer inputs and store the selected values into a vector register.
 
-tmp[31 : 16].i16 = S0[31 : 16].i16 >= S1[31 : 16].i16 ? S0[31 : 16].i16 : S1[31 : 16].i16; tmp[15 : 0].i16 = S0[15 : 0].i16 >= S1[15 : 0].i16 ? S0[15 : 0].i16 : S1[15 : 0].i16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].i16 = S0[31 : 16].i16 >= S1[31 : 16].i16 ? S0[31 : 16].i16 : S1[31 : 16].i16;
+tmp[15 : 0].i16 = S0[15 : 0].i16 >= S1[15 : 0].i16 ? S0[15 : 0].i16 : S1[15 : 0].i16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MIN\_I16 8**
 
 Select the component-wise minimum of two packed signed 16-bit integer inputs and store the selected values into a vector register.
 
-tmp[31 : 16].i16 = S0[31 : 16].i16 < S1[31 : 16].i16 ? S0[31 : 16].i16 : S1[31 : 16].i16; tmp[15 : 0].i16 = S0[15 : 0].i16 < S1[15 : 0].i16 ? S0[15 : 0].i16 : S1[15 : 0].i16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].i16 = S0[31 : 16].i16 < S1[31 : 16].i16 ? S0[31 : 16].i16 : S1[31 : 16].i16;
+tmp[15 : 0].i16 = S0[15 : 0].i16 < S1[15 : 0].i16 ? S0[15 : 0].i16 : S1[15 : 0].i16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MAD\_U16 9**
 
 Multiply two packed unsigned 16-bit integer inputs component-wise, add a packed unsigned 16-bit integer value from a third input component-wise, and store the result into a vector register.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 \* S1[31 : 16].u16 + S2[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 \* S1[15 : 0].u16 + S2[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 * S1[31 : 16].u16 + S2[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 * S1[15 : 0].u16 + S2[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_ADD\_U16 10**
 
 Add two packed unsigned 16-bit integer inputs component-wise and store the result into a vector register. No carry-in or carry-out support.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 + S1[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 + S1[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 + S1[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 + S1[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_SUB\_U16 11**
 
 Subtract the second packed unsigned 16-bit integer input from the first input component-wise and store the result into a vector register. No carry-in or carry-out support.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 - S1[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 - S1[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 - S1[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 - S1[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MAX\_U16 12**
 
 Select the component-wise maximum of two packed unsigned 16-bit integer inputs and store the selected values into a vector register.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 >= S1[31 : 16].u16 ? S0[31 : 16].u16 : S1[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 >= S1[15 : 0].u16 ? S0[15 : 0].u16 : S1[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 >= S1[31 : 16].u16 ? S0[31 : 16].u16 : S1[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 >= S1[15 : 0].u16 ? S0[15 : 0].u16 : S1[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MIN\_U16 13**
 
 Select the component-wise minimum of two packed unsigned 16-bit integer inputs and store the selected values into a vector register.
 
-tmp[31 : 16].u16 = S0[31 : 16].u16 < S1[31 : 16].u16 ? S0[31 : 16].u16 : S1[31 : 16].u16; tmp[15 : 0].u16 = S0[15 : 0].u16 < S1[15 : 0].u16 ? S0[15 : 0].u16 : S1[15 : 0].u16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].u16 = S0[31 : 16].u16 < S1[31 : 16].u16 ? S0[31 : 16].u16 : S1[31 : 16].u16;
+tmp[15 : 0].u16 = S0[15 : 0].u16 < S1[15 : 0].u16 ? S0[15 : 0].u16 : S1[15 : 0].u16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_FMA\_F16 14**
 
 Multiply two packed half-precision float inputs component-wise and add a third input component-wise using fused multiply add, and store the result into a vector register.
 
-declare tmp : 32'B; tmp[31 : 16].f16 = fma(S0[31 : 16].f16, S1[31 : 16].f16, S2[31 : 16].f16); tmp[15 : 0].f16 = fma(S0[15 : 0].f16, S1[15 : 0].f16, S2[15 : 0].f16); D0.b32 = tmp
+```text
+declare tmp : 32'B;
+tmp[31 : 16].f16 = fma(S0[31 : 16].f16, S1[31 : 16].f16, S2[31 : 16].f16);
+tmp[15 : 0].f16 = fma(S0[15 : 0].f16, S1[15 : 0].f16, S2[15 : 0].f16);
+D0.b32 = tmp
+```
 
 #### **V\_PK\_ADD\_F16 15**
 
 Add two packed half-precision float inputs component-wise and store the result into a vector register. No carryin or carry-out support.
 
-tmp[31 : 16].f16 = S0[31 : 16].f16 + S1[31 : 16].f16; tmp[15 : 0].f16 = S0[15 : 0].f16 + S1[15 : 0].f16; D0.b32 = tmp.b32
+```text
+tmp[31 : 16].f16 = S0[31 : 16].f16 + S1[31 : 16].f16;
+tmp[15 : 0].f16 = S0[15 : 0].f16 + S1[15 : 0].f16;
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MUL\_F16 16**
 
@@ -11863,19 +13651,32 @@ tmp[15 : 0].f16 = S0[15 : 0].f16 \* S1[15 : 0].f16; D0.b32 = tmp.b32
 
 Select the component-wise minimum of two packed half-precision float inputs and store the result into a vector register.
 
-tmp[31 : 16].f16 = v\_min\_f16(S0[31 : 16].f16, S1[31 : 16].f16); tmp[15 : 0].f16 = v\_min\_f16(S0[15 : 0].f16, S1[15 : 0].f16); D0.b32 = tmp.b32
+```text
+tmp[31 : 16].f16 = v_min_f16(S0[31 : 16].f16, S1[31 : 16].f16);
+tmp[15 : 0].f16 = v_min_f16(S0[15 : 0].f16, S1[15 : 0].f16);
+D0.b32 = tmp.b32
+```
 
 #### **V\_PK\_MAX\_F16 18**
 
 Select the component-wise maximum of two packed half-precision float inputs and store the result into a vector register.
 
-tmp[31 : 16].f16 = v\_max\_f16(S0[31 : 16].f16, S1[31 : 16].f16); tmp[15 : 0].f16 = v\_max\_f16(S0[15 : 0].f16, S1[15 : 0].f16); D0.b32 = tmp.b32
+```text
+tmp[31 : 16].f16 = v_max_f16(S0[31 : 16].f16, S1[31 : 16].f16);
+tmp[15 : 0].f16 = v_max_f16(S0[15 : 0].f16, S1[15 : 0].f16);
+D0.b32 = tmp.b32
+```
 
 #### **V\_DOT2\_F32\_F16 19**
 
 Compute the dot product of two packed 2-D half-precision float inputs in the single-precision float domain, add a single-precision float value from the third input and store the result into a vector register.
 
-tmp = S2.f32; tmp += f16\_to\_f32(S0[15 : 0].f16) \* f16\_to\_f32(S1[15 : 0].f16); tmp += f16\_to\_f32(S0[31 : 16].f16) \* f16\_to\_f32(S1[31 : 16].f16); D0.f32 = tmp
+```text
+tmp = S2.f32;
+tmp += f16_to_f32(S0[15 : 0].f16) * f16_to_f32(S1[15 : 0].f16);
+tmp += f16_to_f32(S0[31 : 16].f16) * f16_to_f32(S1[31 : 16].f16);
+D0.f32 = tmp
+```
 
 #### **V\_DOT4\_I32\_IU8 22**
 
@@ -11893,7 +13694,14 @@ This opcode does not depend on the inference or deep learning features being ena
 
 Compute the dot product of two packed 4-D unsigned 8-bit integer inputs in the unsigned 32-bit integer domain, add an unsigned 32-bit integer value from the third input and store the result into a vector register.
 
-tmp = S2.u32; tmp += u8\_to\_u32(S0[7 : 0].u8) \* u8\_to\_u32(S1[7 : 0].u8); tmp += u8\_to\_u32(S0[15 : 8].u8) \* u8\_to\_u32(S1[15 : 8].u8); tmp += u8\_to\_u32(S0[23 : 16].u8) \* u8\_to\_u32(S1[23 : 16].u8); tmp += u8\_to\_u32(S0[31 : 24].u8) \* u8\_to\_u32(S1[31 : 24].u8); D0.u32 = tmp
+```text
+tmp = S2.u32;
+tmp += u8_to_u32(S0[7 : 0].u8) * u8_to_u32(S1[7 : 0].u8);
+tmp += u8_to_u32(S0[15 : 8].u8) * u8_to_u32(S1[15 : 8].u8);
+tmp += u8_to_u32(S0[23 : 16].u8) * u8_to_u32(S1[23 : 16].u8);
+tmp += u8_to_u32(S0[31 : 24].u8) * u8_to_u32(S1[31 : 24].u8);
+D0.u32 = tmp
+```
 
 #### **Notes**
 
@@ -11905,13 +13713,46 @@ Compute the dot product of two packed 8-D unsigned 4-bit integer inputs in the s
 
 The NEG modifier is used to specify whether each input is signed or unsigned: 0=unsigned input, 1=signed input.
 
-declare A : 32'I[8]; declare B : 32'I[8]; // Figure out whether inputs are signed/unsigned. for i in 0 : 7 do A4 = S0[i \* 4 + 3 : i \* 4]; B4 = S1[i \* 4 + 3 : i \* 4]; A[i] = NEG[0].u1 ? 32'I(signext(A4.i4)) : 32'I(32'U(A4.u4)); B[i] = NEG[1].u1 ? 32'I(signext(B4.i4)) : 32'I(32'U(B4.u4)) endfor; C = S2.i32; // Signed multiplier/adder. Extend unsigned inputs with leading 0. tmp = C.i32; tmp += A[0] \* B[0]; tmp += A[1] \* B[1]; tmp += A[2] \* B[2]; tmp += A[3] \* B[3]; tmp += A[4] \* B[4]; tmp += A[5] \* B[5]; tmp += A[6] \* B[6]; tmp += A[7] \* B[7]; D0.i32 = tmp
+```text
+declare A : 32'I[8];
+declare B : 32'I[8];
+// Figure out whether inputs are signed/unsigned.
+for i in 0 : 7 do
+    A4 = S0[i * 4 + 3 : i * 4];
+    B4 = S1[i * 4 + 3 : i * 4];
+    A[i] = NEG[0].u1 ? 32'I(signext(A4.i4)) : 32'I(32'U(A4.u4));
+    B[i] = NEG[1].u1 ? 32'I(signext(B4.i4)) : 32'I(32'U(B4.u4))
+endfor;
+C = S2.i32;
+// Signed multiplier/adder. Extend unsigned inputs with leading 0.
+tmp = C.i32;
+tmp += A[0] * B[0];
+tmp += A[1] * B[1];
+tmp += A[2] * B[2];
+tmp += A[3] * B[3];
+tmp += A[4] * B[4];
+tmp += A[5] * B[5];
+tmp += A[6] * B[6];
+tmp += A[7] * B[7];
+D0.i32 = tmp
+```
 
 #### **V\_DOT8\_U32\_U4 25**
 
 Compute the dot product of two packed 8-D unsigned 4-bit integer inputs in the unsigned 32-bit integer domain, add an unsigned 32-bit integer value from the third input and store the result into a vector register.
 
-tmp = S2.u32; tmp += u4\_to\_u32(S0[3 : 0].u4) \* u4\_to\_u32(S1[3 : 0].u4); tmp += u4\_to\_u32(S0[7 : 4].u4) \* u4\_to\_u32(S1[7 : 4].u4); tmp += u4\_to\_u32(S0[11 : 8].u4) \* u4\_to\_u32(S1[11 : 8].u4); tmp += u4\_to\_u32(S0[15 : 12].u4) \* u4\_to\_u32(S1[15 : 12].u4); tmp += u4\_to\_u32(S0[19 : 16].u4) \* u4\_to\_u32(S1[19 : 16].u4); tmp += u4\_to\_u32(S0[23 : 20].u4) \* u4\_to\_u32(S1[23 : 20].u4); tmp += u4\_to\_u32(S0[27 : 24].u4) \* u4\_to\_u32(S1[27 : 24].u4); tmp += u4\_to\_u32(S0[31 : 28].u4) \* u4\_to\_u32(S1[31 : 28].u4); D0.u32 = tmp
+```text
+tmp = S2.u32;
+tmp += u4_to_u32(S0[3 : 0].u4) * u4_to_u32(S1[3 : 0].u4);
+tmp += u4_to_u32(S0[7 : 4].u4) * u4_to_u32(S1[7 : 4].u4);
+tmp += u4_to_u32(S0[11 : 8].u4) * u4_to_u32(S1[11 : 8].u4);
+tmp += u4_to_u32(S0[15 : 12].u4) * u4_to_u32(S1[15 : 12].u4);
+tmp += u4_to_u32(S0[19 : 16].u4) * u4_to_u32(S1[19 : 16].u4);
+tmp += u4_to_u32(S0[23 : 20].u4) * u4_to_u32(S1[23 : 20].u4);
+tmp += u4_to_u32(S0[27 : 24].u4) * u4_to_u32(S1[27 : 24].u4);
+tmp += u4_to_u32(S0[31 : 28].u4) * u4_to_u32(S1[31 : 28].u4);
+D0.u32 = tmp
+```
 
 #### **V\_DOT2\_F32\_BF16 26**
 
@@ -11952,7 +13793,20 @@ Multiply two inputs and add a third input using fused multiply add where the inp
 
 Size and location of the three inputs are controlled by { OPSEL\_HI[i], OPSEL[i] }: 0=src[31:0], 1=src[31:0], 2=src[15:0], 3=src[31:16]. For MIX opcodes the NEG\_HI instruction field acts as an absolute-value modifier for the three inputs.
 
-declare in : 32'F[3]; declare S : 32'B[3]; for i in 0 : 2 do if !OPSEL\_HI.u3[i] then in[i] = S[i].f32 elsif OPSEL.u3[i] then in[i] = f16\_to\_f32(S[i][31 : 16].f16) else in[i] = f16\_to\_f32(S[i][15 : 0].f16) endif endfor; D0[15 : 0].f16 = f32\_to\_f16(fma(in[0], in[1], in[2]))
+```text
+declare in : 32'F[3];
+declare S : 32'B[3];
+for i in 0 : 2 do
+     if !OPSEL_HI.u3[i] then
+          in[i] = S[i].f32
+     elsif OPSEL.u3[i] then
+          in[i] = f16_to_f32(S[i][31 : 16].f16)
+     else
+          in[i] = f16_to_f32(S[i][15 : 0].f16)
+     endif
+endfor;
+D0[15 : 0].f16 = f32_to_f16(fma(in[0], in[1], in[2]))
+```
 
 #### **V\_FMA\_MIXHI\_F16 34**
 
@@ -11960,49 +13814,77 @@ Multiply two inputs and add a third input using fused multiply add where the inp
 
 Size and location of the three inputs are controlled by { OPSEL\_HI[i], OPSEL[i] }: 0=src[31:0], 1=src[31:0], 2=src[15:0], 3=src[31:16]. For MIX opcodes the NEG\_HI instruction field acts as an absolute-value modifier for the three inputs.
 
-declare in : 32'F[3]; declare S : 32'B[3]; for i in 0 : 2 do if !OPSEL\_HI.u3[i] then in[i] = S[i].f32 elsif OPSEL.u3[i] then in[i] = f16\_to\_f32(S[i][31 : 16].f16) else in[i] = f16\_to\_f32(S[i][15 : 0].f16) endif endfor; D0[31 : 16].f16 = f32\_to\_f16(fma(in[0], in[1], in[2]))
+```text
+declare in : 32'F[3];
+declare S : 32'B[3];
+for i in 0 : 2 do
+     if !OPSEL_HI.u3[i] then
+          in[i] = S[i].f32
+     elsif OPSEL.u3[i] then
+          in[i] = f16_to_f32(S[i][31 : 16].f16)
+     else
+          in[i] = f16_to_f32(S[i][15 : 0].f16)
+     endif
+endfor;
+D0[31 : 16].f16 = f32_to_f16(fma(in[0], in[1], in[2]))
+```
 
 #### **V\_WMMA\_F32\_16X16X16\_F16 64**
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
 Matrices A and B are half-precision float format. Matrices C and D are single-precision float format.
 
-saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.f32(16x16) = S0.f16(16x16) \* S1.f16(16x16) + S2.f32(16x16)"; EXEC = saved\_exec
+```text
+saved_exec = EXEC;
+EXEC = 64'B(-1);
+eval "D0.f32(16x16) = S0.f16(16x16) * S1.f16(16x16) + S2.f32(16x16)";
+EXEC = saved_exec
+```
 
 #### **V\_WMMA\_F32\_16X16X16\_BF16 65**
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
 Matrices A and B are BF16 float format. Matrices C and D are single-precision float format.
 
-saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.f32(16x16) = S0.bf16(16x16) \* S1.bf16(16x16) + S2.f32(16x16)"; EXEC = saved\_exec
+```text
+saved_exec = EXEC;
+EXEC = 64'B(-1);
+eval "D0.f32(16x16) = S0.bf16(16x16) * S1.bf16(16x16) + S2.f32(16x16)";
+EXEC = saved_exec
+```
 
 #### **V\_WMMA\_F16\_16X16X16\_F16 66**
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
 Matrices A and B are half-precision float format. Matrices C and D are half-precision float format.
 
-saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.f16(16x16) = S0.f16(16x16) \* S1.f16(16x16) + S2.f16(16x16)"; EXEC = saved\_exec
+```text
+saved_exec = EXEC;
+EXEC = 64'B(-1);
+eval "D0.f16(16x16) = S0.f16(16x16) * S1.f16(16x16) + S2.f16(16x16)";
+EXEC = saved_exec
+```
 
 #### **V\_WMMA\_BF16\_16X16X16\_BF16 67**
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
@@ -12014,25 +13896,35 @@ saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.bf16(16x16) = S0.bf16(16x16) \* S1
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
 Matrices A and B are unsigned 8-bit integer format. Matrices C and D are signed 32-bit integer format.
 
-saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.i32(16x16) = S0.iu8(16x16) \* S1.iu8(16x16) + S2.i32(16x16)"; EXEC = saved\_exec
+```text
+saved_exec = EXEC;
+EXEC = 64'B(-1);
+eval "D0.i32(16x16) = S0.iu8(16x16) * S1.iu8(16x16) + S2.i32(16x16)";
+EXEC = saved_exec
+```
 
 #### **V\_WMMA\_I32\_16X16X16\_IU4 69**
 
 Multiply the 16x16 matrix in the first input by the 16x16 matrix in the second input and add the 16x16 matrix in the third input using fused multiply add. Store the resulting matrix into vector registers.
 
-D = A (16x16) \* B (16x16) + C (16x16)
+`D = A (16x16) * B (16x16) + C (16x16)`
 
 Each operand contains a single matrix whose elements are distributed across all lanes of the wave. A single matrix multiply is computed and the row-column dot products are distributed across the vector ALU for higher performance.
 
 Matrices A and B are unsigned 4-bit integer format. Matrices C and D are signed 32-bit integer format.
 
-saved\_exec = EXEC; EXEC = 64'B(-1); eval "D0.i32(16x16) = S0.iu4(16x16) \* S1.iu4(16x16) + S2.i32(16x16)"; EXEC = saved\_exec
+```text
+saved_exec = EXEC;
+EXEC = 64'B(-1);
+eval "D0.i32(16x16) = S0.iu4(16x16) * S1.iu4(16x16) + S2.i32(16x16)";
+EXEC = saved_exec
+```
 
 # <span id="page-392-0"></span>**16.11. VOPD Instructions**
 
@@ -12194,7 +14086,7 @@ Do nothing.
 
 Move 32-bit data from a vector input into a vector register.
 
-D0.b32 = S0.b32
+`D0.b32 = S0.b32`
 
 #### **Notes**
 
@@ -12202,13 +14094,39 @@ Floating-point modifiers are valid for this instruction if S0 is a 32-bit floati
 
 Functional examples:
 
- v\_mov\_b32 v0, v1 // Move into v0 from v1 v\_mov\_b32 v0, -v1 // Set v0 to the negation of v1 v\_mov\_b32 v0, abs(v1) // Set v0 to the absolute value of v1
+```text
+v_mov_b32 v0, v1    // Move into v0 from v1
+v_mov_b32 v0, -v1   // Set v0 to the negation of v1
+v_mov_b32 v0, abs(v1)    // Set v0 to the absolute value of v1
+```
 
 #### **V\_READFIRSTLANE\_B32 386**
 
 Read the scalar value in the lowest active lane of the input vector register and store it into a scalar register.
 
-declare lane : 32'U; if WAVE64 then // 64 lanes if EXEC == 0x0LL then lane = 0U; // Force lane 0 if all lanes are disabled else lane = 32'U(s\_ff1\_i32\_b64(EXEC)); // Lowest active lane endif else // 32 lanes if EXEC\_LO.i32 == 0 then lane = 0U; // Force lane 0 if all lanes are disabled else lane = 32'U(s\_ff1\_i32\_b32(EXEC\_LO)); // Lowest active lane endif endif; D0.b32 = VGPR[lane][SRC0.u32]
+```text
+declare lane : 32'U;
+if WAVE64 then
+      // 64 lanes
+      if EXEC == 0x0LL then
+          lane = 0U;
+          // Force lane 0 if all lanes are disabled
+      else
+          lane = 32'U(s_ff1_i32_b64(EXEC));
+          // Lowest active lane
+      endif
+else
+      // 32 lanes
+      if EXEC_LO.i32 == 0 then
+          lane = 0U;
+          // Force lane 0 if all lanes are disabled
+      else
+          lane = 32'U(s_ff1_i32_b32(EXEC_LO));
+          // Lowest active lane
+      endif
+endif;
+D0.b32 = VGPR[lane][SRC0.u32]
+```
 
 # **Notes**
 
@@ -12244,7 +14162,7 @@ D0.f64 = i32_to_f64(S0.i32)
 
 Convert from a signed 32-bit integer input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = i32\_to\_f32(S0.i32)
+`D0.f32 = i32_to_f32(S0.i32)`
 
 #### **Notes**
 
@@ -12254,7 +14172,7 @@ D0.f32 = i32\_to\_f32(S0.i32)
 
 Convert from an unsigned 32-bit integer input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0.u32)
+`D0.f32 = u32_to_f32(S0.u32)`
 
 #### **Notes**
 
@@ -12264,7 +14182,7 @@ D0.f32 = u32\_to\_f32(S0.u32)
 
 Convert from a single-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
-D0.u32 = f32\_to\_u32(S0.f32)
+`D0.u32 = f32_to_u32(S0.f32)`
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
@@ -12272,7 +14190,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a single-precision float input to a signed 32-bit integer value and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(S0.f32)
+`D0.i32 = f32_to_i32(S0.f32)`
 
 #### **Notes**
 
@@ -12284,7 +14202,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a single-precision float input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = f32\_to\_f16(S0.f32)
+`D0.f16 = f32_to_f16(S0.f32)`
 
 #### **Notes**
 
@@ -12294,7 +14212,7 @@ D0.f16 = f32\_to\_f16(S0.f32)
 
 Convert from a half-precision float input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = f16\_to\_f32(S0.f16)
+`D0.f32 = f16_to_f32(S0.f16)`
 
 # **Notes**
 
@@ -12304,7 +14222,7 @@ D0.f32 = f16\_to\_f32(S0.f16)
 
 Convert from a single-precision float input to a signed 32-bit integer value using round to nearest integer semantics (ignore the default rounding mode) and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(floor(S0.f32 + 0.5F))
+`D0.i32 = f32_to_i32(floor(S0.f32 + 0.5F))`
 
 #### **Notes**
 
@@ -12314,7 +14232,7 @@ D0.i32 = f32\_to\_i32(floor(S0.f32 + 0.5F))
 
 Convert from a single-precision float input to a signed 32-bit integer value using round-down semantics (ignore the default rounding mode) and store the result into a vector register.
 
-D0.i32 = f32\_to\_i32(floor(S0.f32))
+`D0.i32 = f32_to_i32(floor(S0.f32))`
 
 #### **Notes**
 
@@ -12330,13 +14248,16 @@ S0 binary Result 1000 -0.5000f 1001 -0.4375f 1010 -0.3750f 1011 -0.3125f 1100 -0
 
 0111 +0.4375f
 
-declare CVT\_OFF\_TABLE : 32'F[16]; D0.f32 = CVT\_OFF\_TABLE[S0.u32[3 : 0]]
+```text
+declare CVT_OFF_TABLE : 32'F[16];
+D0.f32 = CVT_OFF_TABLE[S0.u32[3 : 0]]
+```
 
 #### **V\_CVT\_F32\_F64 399**
 
 Convert from a double-precision float input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = f64\_to\_f32(S0.f64)
+`D0.f32 = f64_to_f32(S0.f64)`
 
 # **Notes**
 
@@ -12346,7 +14267,7 @@ D0.f32 = f64\_to\_f32(S0.f64)
 
 Convert from a single-precision float input to a double-precision float value and store the result into a vector register.
 
-D0.f64 = f32\_to\_f64(S0.f32)
+`D0.f64 = f32_to_f64(S0.f32)`
 
 ### **Notes**
 
@@ -12356,31 +14277,31 @@ D0.f64 = f32\_to\_f64(S0.f32)
 
 Convert an unsigned byte in byte 0 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[7 : 0].u32)
+`D0.f32 = u32_to_f32(S0[7 : 0].u32)`
 
 #### **V\_CVT\_F32\_UBYTE1 402**
 
 Convert an unsigned byte in byte 1 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[15 : 8].u32)
+`D0.f32 = u32_to_f32(S0[15 : 8].u32)`
 
 #### **V\_CVT\_F32\_UBYTE2 403**
 
 Convert an unsigned byte in byte 2 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[23 : 16].u32)
+`D0.f32 = u32_to_f32(S0[23 : 16].u32)`
 
 #### **V\_CVT\_F32\_UBYTE3 404**
 
 Convert an unsigned byte in byte 3 of the input to a single-precision float value and store the result into a vector register.
 
-D0.f32 = u32\_to\_f32(S0[31 : 24].u32)
+`D0.f32 = u32_to_f32(S0[31 : 24].u32)`
 
 #### **V\_CVT\_U32\_F64 405**
 
 Convert from a double-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
-D0.u32 = f64\_to\_u32(S0.f64)
+`D0.u32 = f64_to_u32(S0.f64)`
 
 #### **Notes**
 
@@ -12398,25 +14319,40 @@ Convert from an unsigned 32-bit integer input to a double-precision float value 
 
 Compute the integer part of a double-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64)
+`D0.f64 = trunc(S0.f64)`
 
 #### **V\_CEIL\_F64 408**
 
 Round the double-precision float input up to next integer and store the result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64); if ((S0.f64 > 0.0) && (S0.f64 != D0.f64)) then D0.f64 += 1.0 endif
+```text
+D0.f64 = trunc(S0.f64);
+if ((S0.f64 > 0.0) && (S0.f64 != D0.f64)) then
+      D0.f64 += 1.0
+endif
+```
 
 #### **V\_RNDNE\_F64 409**
 
 Round the double-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
-D0.f64 = floor(S0.f64 + 0.5); if (isEven(floor(S0.f64)) && (fract(S0.f64) == 0.5)) then D0.f64 -= 1.0 endif
+```text
+D0.f64 = floor(S0.f64 + 0.5);
+if (isEven(floor(S0.f64)) && (fract(S0.f64) == 0.5)) then
+      D0.f64 -= 1.0
+endif
+```
 
 #### **V\_FLOOR\_F64 410**
 
 Round the double-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64); if ((S0.f64 < 0.0) && (S0.f64 != D0.f64)) then D0.f64 += -1.0 endif
+```text
+D0.f64 = trunc(S0.f64);
+if ((S0.f64 < 0.0) && (S0.f64 != D0.f64)) then
+      D0.f64 += -1.0
+endif
+```
 
 #### **V\_PIPEFLUSH 411**
 
@@ -12426,7 +14362,7 @@ Flush the vector ALU pipeline through the destination cache.
 
 Move 16-bit data from a vector input into a vector register.
 
-D0.b16 = S0.b16
+`D0.b16 = S0.b16`
 
 # **Notes**
 
@@ -12436,7 +14372,7 @@ Floating-point modifiers are valid for this instruction if S0 is a 16-bit floati
 
 Compute the fractional portion of a single-precision float input and store the result in floating point format into a vector register.
 
-D0.f32 = S0.f32 + -floor(S0.f32)
+`D0.f32 = S0.f32 + -floor(S0.f32)`
 
 #### **Notes**
 
@@ -12450,43 +14386,62 @@ Obey round mode, result clamped to 0x3f7fffff.
 
 Compute the integer part of a single-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-D0.f32 = trunc(S0.f32)
+`D0.f32 = trunc(S0.f32)`
 
 #### **V\_CEIL\_F32 418**
 
 Round the single-precision float input up to next integer and store the result in floating point format into a vector register.
 
-D0.f32 = trunc(S0.f32); if ((S0.f32 > 0.0F) && (S0.f32 != D0.f32)) then D0.f32 += 1.0F endif
+```text
+D0.f32 = trunc(S0.f32);
+if ((S0.f32 > 0.0F) && (S0.f32 != D0.f32)) then
+      D0.f32 += 1.0F
+endif
+```
 
 #### **V\_RNDNE\_F32 419**
 
 Round the single-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
-D0.f32 = floor(S0.f32 + 0.5F); if (isEven(64'F(floor(S0.f32))) && (fract(S0.f32) == 0.5F)) then D0.f32 -= 1.0F endif
+```text
+D0.f32 = floor(S0.f32 + 0.5F);
+if (isEven(64'F(floor(S0.f32))) && (fract(S0.f32) == 0.5F)) then
+      D0.f32 -= 1.0F
+endif
+```
 
 #### **V\_FLOOR\_F32 420**
 
 Round the single-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f32 = trunc(S0.f32); if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then D0.f32 += -1.0F endif
+```text
+D0.f32 = trunc(S0.f32);
+if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then
+      D0.f32 += -1.0F
+endif
+```
 
 #### **V\_EXP\_F32 421**
 
 Calculate 2 raised to the power of the single-precision float input and store the result into a vector register.
 
-D0.f32 = pow(2.0F, S0.f32)
+`D0.f32 = pow(2.0F, S0.f32)`
 
 # **Notes**
 
 1ULP accuracy, denormals are flushed.
 
-V\_EXP\_F32(0xff800000) => 0x00000000 // exp(-INF) = 0 V\_EXP\_F32(0x80000000) => 0x3f800000 // exp(-0.0) = 1 V\_EXP\_F32(0x7f800000) => 0x7f800000 // exp(+INF) = +INF
+```text
+V_EXP_F32(0xff800000) => 0x00000000       // exp(-INF) = 0
+V_EXP_F32(0x80000000) => 0x3f800000       // exp(-0.0) = 1
+V_EXP_F32(0x7f800000) => 0x7f800000       // exp(+INF) = +INF
+```
 
 #### **V\_LOG\_F32 423**
 
 Calculate the base 2 logarithm of the single-precision float input and store the result into a vector register.
 
-D0.f32 = log2(S0.f32)
+`D0.f32 = log2(S0.f32)`
 
 #### **Notes**
 
@@ -12494,13 +14449,20 @@ D0.f32 = log2(S0.f32)
 
 Functional examples:
 
-V\_LOG\_F32(0xff800000) => 0xffc00000 // log(-INF) = NAN V\_LOG\_F32(0xbf800000) => 0xffc00000 // log(-1.0) = NAN V\_LOG\_F32(0x80000000) => 0xff800000 // log(-0.0) = -INF V\_LOG\_F32(0x00000000) => 0xff800000 // log(+0.0) = -INF V\_LOG\_F32(0x3f800000) => 0x00000000 // log(+1.0) = 0 V\_LOG\_F32(0x7f800000) => 0x7f800000 // log(+INF) = +INF
+```text
+V_LOG_F32(0xff800000) => 0xffc00000       // log(-INF) = NAN
+V_LOG_F32(0xbf800000) => 0xffc00000       // log(-1.0) = NAN
+V_LOG_F32(0x80000000) => 0xff800000       // log(-0.0) = -INF
+V_LOG_F32(0x00000000) => 0xff800000       // log(+0.0) = -INF
+V_LOG_F32(0x3f800000) => 0x00000000       // log(+1.0) = 0
+V_LOG_F32(0x7f800000) => 0x7f800000       // log(+INF) = +INF
+```
 
 #### **V\_RCP\_F32 426**
 
 Calculate the reciprocal of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = 1.0F / S0.f32
+`D0.f32 = 1.0F / S0.f32`
 
 #### **Notes**
 
@@ -12508,13 +14470,22 @@ D0.f32 = 1.0F / S0.f32
 
 Functional examples:
 
-V\_RCP\_F32(0xff800000) => 0x80000000 // rcp(-INF) = -0 V\_RCP\_F32(0xc0000000) => 0xbf000000 // rcp(-2.0) = -0.5 V\_RCP\_F32(0x80000000) => 0xff800000 // rcp(-0.0) = -INF V\_RCP\_F32(0x00000000) => 0x7f800000 // rcp(+0.0) = +INF V\_RCP\_F32(0x7f800000) => 0x00000000 // rcp(+INF) = +0
+```text
+V_RCP_F32(0xff800000) => 0x80000000       // rcp(-INF) = -0
+V_RCP_F32(0xc0000000) => 0xbf000000       // rcp(-2.0) = -0.5
+V_RCP_F32(0x80000000) => 0xff800000       // rcp(-0.0) = -INF
+V_RCP_F32(0x00000000) => 0x7f800000       // rcp(+0.0) = +INF
+V_RCP_F32(0x7f800000) => 0x00000000       // rcp(+INF) = +0
+```
 
 #### **V\_RCP\_IFLAG\_F32 427**
 
 Calculate the reciprocal of the vector float input in a manner suitable for integer division and store the result into a vector register. This opcode is intended for use as part of an integer division macro.
 
-D0.f32 = 1.0F / S0.f32; // Can only raise integer DIV\_BY\_ZERO exception
+```text
+D0.f32 = 1.0F / S0.f32;
+// Can only raise integer DIV_BY_ZERO exception
+```
 
 # **Notes**
 
@@ -12528,7 +14499,7 @@ Signed usage: CVT\_F32\_I32 RCP\_IFLAG\_F32 MUL\_F32 (2\*\*31 - 1) CVT\_I32\_F32
 
 Calculate the reciprocal of the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = 1.0F / sqrt(S0.f32)
+`D0.f32 = 1.0F / sqrt(S0.f32)`
 
 #### **Notes**
 
@@ -12536,13 +14507,19 @@ D0.f32 = 1.0F / sqrt(S0.f32)
 
 Functional examples:
 
-V\_RSQ\_F32(0xff800000) => 0xffc00000 // rsq(-INF) = NAN V\_RSQ\_F32(0x80000000) => 0xff800000 // rsq(-0.0) = -INF V\_RSQ\_F32(0x00000000) => 0x7f800000 // rsq(+0.0) = +INF V\_RSQ\_F32(0x40800000) => 0x3f000000 // rsq(+4.0) = +0.5 V\_RSQ\_F32(0x7f800000) => 0x00000000 // rsq(+INF) = +0
+```text
+V_RSQ_F32(0xff800000) => 0xffc00000       // rsq(-INF) = NAN
+V_RSQ_F32(0x80000000) => 0xff800000       // rsq(-0.0) = -INF
+V_RSQ_F32(0x00000000) => 0x7f800000       // rsq(+0.0) = +INF
+V_RSQ_F32(0x40800000) => 0x3f000000       // rsq(+4.0) = +0.5
+V_RSQ_F32(0x7f800000) => 0x00000000       // rsq(+INF) = +0
+```
 
 #### **V\_RCP\_F64 431**
 
 Calculate the reciprocal of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = 1.0 / S0.f64
+`D0.f64 = 1.0 / S0.f64`
 
 #### **Notes**
 
@@ -12552,7 +14529,7 @@ This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
 Calculate the reciprocal of the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = 1.0 / sqrt(S0.f64)
+`D0.f64 = 1.0 / sqrt(S0.f64)`
 
 #### **Notes**
 
@@ -12562,7 +14539,7 @@ This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
 Calculate the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f32 = sqrt(S0.f32)
+`D0.f32 = sqrt(S0.f32)`
 
 # **Notes**
 
@@ -12570,13 +14547,19 @@ D0.f32 = sqrt(S0.f32)
 
 Functional examples:
 
-V\_SQRT\_F32(0xff800000) => 0xffc00000 // sqrt(-INF) = NAN V\_SQRT\_F32(0x80000000) => 0x80000000 // sqrt(-0.0) = -0 V\_SQRT\_F32(0x00000000) => 0x00000000 // sqrt(+0.0) = +0 V\_SQRT\_F32(0x40800000) => 0x40000000 // sqrt(+4.0) = +2.0 V\_SQRT\_F32(0x7f800000) => 0x7f800000 // sqrt(+INF) = +INF
+```text
+V_SQRT_F32(0xff800000) => 0xffc00000       // sqrt(-INF) = NAN
+V_SQRT_F32(0x80000000) => 0x80000000       // sqrt(-0.0) = -0
+V_SQRT_F32(0x00000000) => 0x00000000       // sqrt(+0.0) = +0
+V_SQRT_F32(0x40800000) => 0x40000000       // sqrt(+4.0) = +2.0
+V_SQRT_F32(0x7f800000) => 0x7f800000       // sqrt(+INF) = +INF
+```
 
 #### **V\_SQRT\_F64 436**
 
 Calculate the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f64 = sqrt(S0.f64)
+`D0.f64 = sqrt(S0.f64)`
 
 #### **Notes**
 
@@ -12586,7 +14569,7 @@ This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
 Calculate the trigonometric sine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f32 = sin(S0.f32 \* 32'F(PI \* 2.0))
+`D0.f32 = sin(S0.f32 * 32'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -12594,25 +14577,37 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_SIN\_F32(0xff800000) => 0xffc00000 // sin(-INF) = NAN V\_SIN\_F32(0xff7fffff) => 0x00000000 // -MaxFloat, finite V\_SIN\_F32(0x80000000) => 0x80000000 // sin(-0.0) = -0 V\_SIN\_F32(0x3e800000) => 0x3f800000 // sin(0.25) = 1 V\_SIN\_F32(0x7f800000) => 0xffc00000 // sin(+INF) = NAN
+```text
+V_SIN_F32(0xff800000) => 0xffc00000       // sin(-INF) = NAN
+V_SIN_F32(0xff7fffff) => 0x00000000       // -MaxFloat, finite
+V_SIN_F32(0x80000000) => 0x80000000       // sin(-0.0) = -0
+V_SIN_F32(0x3e800000) => 0x3f800000       // sin(0.25) = 1
+V_SIN_F32(0x7f800000) => 0xffc00000       // sin(+INF) = NAN
+```
 
 #### **V\_COS\_F32 438**
 
 Calculate the trigonometric cosine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f32 = cos(S0.f32 \* 32'F(PI \* 2.0))
+`D0.f32 = cos(S0.f32 * 32'F(PI * 2.0))`
 
 ### **Notes**
 
 Denormals are supported. Full range input is supported.
 
-V\_COS\_F32(0xff800000) => 0xffc00000 // cos(-INF) = NAN V\_COS\_F32(0xff7fffff) => 0x3f800000 // -MaxFloat, finite V\_COS\_F32(0x80000000) => 0x3f800000 // cos(-0.0) = 1 V\_COS\_F32(0x3e800000) => 0x00000000 // cos(0.25) = 0 V\_COS\_F32(0x7f800000) => 0xffc00000 // cos(+INF) = NAN
+```text
+V_COS_F32(0xff800000) => 0xffc00000        // cos(-INF) = NAN
+V_COS_F32(0xff7fffff) => 0x3f800000        // -MaxFloat, finite
+V_COS_F32(0x80000000) => 0x3f800000        // cos(-0.0) = 1
+V_COS_F32(0x3e800000) => 0x00000000        // cos(0.25) = 0
+V_COS_F32(0x7f800000) => 0xffc00000        // cos(+INF) = NAN
+```
 
 #### **V\_NOT\_B32 439**
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u32 = ~S0.u32
+`D0.u32 = ~S0.u32`
 
 # **Notes**
 
@@ -12622,7 +14617,7 @@ Input and output modifiers not supported.
 
 Reverse the order of bits in a vector input and store the result into a vector register.
 
-D0.u32[31 : 0] = S0.u32[0 : 31]
+`D0.u32[31 : 0] = S0.u32[0 : 31]`
 
 #### **Notes**
 
@@ -12632,19 +14627,45 @@ Input and output modifiers not supported.
 
 Count the number of leading "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits.
 
-D0.i32 = -1; // Set if no ones are found for i in 0 : 31 do // Search from MSB if S0.u32[31 - i] == 1'1U then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from MSB
+      if S0.u32[31 - i] == 1'1U then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 Compare with S\_CLZ\_I32\_U32, which performs the equivalent operation in the scalar ALU.
 
 Functional examples:
 
-V\_CLZ\_I32\_U32(0x00000000) => 0xffffffff V\_CLZ\_I32\_U32(0x800000ff) => 0 V\_CLZ\_I32\_U32(0x100000ff) => 3 V\_CLZ\_I32\_U32(0x0000ffff) => 16 V\_CLZ\_I32\_U32(0x00000001) => 31
+```text
+V_CLZ_I32_U32(0x00000000) => 0xffffffff
+V_CLZ_I32_U32(0x800000ff) => 0
+V_CLZ_I32_U32(0x100000ff) => 3
+V_CLZ_I32_U32(0x0000ffff) => 16
+V_CLZ_I32_U32(0x00000001) => 31
+```
 
 #### **V\_CTZ\_I32\_B32 442**
 
 Count the number of trailing "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits in the input.
 
-D0.i32 = -1; // Set if no ones are found for i in 0 : 31 do // Search from LSB if S0.u32[i] == 1'1U then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from LSB
+      if S0.u32[i] == 1'1U then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 #### **Notes**
 
@@ -12652,15 +14673,29 @@ Compare with S\_CTZ\_I32\_B32, which performs the equivalent operation in the sc
 
 Functional examples:
 
-V\_CTZ\_I32\_B32(0x00000000) => 0xffffffff V\_CTZ\_I32\_B32(0xff000001) => 0 V\_CTZ\_I32\_B32(0xff000008) => 3 V\_CTZ\_I32\_B32(0xffff0000) => 16 V\_CTZ\_I32\_B32(0x80000000) => 31
+```text
+V_CTZ_I32_B32(0x00000000) => 0xffffffff
+V_CTZ_I32_B32(0xff000001) => 0
+V_CTZ_I32_B32(0xff000008) => 3
+V_CTZ_I32_B32(0xffff0000) => 16
+V_CTZ_I32_B32(0x80000000) => 31
+```
 
 #### **V\_CLS\_I32 443**
 
 Count the number of leading bits that are the same as the sign bit of a vector input and store the result into a vector register. Store -1 if all input bits are the same.
 
-D0.i32 = -1; // Set if all bits are the same for i in 1 : 31 do // Search from MSB
-
- if S0.i32[31 - i] != S0.i32[31] then D0.i32 = i; break endif endfor
+```text
+D0.i32 = -1;
+// Set if all bits are the same
+for i in 1 : 31 do
+      // Search from MSB
+      if S0.i32[31 - i] != S0.i32[31] then
+          D0.i32 = i;
+          break
+      endif
+endfor
+```
 
 #### **Notes**
 
@@ -12668,13 +14703,27 @@ Compare with S\_CLS\_I32, which performs the equivalent operation in the scalar 
 
 Functional examples:
 
-V\_CLS\_I32(0x00000000) => 0xffffffff V\_CLS\_I32(0x40000000) => 1 V\_CLS\_I32(0x80000000) => 1 V\_CLS\_I32(0x0fffffff) => 4 V\_CLS\_I32(0xffff0000) => 16 V\_CLS\_I32(0xfffffffe) => 31 V\_CLS\_I32(0xffffffff) => 0xffffffff
+```text
+V_CLS_I32(0x00000000) => 0xffffffff
+V_CLS_I32(0x40000000) => 1
+V_CLS_I32(0x80000000) => 1
+V_CLS_I32(0x0fffffff) => 4
+V_CLS_I32(0xffff0000) => 16
+V_CLS_I32(0xfffffffe) => 31
+V_CLS_I32(0xffffffff) => 0xffffffff
+```
 
 #### **V\_FREXP\_EXP\_I32\_F64 444**
 
 Extract the exponent of a double-precision float input and store the result as a signed 32-bit integer into a vector register.
 
-if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then D0.i32 = 0 else D0.i32 = exponent(S0.f64) - 1023 + 1 endif
+```text
+if ((S0.f64 == +INF) || (S0.f64 == -INF) || isNAN(S0.f64)) then
+      D0.i32 = 0
+else
+      D0.i32 = exponent(S0.f64) - 1023 + 1
+endif
+```
 
 #### **Notes**
 
@@ -12694,7 +14743,7 @@ This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent)
 
 Compute the fractional portion of a double-precision float input and store the result in floating point format into a vector register.
 
-D0.f64 = S0.f64 + -floor(S0.f64)
+`D0.f64 = S0.f64 + -floor(S0.f64)`
 
 #### **Notes**
 
@@ -12708,7 +14757,13 @@ Obey round mode, result clamped to 0x3fefffffffffffff.
 
 Extract the exponent of a single-precision float input and store the result as a signed 32-bit integer into a vector register.
 
-if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then D0.i32 = 0 else D0.i32 = exponent(S0.f32) - 127 + 1 endif
+```text
+if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then
+      D0.i32 = 0
+else
+      D0.i32 = exponent(S0.f32) - 127 + 1
+endif
+```
 
 #### **Notes**
 
@@ -12718,7 +14773,13 @@ This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent)
 
 Extract the binary significand, or mantissa, of a single-precision float input and store the result as a single-precision float into a vector register.
 
-if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then D0.f32 = S0.f32 else D0.f32 = mantissa(S0.f32) endif
+```text
+if ((64'F(S0.f32) == +INF) || (64'F(S0.f32) == -INF) || isNAN(64'F(S0.f32))) then
+      D0.f32 = S0.f32
+else
+      D0.f32 = mantissa(S0.f32)
+endif
+```
 
 #### **Notes**
 
@@ -12728,7 +14789,12 @@ This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent)
 
 Move data from a vector input into a relatively-indexed vector register.
 
-addr = DST.u32; // Raw value from instruction addr += M0.u32[31 : 0]; VGPR[laneId][addr].b32 = S0.b32
+```text
+addr = DST.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+VGPR[laneId][addr].b32 = S0.b32
+```
 
 #### **Notes**
 
@@ -12740,7 +14806,12 @@ Example: The following instruction sequence performs the move v15 <= v7:
 
 Move data from a relatively-indexed vector register into another vector register.
 
-addr = SRC0.u32; // Raw value from instruction addr += M0.u32[31 : 0]; D0.b32 = VGPR[laneId][addr].b32
+```text
+addr = SRC0.u32;
+// Raw value from instruction
+addr += M0.u32[31 : 0];
+D0.b32 = VGPR[laneId][addr].b32
+```
 
 #### **Notes**
 
@@ -12750,7 +14821,15 @@ addr = SRC0.u32; // Raw value from instruction addr += M0.u32[31 : 0]; D0.b32 = 
 
 Move data from a relatively-indexed vector register into another relatively-indexed vector register.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32; // Raw value from instruction addrs += M0.u32[31 : 0]; addrd += M0.u32[31 : 0]; VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```text
+addrs = SRC0.u32;
+// Raw value from instruction
+addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[31 : 0];
+addrd += M0.u32[31 : 0];
+VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```
 
 # **Notes**
 
@@ -12762,7 +14841,15 @@ Example: The following instruction sequence performs the move v15 <= v17:
 
 Move data from a relatively-indexed vector register into another relatively-indexed vector register, using different offsets for each index.
 
-addrs = SRC0.u32; // Raw value from instruction addrd = DST.u32; // Raw value from instruction addrs += M0.u32[9 : 0].u32; addrd += M0.u32[25 : 16].u32; VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```text
+addrs = SRC0.u32;
+// Raw value from instruction
+addrd = DST.u32;
+// Raw value from instruction
+addrs += M0.u32[9 : 0].u32;
+addrd += M0.u32[25 : 16].u32;
+VGPR[laneId][addrd].b32 = VGPR[laneId][addrs].b32
+```
 
 #### **Notes**
 
@@ -12774,7 +14861,7 @@ Example: The following instruction sequence performs the move v25 <= v17:
 
 Convert from an unsigned 16-bit integer input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = u16\_to\_f16(S0.u16)
+`D0.f16 = u16_to_f16(S0.u16)`
 
 #### **Notes**
 
@@ -12784,7 +14871,7 @@ D0.f16 = u16\_to\_f16(S0.u16)
 
 Convert from a signed 16-bit integer input to a half-precision float value and store the result into a vector register.
 
-D0.f16 = i16\_to\_f16(S0.i16)
+`D0.f16 = i16_to_f16(S0.i16)`
 
 #### **Notes**
 
@@ -12794,7 +14881,7 @@ D0.f16 = i16\_to\_f16(S0.i16)
 
 Convert from a half-precision float input to an unsigned 16-bit integer value and store the result into a vector register.
 
-D0.u16 = f16\_to\_u16(S0.f16)
+`D0.u16 = f16_to_u16(S0.f16)`
 
 # **Notes**
 
@@ -12806,7 +14893,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a half-precision float input to a signed 16-bit integer value and store the result into a vector register.
 
-D0.i16 = f16\_to\_i16(S0.f16)
+`D0.i16 = f16_to_i16(S0.f16)`
 
 #### **Notes**
 
@@ -12818,7 +14905,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Calculate the reciprocal of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = 16'1.0 / S0.f16
+`D0.f16 = 16'1.0 / S0.f16`
 
 ## **Notes**
 
@@ -12826,13 +14913,19 @@ D0.f16 = 16'1.0 / S0.f16
 
 Functional examples:
 
-V\_RCP\_F16(0xfc00) => 0x8000 // rcp(-INF) = -0 V\_RCP\_F16(0xc000) => 0xb800 // rcp(-2.0) = -0.5 V\_RCP\_F16(0x8000) => 0xfc00 // rcp(-0.0) = -INF V\_RCP\_F16(0x0000) => 0x7c00 // rcp(+0.0) = +INF V\_RCP\_F16(0x7c00) => 0x0000 // rcp(+INF) = +0
+```text
+V_RCP_F16(0xfc00) => 0x8000        // rcp(-INF) = -0
+V_RCP_F16(0xc000) => 0xb800        // rcp(-2.0) = -0.5
+V_RCP_F16(0x8000) => 0xfc00        // rcp(-0.0) = -INF
+V_RCP_F16(0x0000) => 0x7c00        // rcp(+0.0) = +INF
+V_RCP_F16(0x7c00) => 0x0000        // rcp(+INF) = +0
+```
 
 #### **V\_SQRT\_F16 469**
 
 Calculate the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = sqrt(S0.f16)
+`D0.f16 = sqrt(S0.f16)`
 
 # **Notes**
 
@@ -12844,7 +14937,7 @@ V\_SQRT\_F16(0x8000) => 0x8000 // sqrt(-0.0) = -0 V\_SQRT\_F16(0x0000) => 0x0000
 
 Calculate the reciprocal of the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
-D0.f16 = 16'1.0 / sqrt(S0.f16)
+`D0.f16 = 16'1.0 / sqrt(S0.f16)`
 
 #### **Notes**
 
@@ -12852,13 +14945,19 @@ D0.f16 = 16'1.0 / sqrt(S0.f16)
 
 Functional examples:
 
-V\_RSQ\_F16(0xfc00) => 0xfe00 // rsq(-INF) = NAN V\_RSQ\_F16(0x8000) => 0xfc00 // rsq(-0.0) = -INF V\_RSQ\_F16(0x0000) => 0x7c00 // rsq(+0.0) = +INF V\_RSQ\_F16(0x4400) => 0x3800 // rsq(+4.0) = +0.5 V\_RSQ\_F16(0x7c00) => 0x0000 // rsq(+INF) = +0
+```text
+V_RSQ_F16(0xfc00) => 0xfe00        // rsq(-INF) = NAN
+V_RSQ_F16(0x8000) => 0xfc00        // rsq(-0.0) = -INF
+V_RSQ_F16(0x0000) => 0x7c00        // rsq(+0.0) = +INF
+V_RSQ_F16(0x4400) => 0x3800        // rsq(+4.0) = +0.5
+V_RSQ_F16(0x7c00) => 0x0000        // rsq(+INF) = +0
+```
 
 #### **V\_LOG\_F16 471**
 
 Calculate the base 2 logarithm of the half-precision float input and store the result into a vector register.
 
-D0.f16 = log2(S0.f16)
+`D0.f16 = log2(S0.f16)`
 
 #### **Notes**
 
@@ -12866,13 +14965,20 @@ D0.f16 = log2(S0.f16)
 
 Functional examples:
 
-V\_LOG\_F16(0xfc00) => 0xfe00 // log(-INF) = NAN V\_LOG\_F16(0xbc00) => 0xfe00 // log(-1.0) = NAN V\_LOG\_F16(0x8000) => 0xfc00 // log(-0.0) = -INF V\_LOG\_F16(0x0000) => 0xfc00 // log(+0.0) = -INF V\_LOG\_F16(0x3c00) => 0x0000 // log(+1.0) = 0 V\_LOG\_F16(0x7c00) => 0x7c00 // log(+INF) = +INF
+```text
+V_LOG_F16(0xfc00) => 0xfe00        // log(-INF) = NAN
+V_LOG_F16(0xbc00) => 0xfe00        // log(-1.0) = NAN
+V_LOG_F16(0x8000) => 0xfc00        // log(-0.0) = -INF
+V_LOG_F16(0x0000) => 0xfc00        // log(+0.0) = -INF
+V_LOG_F16(0x3c00) => 0x0000        // log(+1.0) = 0
+V_LOG_F16(0x7c00) => 0x7c00        // log(+INF) = +INF
+```
 
 #### **V\_EXP\_F16 472**
 
 Calculate 2 raised to the power of the half-precision float input and store the result into a vector register.
 
-D0.f16 = pow(16'2.0, S0.f16)
+`D0.f16 = pow(16'2.0, S0.f16)`
 
 #### **Notes**
 
@@ -12880,13 +14986,23 @@ D0.f16 = pow(16'2.0, S0.f16)
 
 Functional examples:
 
-V\_EXP\_F16(0xfc00) => 0x0000 // exp(-INF) = 0 V\_EXP\_F16(0x8000) => 0x3c00 // exp(-0.0) = 1 V\_EXP\_F16(0x7c00) => 0x7c00 // exp(+INF) = +INF
+```text
+V_EXP_F16(0xfc00) => 0x0000        // exp(-INF) = 0
+V_EXP_F16(0x8000) => 0x3c00        // exp(-0.0) = 1
+V_EXP_F16(0x7c00) => 0x7c00        // exp(+INF) = +INF
+```
 
 #### **V\_FREXP\_MANT\_F16 473**
 
 Extract the binary significand, or mantissa, of a half-precision float input and store the result as a halfprecision float into a vector register.
 
-if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then D0.f16 = S0.f16 else D0.f16 = mantissa(S0.f16) endif
+```text
+if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then
+      D0.f16 = S0.f16
+else
+      D0.f16 = mantissa(S0.f16)
+endif
+```
 
 #### **Notes**
 
@@ -12896,7 +15012,13 @@ This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent)
 
 Extract the exponent of a half-precision float input and store the result as a signed 16-bit integer into a vector register.
 
-if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then D0.i16 = 16'0 else D0.i16 = 16'I(exponent(S0.f16) - 15 + 1) endif
+```text
+if ((64'F(S0.f16) == +INF) || (64'F(S0.f16) == -INF) || isNAN(64'F(S0.f16))) then
+      D0.i16 = 16'0
+else
+      D0.i16 = 16'I(exponent(S0.f16) - 15 + 1)
+endif
+```
 
 This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent). See also V\_FREXP\_MANT\_F16, which returns the significand. See the C library function frexp() for more information.
 
@@ -12904,19 +15026,29 @@ This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent)
 
 Round the half-precision float input down to previous integer and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += -16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then
+      D0.f16 += -16'1.0
+endif
+```
 
 #### **V\_CEIL\_F16 476**
 
 Round the half-precision float input up to next integer and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16); if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then D0.f16 += 16'1.0 endif
+```text
+D0.f16 = trunc(S0.f16);
+if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then
+      D0.f16 += 16'1.0
+endif
+```
 
 #### **V\_TRUNC\_F16 477**
 
 Compute the integer part of a half-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-D0.f16 = trunc(S0.f16)
+`D0.f16 = trunc(S0.f16)`
 
 #### **V\_RNDNE\_F16 478**
 
@@ -12928,7 +15060,7 @@ D0.f16 = floor(S0.f16 + 16'0.5); if (isEven(64'F(floor(S0.f16))) && (fract(S0.f1
 
 Compute the fractional portion of a half-precision float input and store the result in floating point format into a vector register.
 
-D0.f16 = S0.f16 + -floor(S0.f16)
+`D0.f16 = S0.f16 + -floor(S0.f16)`
 
 #### **Notes**
 
@@ -12940,7 +15072,7 @@ This is intended to comply with the DX specification of fract where the function
 
 Calculate the trigonometric sine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f16 = sin(S0.f16 \* 16'F(PI \* 2.0))
+`D0.f16 = sin(S0.f16 * 16'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -12948,13 +15080,20 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_SIN\_F16(0xfc00) => 0xfe00 // sin(-INF) = NAN V\_SIN\_F16(0xfbff) => 0x0000 // Most negative finite FP16 V\_SIN\_F16(0x8000) => 0x8000 // sin(-0.0) = -0 V\_SIN\_F16(0x3400) => 0x3c00 // sin(0.25) = 1 V\_SIN\_F16(0x7bff) => 0x0000 // Most positive finite FP16 V\_SIN\_F16(0x7c00) => 0xfe00 // sin(+INF) = NAN
+```text
+V_SIN_F16(0xfc00) => 0xfe00        // sin(-INF) = NAN
+V_SIN_F16(0xfbff) => 0x0000        // Most negative finite FP16
+V_SIN_F16(0x8000) => 0x8000        // sin(-0.0) = -0
+V_SIN_F16(0x3400) => 0x3c00        // sin(0.25) = 1
+V_SIN_F16(0x7bff) => 0x0000        // Most positive finite FP16
+V_SIN_F16(0x7c00) => 0xfe00        // sin(+INF) = NAN
+```
 
 #### **V\_COS\_F16 481**
 
 Calculate the trigonometric cosine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
-D0.f16 = cos(S0.f16 \* 16'F(PI \* 2.0))
+`D0.f16 = cos(S0.f16 * 16'F(PI * 2.0))`
 
 #### **Notes**
 
@@ -12962,13 +15101,30 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_COS\_F16(0xfc00) => 0xfe00 // cos(-INF) = NAN V\_COS\_F16(0xfbff) => 0x3c00 // Most negative finite FP16 V\_COS\_F16(0x8000) => 0x3c00 // cos(-0.0) = 1 V\_COS\_F16(0x3400) => 0x0000 // cos(0.25) = 0 V\_COS\_F16(0x7bff) => 0x3c00 // Most positive finite FP16 V\_COS\_F16(0x7c00) => 0xfe00 // cos(+INF) = NAN
+```text
+V_COS_F16(0xfc00) => 0xfe00        // cos(-INF) = NAN
+V_COS_F16(0xfbff) => 0x3c00        // Most negative finite FP16
+V_COS_F16(0x8000) => 0x3c00        // cos(-0.0) = 1
+V_COS_F16(0x3400) => 0x0000        // cos(0.25) = 0
+V_COS_F16(0x7bff) => 0x3c00        // Most positive finite FP16
+V_COS_F16(0x7c00) => 0xfe00        // cos(+INF) = NAN
+```
 
 #### **V\_SAT\_PK\_U8\_I16 482**
 
 Given two 16-bit signed integer inputs, saturate each input over an 8-bit unsigned range, pack the resulting values into a 16-bit word and store the result into a vector register.
 
-SAT8 = lambda(n) ( if n.i32 <= 0 then return 8'0U elsif n >= 16'I(0xff) then return 8'255U else return n[7 : 0].u8 endif); D0.b16 = { SAT8(S0[31 : 16].i16), SAT8(S0[15 : 0].i16) }
+```text
+SAT8 = lambda(n) (
+      if n.i32 <= 0 then
+          return 8'0U
+      elsif n >= 16'I(0xff) then
+          return 8'255U
+      else
+          return n[7 : 0].u8
+      endif);
+D0.b16 = { SAT8(S0[31 : 16].i16), SAT8(S0[15 : 0].i16) }
+```
 
 #### **Notes**
 
@@ -12978,13 +15134,13 @@ Used for 4x16bit data packed as 4x8bit data.
 
 Convert from a half-precision float input to a signed normalized short and store the result into a vector register.
 
-D0.i16 = f16\_to\_snorm(S0.f16)
+`D0.i16 = f16_to_snorm(S0.f16)`
 
 #### **V\_CVT\_NORM\_U16\_F16 484**
 
 Convert from a half-precision float input to an unsigned normalized short and store the result into a vector register.
 
-D0.u16 = f16\_to\_unorm(S0.f16)
+`D0.u16 = f16_to_unorm(S0.f16)`
 
 #### **Notes**
 
@@ -12994,7 +15150,7 @@ D0.u16 = f16\_to\_unorm(S0.f16)
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u16 = ~S0.u16
+`D0.u16 = ~S0.u16`
 
 #### **Notes**
 
@@ -13004,7 +15160,7 @@ Input and output modifiers not supported.
 
 Convert from a signed 16-bit integer input to a signed 32-bit integer value using sign extension and store the result into a vector register.
 
-D0.i32 = 32'I(signext(S0.i16))
+`D0.i32 = 32'I(signext(S0.i16))`
 
 ## **Notes**
 
@@ -13020,7 +15176,7 @@ To convert in the other direction (from 32-bit to 16-bit integer) use V\_MOV\_B1
 
 Copy data from one of two inputs based on the per-lane condition code and store the result into a vector register.
 
-D0.u32 = VCC.u64[laneId] ? S1.u32 : S0.u32
+`D0.u32 = VCC.u64[laneId] ? S1.u32 : S0.u32`
 
 #### **Notes**
 
@@ -13032,7 +15188,7 @@ Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit 
 
 Add two floating point inputs and store the result into a vector register.
 
-D0.f32 = S0.f32 + S1.f32
+`D0.f32 = S0.f32 + S1.f32`
 
 #### **Notes**
 
@@ -13064,19 +15220,33 @@ D0.f32 = S1.f32 - S0.f32
 
 Multiply two single-precision values and accumulate the result with the destination. Follows DX9 rules where 0.0 times anything produces 0.0.
 
-if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then // DX9 rules, 0.0 \* x = 0.0 D0.f32 = S2.f32 else D0.f32 = fma(S0.f32, S1.f32, D0.f32) endif
+```text
+if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then
+      // DX9 rules, 0.0 * x = 0.0
+      D0.f32 = S2.f32
+else
+      D0.f32 = fma(S0.f32, S1.f32, D0.f32)
+endif
+```
 
 #### **V\_MUL\_DX9\_ZERO\_F32 263**
 
 Multiply two floating point inputs and store the result into a vector register. Follows DX9 rules where 0.0 times anything produces 0.0 (this differs from other APIs when the other input is infinity or NaN).
 
-if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then // DX9 rules, 0.0 \* x = 0.0 D0.f32 = 0.0F else D0.f32 = S0.f32 \* S1.f32 endif
+```text
+if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then
+      // DX9 rules, 0.0 * x = 0.0
+      D0.f32 = 0.0F
+else
+      D0.f32 = S0.f32 * S1.f32
+endif
+```
 
 #### **V\_MUL\_F32 264**
 
 Multiply two floating point inputs and store the result into a vector register.
 
-D0.f32 = S0.f32 \* S1.f32
+`D0.f32 = S0.f32 * S1.f32`
 
 ### **Notes**
 
@@ -13086,7 +15256,7 @@ D0.f32 = S0.f32 \* S1.f32
 
 Multiply two signed 24-bit integer inputs and store the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I(S0.i24) \* 32'I(S1.i24)
+`D0.i32 = 32'I(S0.i24) * 32'I(S1.i24)`
 
 #### **Notes**
 
@@ -13096,7 +15266,7 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I((64'I(S0.i24) \* 64'I(S1.i24)) >> 32U)
+`D0.i32 = 32'I((64'I(S0.i24) * 64'I(S1.i24)) >> 32U)`
 
 #### **Notes**
 
@@ -13106,7 +15276,7 @@ See also V\_MUL\_I32\_I24.
 
 Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector register.
 
-D0.u32 = 32'U(S0.u24) \* 32'U(S1.u24)
+`D0.u32 = 32'U(S0.u24) * 32'U(S1.u24)`
 
 ## **Notes**
 
@@ -13122,7 +15292,40 @@ See also V\_MUL\_U32\_U24.
 
 Select the minimum of two single-precision float inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif LT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: -0<+0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+      elsif isSignalNAN(64'F(S1.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+      elsif isQuietNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isQuietNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+else
+      if isNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif LT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **Notes**
 
@@ -13134,7 +15337,40 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the maximum of two single-precision float inputs and store the result into a vector register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32))) elsif isSignalNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif isQuietNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isQuietNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif else if isNAN(64'F(S1.f32)) then D0.f32 = S0.f32 elsif isNAN(64'F(S0.f32)) then D0.f32 = S1.f32 elsif GT\_NEG\_ZERO(S0.f32, S1.f32) then // NOTE: +0>-0 is TRUE in this comparison D0.f32 = S0.f32 else D0.f32 = S1.f32 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+      ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S0.f32)))
+      elsif isSignalNAN(64'F(S1.f32)) then
+          D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+      elsif isQuietNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isQuietNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+else
+      if isNAN(64'F(S1.f32)) then
+          D0.f32 = S0.f32
+      elsif isNAN(64'F(S0.f32)) then
+          D0.f32 = S1.f32
+      elsif GT_NEG_ZERO(S0.f32, S1.f32) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f32 = S0.f32
+      else
+          D0.f32 = S1.f32
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 # **Notes**
 
@@ -13150,25 +15386,25 @@ Select the minimum of two signed 32-bit integer inputs and store the selected va
 
 Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register.
 
-D0.i32 = S0.i32 >= S1.i32 ? S0.i32 : S1.i32
+`D0.i32 = S0.i32 >= S1.i32 ? S0.i32 : S1.i32`
 
 #### **V\_MIN\_U32 275**
 
 Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = S0.u32 < S1.u32 ? S0.u32 : S1.u32
+`D0.u32 = S0.u32 < S1.u32 ? S0.u32 : S1.u32`
 
 #### **V\_MAX\_U32 276**
 
 Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = S0.u32 >= S1.u32 ? S0.u32 : S1.u32
+`D0.u32 = S0.u32 >= S1.u32 ? S0.u32 : S1.u32`
 
 #### **V\_LSHLREV\_B32 280**
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
-D0.u32 = (S1.u32 << S0[4 : 0].u32)
+`D0.u32 = (S1.u32 << S0[4 : 0].u32)`
 
 #### **Notes**
 
@@ -13184,7 +15420,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
-D0.i32 = (S1.i32 >> S0[4 : 0].u32)
+`D0.i32 = (S1.i32 >> S0[4 : 0].u32)`
 
 #### **Notes**
 
@@ -13194,7 +15430,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Calculate bitwise AND on two vector inputs and store the result into a vector register.
 
-D0.u32 = (S0.u32 & S1.u32)
+`D0.u32 = (S0.u32 & S1.u32)`
 
 #### **Notes**
 
@@ -13204,7 +15440,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise OR on two vector inputs and store the result into a vector register.
 
-D0.u32 = (S0.u32 | S1.u32)
+`D0.u32 = (S0.u32 | S1.u32)`
 
 ### **Notes**
 
@@ -13214,7 +15450,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise XOR on two vector inputs and store the result into a vector register.
 
-D0.u32 = (S0.u32 ^ S1.u32)
+`D0.u32 = (S0.u32 ^ S1.u32)`
 
 #### **Notes**
 
@@ -13224,7 +15460,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise XNOR on two vector inputs and store the result into a vector register.
 
-D0.u32 = ~(S0.u32 ^ S1.u32)
+`D0.u32 = ~(S0.u32 ^ S1.u32)`
 
 #### **Notes**
 
@@ -13234,7 +15470,12 @@ Input and output modifiers not supported.
 
 Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = 64'U(S0.u32) + 64'U(S1.u32) + VCC.u64[laneId].u64; VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_ADD\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = 64'U(S0.u32) + 64'U(S1.u32) + VCC.u64[laneId].u64;
+VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_ADD_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 #### **Notes**
 
@@ -13246,7 +15487,12 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = S0.u32 - S1.u32 - VCC.u64[laneId].u32; VCC.u64[laneId] = 64'U(S1.u32) + VCC.u64[laneId].u64 > 64'U(S0.u32) ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_SUB\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = S0.u32 - S1.u32 - VCC.u64[laneId].u32;
+VCC.u64[laneId] = 64'U(S1.u32) + VCC.u64[laneId].u64 > 64'U(S0.u32) ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_SUB_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u.
 
@@ -13256,7 +15502,12 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = S1.u32 - S0.u32 - VCC.u64[laneId].u32; VCC.u64[laneId] = 64'U(S0.u32) + VCC.u64[laneId].u64 > 64'U(S1.u32) ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_SUB\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = S1.u32 - S0.u32 - VCC.u64[laneId].u32;
+VCC.u64[laneId] = 64'U(S0.u32) + VCC.u64[laneId].u64 > 64'U(S1.u32) ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_SUB_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 #### **Notes**
 
@@ -13268,7 +15519,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Add two unsigned 32-bit integer inputs and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u32 = S0.u32 + S1.u32
+`D0.u32 = S0.u32 + S1.u32`
 
 #### **Notes**
 
@@ -13284,7 +15535,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u32 = S1.u32 - S0.u32
+`D0.u32 = S1.u32 - S0.u32`
 
 #### **Notes**
 
@@ -13294,13 +15545,21 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Multiply two floating point inputs and accumulate the result into the destination register using fused multiply add.
 
-D0.f32 = fma(S0.f32, S1.f32, D0.f32)
+`D0.f32 = fma(S0.f32, S1.f32, D0.f32)`
 
 #### **V\_CVT\_PK\_RTZ\_F16\_F32 303**
 
 Convert two single-precision float inputs to a packed half-precision float value using round toward zero semantics (ignore the current rounding mode), and store the result into a vector register.
 
-prev\_mode = ROUND\_MODE; ROUND\_MODE = ROUND\_TOWARD\_ZERO; tmp[15 : 0].f16 = f32\_to\_f16(S0.f32); tmp[31 : 16].f16 = f32\_to\_f16(S1.f32); D0 = tmp.b32; ROUND\_MODE = prev\_mode; // Round-toward-zero regardless of current round mode setting in hardware.
+```text
+prev_mode = ROUND_MODE;
+ROUND_MODE = ROUND_TOWARD_ZERO;
+tmp[15 : 0].f16 = f32_to_f16(S0.f32);
+tmp[31 : 16].f16 = f32_to_f16(S1.f32);
+D0 = tmp.b32;
+ROUND_MODE = prev_mode;
+// Round-toward-zero regardless of current round mode setting in hardware.
+```
 
 # **Notes**
 
@@ -13314,7 +15573,7 @@ Add two floating point inputs and store the result into a vector register.
 
 Subtract the second floating point input from the first input and store the result into a vector register.
 
-D0.f16 = S0.f16 - S1.f16
+`D0.f16 = S0.f16 - S1.f16`
 
 #### **Notes**
 
@@ -13324,7 +15583,7 @@ D0.f16 = S0.f16 - S1.f16
 
 Subtract the first floating point input from the second input and store the result into a vector register.
 
-D0.f16 = S1.f16 - S0.f16
+`D0.f16 = S1.f16 - S0.f16`
 
 #### **Notes**
 
@@ -13334,7 +15593,7 @@ D0.f16 = S1.f16 - S0.f16
 
 Multiply two floating point inputs and store the result into a vector register.
 
-D0.f16 = S0.f16 \* S1.f16
+`D0.f16 = S0.f16 * S1.f16`
 
 # **Notes**
 
@@ -13344,7 +15603,7 @@ D0.f16 = S0.f16 \* S1.f16
 
 Multiply two floating point inputs and accumulate the result into the destination register using fused multiply add.
 
-D0.f16 = fma(S0.f16, S1.f16, D0.f16)
+`D0.f16 = fma(S0.f16, S1.f16, D0.f16)`
 
 # **Notes**
 
@@ -13354,7 +15613,40 @@ D0.f16 = fma(S0.f16, S1.f16, D0.f16)
 
 Select the maximum of two half-precision float inputs and store the result into a vector register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else if isNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif GT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: +0>-0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+      ((a > b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+      elsif isSignalNAN(64'F(S1.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+      elsif isQuietNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isQuietNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+else
+      if isNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif GT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 ### **Notes**
 
@@ -13366,7 +15658,40 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the minimum of two half-precision float inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16))) elsif isSignalNAN(64'F(S1.f16)) then D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16))) elsif isQuietNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isQuietNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif else if isNAN(64'F(S1.f16)) then D0.f16 = S0.f16 elsif isNAN(64'F(S0.f16)) then D0.f16 = S1.f16 elsif LT\_NEG\_ZERO(S0.f16, S1.f16) then // NOTE: -0<+0 is TRUE in this comparison D0.f16 = S0.f16 else D0.f16 = S1.f16 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S0.f16)))
+      elsif isSignalNAN(64'F(S1.f16)) then
+          D0.f16 = 16'F(cvtToQuietNAN(64'F(S1.f16)))
+      elsif isQuietNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isQuietNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+else
+      if isNAN(64'F(S1.f16)) then
+          D0.f16 = S0.f16
+      elsif isNAN(64'F(S0.f16)) then
+          D0.f16 = S1.f16
+      elsif LT_NEG_ZERO(S0.f16, S1.f16) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f16 = S0.f16
+      else
+          D0.f16 = S1.f16
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 # **Notes**
 
@@ -13378,7 +15703,7 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Multiply the first input, a floating point value, by an integral power of 2 specified in the second input, a signed integer value, and store the floating point result into a vector register.
 
-D0.f16 = S0.f16 \* 16'F(2.0F \*\* 32'I(S1.i16))
+`D0.f16 = S0.f16 * 16'F(2.0F ** 32'I(S1.i16))`
 
 #### **Notes**
 
@@ -13388,13 +15713,20 @@ Compare with the ldexp() function in C.
 
 Multiply and add single-precision values. Follows DX9 rules where 0.0 times anything produces 0.0.
 
-if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then // DX9 rules, 0.0 \* x = 0.0 D0.f32 = S2.f32 else D0.f32 = fma(S0.f32, S1.f32, S2.f32) endif
+```text
+if ((64'F(S0.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then
+      // DX9 rules, 0.0 * x = 0.0
+      D0.f32 = S2.f32
+else
+      D0.f32 = fma(S0.f32, S1.f32, S2.f32)
+endif
+```
 
 #### **V\_MAD\_I32\_I24 522**
 
 Multiply two signed 24-bit integer inputs in the signed 32-bit integer domain, add a signed 32-bit integer value from a third input, and store the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I(S0.i24) \* 32'I(S1.i24) + S2.i32
+`D0.i32 = 32'I(S0.i24) * 32'I(S1.i24) + S2.i32`
 
 ### **Notes**
 
@@ -13404,7 +15736,7 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Multiply two unsigned 24-bit integer inputs in the unsigned 32-bit integer domain, add a unsigned 32-bit integer value from a third input, and store the result as an unsigned 32-bit integer into a vector register.
 
-D0.u32 = 32'U(S0.u24) \* 32'U(S1.u24) + S2.u32
+`D0.u32 = 32'U(S0.u24) * 32'U(S1.u24) + S2.u32`
 
 #### **Notes**
 
@@ -13414,21 +15746,82 @@ This opcode is expected to be as efficient as basic single-precision opcodes sin
 
 Compute the cubemap face ID of a 3D coordinate specified as three single-precision float inputs. Store the result in single-precision float format into a vector register.
 
-// Set D0.f = cubemap face ID ({0.0, 1.0, ..., 5.0}). // XYZ coordinate is given in (S0.f, S1.f, S2.f). // S0.f = x // S1.f = y // S2.f = z if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then if S2.f32 < 0.0F then D0.f32 = 5.0F else D0.f32 = 4.0F endif elsif abs(S1.f32) >= abs(S0.f32) then if S1.f32 < 0.0F then D0.f32 = 3.0F else D0.f32 = 2.0F endif else if S0.f32 < 0.0F then D0.f32 = 1.0F else D0.f32 = 0.0F endif endif
+```text
+// Set D0.f = cubemap face ID ({0.0, 1.0, ..., 5.0}).
+// XYZ coordinate is given in (S0.f, S1.f, S2.f).
+// S0.f = x
+// S1.f = y
+// S2.f = z
+if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then
+    if S2.f32 < 0.0F then
+         D0.f32 = 5.0F
+    else
+         D0.f32 = 4.0F
+    endif
+elsif abs(S1.f32) >= abs(S0.f32) then
+    if S1.f32 < 0.0F then
+         D0.f32 = 3.0F
+    else
+         D0.f32 = 2.0F
+    endif
+else
+    if S0.f32 < 0.0F then
+         D0.f32 = 1.0F
+    else
+         D0.f32 = 0.0F
+    endif
+endif
+```
 
 #### **V\_CUBESC\_F32 525**
 
 Compute the cubemap S coordinate of a 3D coordinate specified as three single-precision float inputs. Store the result in single-precision float format into a vector register.
 
-// D0.f = cubemap S coordinate. // XYZ coordinate is given in (S0.f, S1.f, S2.f). // S0.f = x // S1.f = y // S2.f = z if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then if S2.f32 < 0.0F then D0.f32 = -S0.f32 else D0.f32 = S0.f32 endif elsif abs(S1.f32) >= abs(S0.f32) then D0.f32 = S0.f32 else if S0.f32 < 0.0F then D0.f32 = S2.f32
-
- else D0.f32 = -S2.f32 endif endif
+```text
+// D0.f = cubemap S coordinate.
+// XYZ coordinate is given in (S0.f, S1.f, S2.f).
+// S0.f = x
+// S1.f = y
+// S2.f = z
+if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then
+    if S2.f32 < 0.0F then
+         D0.f32 = -S0.f32
+    else
+         D0.f32 = S0.f32
+    endif
+elsif abs(S1.f32) >= abs(S0.f32) then
+    D0.f32 = S0.f32
+else
+    if S0.f32 < 0.0F then
+         D0.f32 = S2.f32
+    else
+         D0.f32 = -S2.f32
+    endif
+endif
+```
 
 #### **V\_CUBETC\_F32 526**
 
 Compute the cubemap T coordinate of a 3D coordinate specified as three single-precision float inputs. Store the result in single-precision float format into a vector register.
 
-// D0.f = cubemap T coordinate. // XYZ coordinate is given in (S0.f, S1.f, S2.f). // S0.f = x // S1.f = y // S2.f = z if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then D0.f32 = -S1.f32 elsif abs(S1.f32) >= abs(S0.f32) then if S1.f32 < 0.0F then D0.f32 = -S2.f32 else D0.f32 = S2.f32 endif else D0.f32 = -S1.f32 endif
+```text
+// D0.f = cubemap T coordinate.
+// XYZ coordinate is given in (S0.f, S1.f, S2.f).
+// S0.f = x
+// S1.f = y
+// S2.f = z
+if ((abs(S2.f32) >= abs(S0.f32)) && (abs(S2.f32) >= abs(S1.f32))) then
+    D0.f32 = -S1.f32
+elsif abs(S1.f32) >= abs(S0.f32) then
+    if S1.f32 < 0.0F then
+         D0.f32 = -S2.f32
+    else
+         D0.f32 = S2.f32
+    endif
+else
+    D0.f32 = -S1.f32
+endif
+```
 
 #### **V\_CUBEMA\_F32 527**
 
@@ -13461,19 +15854,22 @@ D0.u32 = ((S0.u32 >> S1[4 : 0].u32) & ((1U << S2[4 : 0].u32) - 1U))
 
 Extract a signed bitfield from the first input using field offset from the second input and size from the third input, then store the result into a vector register.
 
-tmp.i32 = ((S0.i32 >> S1[4 : 0].u32) & ((1 << S2[4 : 0].u32) - 1)); D0.i32 = signext\_from\_bit(tmp.i32, S2[4 : 0].u32)
+```text
+tmp.i32 = ((S0.i32 >> S1[4 : 0].u32) & ((1 << S2[4 : 0].u32) - 1));
+D0.i32 = signext_from_bit(tmp.i32, S2[4 : 0].u32)
+```
 
 #### **V\_BFI\_B32 530**
 
 Overwrite a bitfield in the third input with a bitfield from the second input using a mask from the first input, then store the result into a vector register.
 
-D0.u32 = ((S0.u32 & S1.u32) | (~S0.u32 & S2.u32))
+`D0.u32 = ((S0.u32 & S1.u32) | (~S0.u32 & S2.u32))`
 
 #### **V\_FMA\_F32 531**
 
 Multiply two single-precision float inputs and add a third input using fused multiply add, and store the result into a vector register.
 
-D0.f32 = fma(S0.f32, S1.f32, S2.f32)
+`D0.f32 = fma(S0.f32, S1.f32, S2.f32)`
 
 #### **Notes**
 
@@ -13489,13 +15885,19 @@ Multiply two double-precision float inputs and add a third input using fused mul
 
 Average two 4-D vectors stored as packed bytes in the first two inputs with rounding control provided by the third input, then store the result into a vector register. Each byte in the third input acts as a rounding mode for the corresponding element; if the LSB is set then 0.5 rounds up, otherwise 0.5 truncates.
 
-tmp = ((S0.u32[31 : 24] + S1.u32[31 : 24] + S2.u32[24].u8) >> 1U << 24U); tmp += ((S0.u32[23 : 16] + S1.u32[23 : 16] + S2.u32[16].u8) >> 1U << 16U); tmp += ((S0.u32[15 : 8] + S1.u32[15 : 8] + S2.u32[8].u8) >> 1U << 8U); tmp += ((S0.u32[7 : 0] + S1.u32[7 : 0] + S2.u32[0].u8) >> 1U); D0.u32 = tmp.u32
+```text
+tmp = ((S0.u32[31 : 24] + S1.u32[31 : 24] + S2.u32[24].u8) >> 1U << 24U);
+tmp += ((S0.u32[23 : 16] + S1.u32[23 : 16] + S2.u32[16].u8) >> 1U << 16U);
+tmp += ((S0.u32[15 : 8] + S1.u32[15 : 8] + S2.u32[8].u8) >> 1U << 8U);
+tmp += ((S0.u32[7 : 0] + S1.u32[7 : 0] + S2.u32[0].u8) >> 1U);
+D0.u32 = tmp.u32
+```
 
 #### **V\_ALIGNBIT\_B32 534**
 
 Align a 64-bit value encoded in the first two inputs to a bit position specified in the third input, then store the result into a 32-bit vector register.
 
-D0.u32 = 32'U(({ S0.u32, S1.u32 } >> S2.u32[4 : 0].u32) & 0xffffffffLL)
+`D0.u32 = 32'U(({ S0.u32, S1.u32 } >> S2.u32[4 : 0].u32) & 0xffffffffLL)`
 
 # **Notes**
 
@@ -13532,43 +15934,53 @@ endif
 
 Select the minimum of three single-precision float inputs and store the selected value into a vector register.
 
-D0.f32 = v\_min\_f32(v\_min\_f32(S0.f32, S1.f32), S2.f32)
+`D0.f32 = v_min_f32(v_min_f32(S0.f32, S1.f32), S2.f32)`
 
 #### **V\_MIN3\_I32 538**
 
 Select the minimum of three signed 32-bit integer inputs and store the selected value into a vector register.
 
-D0.i32 = v\_min\_i32(v\_min\_i32(S0.i32, S1.i32), S2.i32)
+`D0.i32 = v_min_i32(v_min_i32(S0.i32, S1.i32), S2.i32)`
 
 #### **V\_MIN3\_U32 539**
 
 Select the minimum of three unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = v\_min\_u32(v\_min\_u32(S0.u32, S1.u32), S2.u32)
+`D0.u32 = v_min_u32(v_min_u32(S0.u32, S1.u32), S2.u32)`
 
 #### **V\_MAX3\_F32 540**
 
 Select the maximum of three single-precision float inputs and store the selected value into a vector register.
 
-D0.f32 = v\_max\_f32(v\_max\_f32(S0.f32, S1.f32), S2.f32)
+`D0.f32 = v_max_f32(v_max_f32(S0.f32, S1.f32), S2.f32)`
 
 #### **V\_MAX3\_I32 541**
 
 Select the maximum of three signed 32-bit integer inputs and store the selected value into a vector register.
 
-D0.i32 = v\_max\_i32(v\_max\_i32(S0.i32, S1.i32), S2.i32)
+`D0.i32 = v_max_i32(v_max_i32(S0.i32, S1.i32), S2.i32)`
 
 #### **V\_MAX3\_U32 542**
 
 Select the maximum of three unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-D0.u32 = v\_max\_u32(v\_max\_u32(S0.u32, S1.u32), S2.u32)
+`D0.u32 = v_max_u32(v_max_u32(S0.u32, S1.u32), S2.u32)`
 
 #### **V\_MED3\_F32 543**
 
 Select the median of three single-precision float values and store the selected value into a vector register.
 
-if (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)) || isNAN(64'F(S2.f32))) then D0.f32 = v\_min3\_f32(S0.f32, S1.f32, S2.f32) elsif v\_max3\_f32(S0.f32, S1.f32, S2.f32) == S0.f32 then D0.f32 = v\_max\_f32(S1.f32, S2.f32) elsif v\_max3\_f32(S0.f32, S1.f32, S2.f32) == S1.f32 then D0.f32 = v\_max\_f32(S0.f32, S2.f32) else D0.f32 = v\_max\_f32(S0.f32, S1.f32) endif
+```text
+if (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)) || isNAN(64'F(S2.f32))) then
+    D0.f32 = v_min3_f32(S0.f32, S1.f32, S2.f32)
+elsif v_max3_f32(S0.f32, S1.f32, S2.f32) == S0.f32 then
+    D0.f32 = v_max_f32(S1.f32, S2.f32)
+elsif v_max3_f32(S0.f32, S1.f32, S2.f32) == S1.f32 then
+    D0.f32 = v_max_f32(S0.f32, S2.f32)
+else
+    D0.f32 = v_max_f32(S0.f32, S1.f32)
+endif
+```
 
 #### **V\_MED3\_I32 544**
 
@@ -13602,7 +16014,17 @@ endif
 
 Calculate the sum of absolute differences of elements in two packed 4-component unsigned 8-bit integer inputs, add an unsigned 32-bit integer value from the third input and store the result into a vector register.
 
-ABSDIFF = lambda(x, y) ( x > y ? x - y : y - x); // UNSIGNED comparison tmp = S2.u32; tmp += 32'U(ABSDIFF(S0.u32[7 : 0], S1.u32[7 : 0])); tmp += 32'U(ABSDIFF(S0.u32[15 : 8], S1.u32[15 : 8])); tmp += 32'U(ABSDIFF(S0.u32[23 : 16], S1.u32[23 : 16])); tmp += 32'U(ABSDIFF(S0.u32[31 : 24], S1.u32[31 : 24])); D0.u32 = tmp
+```text
+ABSDIFF = lambda(x, y) (
+      x > y ? x - y : y - x);
+// UNSIGNED comparison
+tmp = S2.u32;
+tmp += 32'U(ABSDIFF(S0.u32[7 : 0], S1.u32[7 : 0]));
+tmp += 32'U(ABSDIFF(S0.u32[15 : 8], S1.u32[15 : 8]));
+tmp += 32'U(ABSDIFF(S0.u32[23 : 16], S1.u32[23 : 16]));
+tmp += 32'U(ABSDIFF(S0.u32[31 : 24], S1.u32[31 : 24]));
+D0.u32 = tmp
+```
 
 # **Notes**
 
@@ -13640,13 +16062,22 @@ D0.u32 = tmp
 
 Calculate the absolute difference of two unsigned 32-bit integer inputs, add an unsigned 32-bit integer value from the third input and store the result into a vector register.
 
-ABSDIFF = lambda(x, y) ( x > y ? x - y : y - x); // UNSIGNED comparison D0.u32 = ABSDIFF(S0.u32, S1.u32) + S2.u32
+```text
+ABSDIFF = lambda(x, y) (
+    x > y ? x - y : y - x);
+// UNSIGNED comparison
+D0.u32 = ABSDIFF(S0.u32, S1.u32) + S2.u32
+```
 
 #### **V\_CVT\_PK\_U8\_F32 550**
 
 Convert a single-precision float value from the first input to an unsigned 8-bit integer value and pack the result into one byte of the third input using the second input as a byte select. Store the result into a vector register.
 
-tmp = (S2.u32 & 32'U(~(0xff << (S1.u32[1 : 0].u32 \* 8U)))); tmp = (tmp | ((32'U(f32\_to\_u8(S0.f32)) & 255U) << (S1.u32[1 : 0].u32 \* 8U))); D0.u32 = tmp
+```text
+tmp = (S2.u32 & 32'U(~(0xff << (S1.u32[1 : 0].u32 * 8U))));
+tmp = (tmp | ((32'U(f32_to_u8(S0.f32)) & 255U) << (S1.u32[1 : 0].u32 * 8U)));
+D0.u32 = tmp
+```
 
 #### **V\_DIV\_FIXUP\_F32 551**
 
@@ -13654,7 +16085,32 @@ Given a single-precision float quotient in the first input, a denominator in the
 
 This operation handles corner cases in a division macro such as divide by zero and NaN inputs. This operation is well defined when the quotient is approximately equal to the numerator divided by the denominator. Other inputs produce a predictable result but may not be mathematically useful.
 
-sign\_out = (sign(S1.f32) ^ sign(S2.f32)); if isNAN(64'F(S2.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S2.f32))) elsif isNAN(64'F(S1.f32)) then D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32))) elsif ((64'F(S1.f32) == 0.0) && (64'F(S2.f32) == 0.0)) then // 0/0 D0.f32 = 32'F(0xffc00000) elsif ((64'F(abs(S1.f32)) == +INF) && (64'F(abs(S2.f32)) == +INF)) then // inf/inf D0.f32 = 32'F(0xffc00000) elsif ((64'F(S1.f32) == 0.0) || (64'F(abs(S2.f32)) == +INF)) then // x/0, or inf/y D0.f32 = sign\_out ? -INF.f32 : +INF.f32 elsif ((64'F(abs(S1.f32)) == +INF) || (64'F(S2.f32) == 0.0)) then // x/inf, 0/y D0.f32 = sign\_out ? -0.0F : 0.0F elsif exponent(S2.f32) - exponent(S1.f32) < -150 then D0.f32 = sign\_out ? -UNDERFLOW\_F32 : UNDERFLOW\_F32 elsif exponent(S1.f32) == 255 then D0.f32 = sign\_out ? -OVERFLOW\_F32 : OVERFLOW\_F32 else D0.f32 = sign\_out ? -abs(S0.f32) : abs(S0.f32) endif
+```text
+sign_out = (sign(S1.f32) ^ sign(S2.f32));
+if isNAN(64'F(S2.f32)) then
+    D0.f32 = 32'F(cvtToQuietNAN(64'F(S2.f32)))
+elsif isNAN(64'F(S1.f32)) then
+      D0.f32 = 32'F(cvtToQuietNAN(64'F(S1.f32)))
+elsif ((64'F(S1.f32) == 0.0) && (64'F(S2.f32) == 0.0)) then
+      // 0/0
+      D0.f32 = 32'F(0xffc00000)
+elsif ((64'F(abs(S1.f32)) == +INF) && (64'F(abs(S2.f32)) == +INF)) then
+      // inf/inf
+      D0.f32 = 32'F(0xffc00000)
+elsif ((64'F(S1.f32) == 0.0) || (64'F(abs(S2.f32)) == +INF)) then
+      // x/0, or inf/y
+      D0.f32 = sign_out ? -INF.f32 : +INF.f32
+elsif ((64'F(abs(S1.f32)) == +INF) || (64'F(S2.f32) == 0.0)) then
+      // x/inf, 0/y
+      D0.f32 = sign_out ? -0.0F : 0.0F
+elsif exponent(S2.f32) - exponent(S1.f32) < -150 then
+      D0.f32 = sign_out ? -UNDERFLOW_F32 : UNDERFLOW_F32
+elsif exponent(S1.f32) == 255 then
+      D0.f32 = sign_out ? -OVERFLOW_F32 : OVERFLOW_F32
+else
+      D0.f32 = sign_out ? -abs(S0.f32) : abs(S0.f32)
+endif
+```
 
 ### **Notes**
 
@@ -13666,9 +16122,32 @@ Given a double-precision float quotient in the first input, a denominator in the
 
 This operation handles corner cases in a division macro such as divide by zero and NaN inputs. This operation is well defined when the quotient is approximately equal to the numerator divided by the denominator. Other inputs produce a predictable result but may not be mathematically useful.
 
-sign\_out = (sign(S1.f64) ^ sign(S2.f64)); if isNAN(S2.f64) then D0.f64 = cvtToQuietNAN(S2.f64) elsif isNAN(S1.f64) then D0.f64 = cvtToQuietNAN(S1.f64) elsif ((S1.f64 == 0.0) && (S2.f64 == 0.0)) then // 0/0 D0.f64 = 64'F(0xfff8000000000000LL) elsif ((abs(S1.f64) == +INF) && (abs(S2.f64) == +INF)) then // inf/inf D0.f64 = 64'F(0xfff8000000000000LL) elsif ((S1.f64 == 0.0) || (abs(S2.f64) == +INF)) then // x/0, or inf/y D0.f64 = sign\_out ? -INF : +INF elsif ((abs(S1.f64) == +INF) || (S2.f64 == 0.0)) then // x/inf, 0/y
-
- D0.f64 = sign\_out ? -0.0 : 0.0 elsif exponent(S2.f64) - exponent(S1.f64) < -1075 then D0.f64 = sign\_out ? -UNDERFLOW\_F64 : UNDERFLOW\_F64 elsif exponent(S1.f64) == 2047 then D0.f64 = sign\_out ? -OVERFLOW\_F64 : OVERFLOW\_F64 else D0.f64 = sign\_out ? -abs(S0.f64) : abs(S0.f64) endif
+```text
+sign_out = (sign(S1.f64) ^ sign(S2.f64));
+if isNAN(S2.f64) then
+      D0.f64 = cvtToQuietNAN(S2.f64)
+elsif isNAN(S1.f64) then
+      D0.f64 = cvtToQuietNAN(S1.f64)
+elsif ((S1.f64 == 0.0) && (S2.f64 == 0.0)) then
+      // 0/0
+      D0.f64 = 64'F(0xfff8000000000000LL)
+elsif ((abs(S1.f64) == +INF) && (abs(S2.f64) == +INF)) then
+      // inf/inf
+      D0.f64 = 64'F(0xfff8000000000000LL)
+elsif ((S1.f64 == 0.0) || (abs(S2.f64) == +INF)) then
+      // x/0, or inf/y
+      D0.f64 = sign_out ? -INF : +INF
+elsif ((abs(S1.f64) == +INF) || (S2.f64 == 0.0)) then
+      // x/inf, 0/y
+      D0.f64 = sign_out ? -0.0 : 0.0
+elsif exponent(S2.f64) - exponent(S1.f64) < -1075 then
+      D0.f64 = sign_out ? -UNDERFLOW_F64 : UNDERFLOW_F64
+elsif exponent(S1.f64) == 2047 then
+      D0.f64 = sign_out ? -OVERFLOW_F64 : OVERFLOW_F64
+else
+      D0.f64 = sign_out ? -abs(S0.f64) : abs(S0.f64)
+endif
+```
 
 #### **Notes**
 
@@ -13680,7 +16159,13 @@ Multiply two single-precision float inputs and add a third input using fused mul
 
 This operation is designed for use in floating point division macros and relies on V\_DIV\_SCALE\_F32 to set the vector condition code iff the quotient requires post-scaling.
 
-if VCC.u64[laneId] then D0.f32 = 2.0F \*\* 32 \* fma(S0.f32, S1.f32, S2.f32) else D0.f32 = fma(S0.f32, S1.f32, S2.f32) endif
+```text
+if VCC.u64[laneId] then
+      D0.f32 = 2.0F ** 32 * fma(S0.f32, S1.f32, S2.f32)
+else
+      D0.f32 = fma(S0.f32, S1.f32, S2.f32)
+endif
+```
 
 #### **Notes**
 
@@ -13706,7 +16191,17 @@ V\_DIV\_SCALE\_F64, V\_DIV\_FMAS\_F64 and V\_DIV\_FIXUP\_F64 are all designed fo
 
 Calculate the sum of absolute differences of elements in two packed 4-component unsigned 8-bit integer inputs, except that elements where the second input (known as the reference input) is zero are not included in the sum. Add an unsigned 32-bit integer value from the third input and store the result into a vector register.
 
-ABSDIFF = lambda(x, y) ( x > y ? x - y : y - x); // UNSIGNED comparison tmp = S2.u32; tmp += S1.u32[7 : 0] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[7 : 0], S1.u32[7 : 0])); tmp += S1.u32[15 : 8] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[15 : 8], S1.u32[15 : 8])); tmp += S1.u32[23 : 16] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[23 : 16], S1.u32[23 : 16])); tmp += S1.u32[31 : 24] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[31 : 24], S1.u32[31 : 24])); D0.u32 = tmp
+```text
+ABSDIFF = lambda(x, y) (
+      x > y ? x - y : y - x);
+// UNSIGNED comparison
+tmp = S2.u32;
+tmp += S1.u32[7 : 0] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[7 : 0], S1.u32[7 : 0]));
+tmp += S1.u32[15 : 8] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[15 : 8], S1.u32[15 : 8]));
+tmp += S1.u32[23 : 16] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[23 : 16], S1.u32[23 : 16]));
+tmp += S1.u32[31 : 24] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u32[31 : 24], S1.u32[31 : 24]));
+D0.u32 = tmp
+```
 
 # **Notes**
 
@@ -13722,13 +16217,25 @@ tmp[63 : 48] = 16'B(v\_sad\_u8(S0[55 : 24], S1[31 : 0], S2[63 : 48].u32)); tmp[4
 
 Perform the V\_MSAD\_U8 operation four times using different slices of the first array, all entries of the second array and each entry of the third array. Truncate each result to 16 bits, pack the values into a 4-entry array and store the array into a vector register. The first input is an 8-entry array of unsigned 8-bit integers, the second input is a 4-entry array of unsigned 8-bit integers and the third input is a 4-entry array of unsigned 16-bit integers.
 
-tmp[63 : 48] = 16'B(v\_msad\_u8(S0[55 : 24], S1[31 : 0], S2[63 : 48].u32)); tmp[47 : 32] = 16'B(v\_msad\_u8(S0[47 : 16], S1[31 : 0], S2[47 : 32].u32)); tmp[31 : 16] = 16'B(v\_msad\_u8(S0[39 : 8], S1[31 : 0], S2[31 : 16].u32)); tmp[15 : 0] = 16'B(v\_msad\_u8(S0[31 : 0], S1[31 : 0], S2[15 : 0].u32)); D0.b64 = tmp.b64
+```text
+tmp[63 : 48] = 16'B(v_msad_u8(S0[55 : 24], S1[31 : 0], S2[63 : 48].u32));
+tmp[47 : 32] = 16'B(v_msad_u8(S0[47 : 16], S1[31 : 0], S2[47 : 32].u32));
+tmp[31 : 16] = 16'B(v_msad_u8(S0[39 : 8], S1[31 : 0], S2[31 : 16].u32));
+tmp[15 : 0] = 16'B(v_msad_u8(S0[31 : 0], S1[31 : 0], S2[15 : 0].u32));
+D0.b64 = tmp.b64
+```
 
 #### **V\_MQSAD\_U32\_U8 573**
 
 Perform the V\_MSAD\_U8 operation four times using different slices of the first array, all entries of the second array and each entry of the third array. Pack each 32-bit value into a 4-entry array and store the array into a vector register. The first input is an 8-entry array of unsigned 8-bit integers, the second input is a 4-entry array of unsigned 8-bit integers and the third input is a 4-entry array of unsigned 32-bit integers.
 
-tmp[127 : 96] = 32'B(v\_msad\_u8(S0[55 : 24], S1[31 : 0], S2[127 : 96].u32)); tmp[95 : 64] = 32'B(v\_msad\_u8(S0[47 : 16], S1[31 : 0], S2[95 : 64].u32)); tmp[63 : 32] = 32'B(v\_msad\_u8(S0[39 : 8], S1[31 : 0], S2[63 : 32].u32)); tmp[31 : 0] = 32'B(v\_msad\_u8(S0[31 : 0], S1[31 : 0], S2[31 : 0].u32)); D0.b128 = tmp.b128
+```text
+tmp[127 : 96] = 32'B(v_msad_u8(S0[55 : 24], S1[31 : 0], S2[127 : 96].u32));
+tmp[95 : 64] = 32'B(v_msad_u8(S0[47 : 16], S1[31 : 0], S2[95 : 64].u32));
+tmp[63 : 32] = 32'B(v_msad_u8(S0[39 : 8], S1[31 : 0], S2[63 : 32].u32));
+tmp[31 : 0] = 32'B(v_msad_u8(S0[31 : 0], S1[31 : 0], S2[31 : 0].u32));
+D0.b128 = tmp.b128
+```
 
 #### **V\_XOR3\_B32 576**
 
@@ -13758,7 +16265,32 @@ Supports saturation (unsigned 16-bit integer domain).
 
 Permute a 64-bit value constructed from two vector inputs (most significant bits come from the first input) using a per-lane selector from the third input. The lane selector allows each byte of the result to choose from any of the 8 input bytes, perform sign extension or pad with 0/1 bits. Store the result into a vector register.
 
-BYTE\_PERMUTE = lambda(data, sel) ( declare in : 8'B[8]; for i in 0 : 7 do in[i] = data[i \* 8 + 7 : i \* 8].b8 endfor; if sel.u32 >= 13U then return 8'0xff elsif sel.u32 == 12U then return 8'0x0 elsif sel.u32 == 11U then return in[7][7].b8 \* 8'0xff elsif sel.u32 == 10U then return in[5][7].b8 \* 8'0xff elsif sel.u32 == 9U then return in[3][7].b8 \* 8'0xff elsif sel.u32 == 8U then return in[1][7].b8 \* 8'0xff else return in[sel] endif); D0[31 : 24] = BYTE\_PERMUTE({ S0.u32, S1.u32 }, S2.u32[31 : 24]); D0[23 : 16] = BYTE\_PERMUTE({ S0.u32, S1.u32 }, S2.u32[23 : 16]); D0[15 : 8] = BYTE\_PERMUTE({ S0.u32, S1.u32 }, S2.u32[15 : 8]); D0[7 : 0] = BYTE\_PERMUTE({ S0.u32, S1.u32 }, S2.u32[7 : 0])
+```text
+BYTE_PERMUTE = lambda(data, sel) (
+      declare in : 8'B[8];
+      for i in 0 : 7 do
+          in[i] = data[i * 8 + 7 : i * 8].b8
+      endfor;
+      if sel.u32 >= 13U then
+          return 8'0xff
+      elsif sel.u32 == 12U then
+          return 8'0x0
+      elsif sel.u32 == 11U then
+          return in[7][7].b8 * 8'0xff
+      elsif sel.u32 == 10U then
+          return in[5][7].b8 * 8'0xff
+      elsif sel.u32 == 9U then
+          return in[3][7].b8 * 8'0xff
+      elsif sel.u32 == 8U then
+          return in[1][7].b8 * 8'0xff
+      else
+          return in[sel]
+      endif);
+D0[31 : 24] = BYTE_PERMUTE({ S0.u32, S1.u32 }, S2.u32[31 : 24]);
+D0[23 : 16] = BYTE_PERMUTE({ S0.u32, S1.u32 }, S2.u32[23 : 16]);
+D0[15 : 8] = BYTE_PERMUTE({ S0.u32, S1.u32 }, S2.u32[15 : 8]);
+D0[7 : 0] = BYTE_PERMUTE({ S0.u32, S1.u32 }, S2.u32[7 : 0])
+```
 
 # **Notes**
 
@@ -13772,7 +16304,7 @@ architecture.
 
 Calculate bitwise XOR of the first two vector inputs, then add the third vector input to the intermediate result, then store the final result into a vector register.
 
-D0.u32 = (S0.u32 ^ S1.u32) + S2.u32
+`D0.u32 = (S0.u32 ^ S1.u32) + S2.u32`
 
 #### **Notes**
 
@@ -13782,19 +16314,19 @@ No carryin/carryout and no saturation. This opcode is designed to help accelerat
 
 Given a shift count in the second input, calculate the logical shift left of the first input, then add the third input to the intermediate result, then store the final result into a vector register.
 
-D0.u32 = (S0.u32 << S1.u32[4 : 0].u32) + S2.u32
+`D0.u32 = (S0.u32 << S1.u32[4 : 0].u32) + S2.u32`
 
 #### **V\_ADD\_LSHL\_U32 583**
 
 Add the first two integer inputs, then given a shift count in the third input, calculate the logical shift left of the intermediate result, then store the final result into a vector register.
 
-D0.u32 = ((S0.u32 + S1.u32) << S2.u32[4 : 0].u32)
+`D0.u32 = ((S0.u32 + S1.u32) << S2.u32[4 : 0].u32)`
 
 #### **V\_FMA\_F16 584**
 
 Multiply two half-precision float inputs and add a third input using fused multiply add, and store the result into a vector register.
 
-D0.f16 = fma(S0.f16, S1.f16, S2.f16)
+`D0.f16 = fma(S0.f16, S1.f16, S2.f16)`
 
 #### **Notes**
 
@@ -13802,49 +16334,67 @@ D0.f16 = fma(S0.f16, S1.f16, S2.f16)
 
 Select the minimum of three half-precision float inputs and store the selected value into a vector register.
 
-D0.f16 = v\_min\_f16(v\_min\_f16(S0.f16, S1.f16), S2.f16)
+`D0.f16 = v_min_f16(v_min_f16(S0.f16, S1.f16), S2.f16)`
 
 #### **V\_MIN3\_I16 586**
 
 Select the minimum of three signed 16-bit integer inputs and store the selected value into a vector register.
 
-D0.i16 = v\_min\_i16(v\_min\_i16(S0.i16, S1.i16), S2.i16)
+`D0.i16 = v_min_i16(v_min_i16(S0.i16, S1.i16), S2.i16)`
 
 #### **V\_MIN3\_U16 587**
 
 Select the minimum of three unsigned 16-bit integer inputs and store the selected value into a vector register.
 
-D0.u16 = v\_min\_u16(v\_min\_u16(S0.u16, S1.u16), S2.u16)
+`D0.u16 = v_min_u16(v_min_u16(S0.u16, S1.u16), S2.u16)`
 
 #### **V\_MAX3\_F16 588**
 
 Select the maximum of three half-precision float inputs and store the selected value into a vector register.
 
-D0.f16 = v\_max\_f16(v\_max\_f16(S0.f16, S1.f16), S2.f16)
+`D0.f16 = v_max_f16(v_max_f16(S0.f16, S1.f16), S2.f16)`
 
 #### **V\_MAX3\_I16 589**
 
 Select the maximum of three signed 16-bit integer inputs and store the selected value into a vector register.
 
-D0.i16 = v\_max\_i16(v\_max\_i16(S0.i16, S1.i16), S2.i16)
+`D0.i16 = v_max_i16(v_max_i16(S0.i16, S1.i16), S2.i16)`
 
 #### **V\_MAX3\_U16 590**
 
 Select the maximum of three unsigned 16-bit integer inputs and store the selected value into a vector register.
 
-D0.u16 = v\_max\_u16(v\_max\_u16(S0.u16, S1.u16), S2.u16)
+`D0.u16 = v_max_u16(v_max_u16(S0.u16, S1.u16), S2.u16)`
 
 #### **V\_MED3\_F16 591**
 
 Select the median of three half-precision float values and store the selected value into a vector register.
 
-if (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)) || isNAN(64'F(S2.f16))) then D0.f16 = v\_min3\_f16(S0.f16, S1.f16, S2.f16) elsif v\_max3\_f16(S0.f16, S1.f16, S2.f16) == S0.f16 then D0.f16 = v\_max\_f16(S1.f16, S2.f16) elsif v\_max3\_f16(S0.f16, S1.f16, S2.f16) == S1.f16 then D0.f16 = v\_max\_f16(S0.f16, S2.f16) else D0.f16 = v\_max\_f16(S0.f16, S1.f16) endif
+```text
+if (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)) || isNAN(64'F(S2.f16))) then
+    D0.f16 = v_min3_f16(S0.f16, S1.f16, S2.f16)
+elsif v_max3_f16(S0.f16, S1.f16, S2.f16) == S0.f16 then
+    D0.f16 = v_max_f16(S1.f16, S2.f16)
+elsif v_max3_f16(S0.f16, S1.f16, S2.f16) == S1.f16 then
+    D0.f16 = v_max_f16(S0.f16, S2.f16)
+else
+    D0.f16 = v_max_f16(S0.f16, S1.f16)
+endif
+```
 
 #### **V\_MED3\_I16 592**
 
 Select the median of three signed 16-bit integer values and store the selected value into a vector register.
 
-if v\_max3\_i16(S0.i16, S1.i16, S2.i16) == S0.i16 then D0.i16 = v\_max\_i16(S1.i16, S2.i16) elsif v\_max3\_i16(S0.i16, S1.i16, S2.i16) == S1.i16 then D0.i16 = v\_max\_i16(S0.i16, S2.i16) else D0.i16 = v\_max\_i16(S0.i16, S1.i16) endif
+```text
+if v_max3_i16(S0.i16, S1.i16, S2.i16) == S0.i16 then
+    D0.i16 = v_max_i16(S1.i16, S2.i16)
+elsif v_max3_i16(S0.i16, S1.i16, S2.i16) == S1.i16 then
+    D0.i16 = v_max_i16(S0.i16, S2.i16)
+else
+    D0.i16 = v_max_i16(S0.i16, S1.i16)
+endif
+```
 
 #### **V\_MED3\_U16 593**
 
@@ -13917,13 +16467,13 @@ D0.u32 = S0.u32 + S1.u32 + S2.u32
 
 Given a shift count in the second input, calculate the logical shift left of the first input, then calculate the bitwise OR of the intermediate result and the third input, then store the final result into a vector register.
 
-D0.u32 = ((S0.u32 << S1.u32[4 : 0].u32) | S2.u32)
+`D0.u32 = ((S0.u32 << S1.u32[4 : 0].u32) | S2.u32)`
 
 #### **V\_AND\_OR\_B32 599**
 
 Calculate bitwise AND on the first two vector inputs, then compute the bitwise OR of the intermediate result and the third vector input, then store the final result into a vector register.
 
-D0.u32 = ((S0.u32 & S1.u32) | S2.u32)
+`D0.u32 = ((S0.u32 & S1.u32) | S2.u32)`
 
 #### **Notes**
 
@@ -13933,7 +16483,7 @@ Input and output modifiers not supported.
 
 Calculate the bitwise OR of three vector inputs and store the result into a vector register.
 
-D0.u32 = (S0.u32 | S1.u32 | S2.u32)
+`D0.u32 = (S0.u32 | S1.u32 | S2.u32)`
 
 #### **Notes**
 
@@ -13947,7 +16497,7 @@ Multiply two unsigned 16-bit integer inputs in the unsigned 32-bit integer domai
 
 Multiply two signed 16-bit integer inputs in the signed 32-bit integer domain, add a signed 32-bit integer value from a third input, and store the result as a signed 32-bit integer into a vector register.
 
-D0.i32 = 32'I(S0.i16) \* 32'I(S1.i16) + S2.i32
+`D0.i32 = 32'I(S0.i16) * 32'I(S1.i16) + S2.i32`
 
 #### **V\_PERMLANE16\_B32 603**
 
@@ -13959,7 +16509,23 @@ OPSEL is not used in its typical manner for this instruction. For this instructi
 
 Compare with V\_PERMLANEX16\_B32.
 
-declare tmp : 32'B[64]; lanesel = { S2.u32, S1.u32 }; // Concatenate lane select bits for i in 0 : WAVE32 ? 31 : 63 do // Copy original S0 in case D==S0 tmp[i] = VGPR[i][SRC0.u32] endfor; for row in 0 : WAVE32 ? 1 : 3 do // Implement arbitrary swizzle within each row for i in 0 : 15 do if EXEC[row \* 16 + i].u1 then VGPR[row \* 16 + i][VDST.u32] = tmp[64'B(row \* 16) + lanesel[i \* 4 + 3 : i \* 4]] endif endfor endfor
+```text
+declare tmp : 32'B[64];
+lanesel = { S2.u32, S1.u32 };
+// Concatenate lane select bits
+for i in 0 : WAVE32 ? 31 : 63 do
+      // Copy original S0 in case D==S0
+      tmp[i] = VGPR[i][SRC0.u32]
+endfor;
+for row in 0 : WAVE32 ? 1 : 3 do
+      // Implement arbitrary swizzle within each row
+      for i in 0 : 15 do
+          if EXEC[row * 16 + i].u1 then
+               VGPR[row * 16 + i][VDST.u32] = tmp[64'B(row * 16) + lanesel[i * 4 + 3 : i * 4]]
+          endif
+      endfor
+endfor
+```
 
 # **Notes**
 
@@ -13967,9 +16533,24 @@ ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
 Example implementing a rotation within each row:
 
-v\_mov\_b32 s0, 0x87654321; v\_mov\_b32 s1, 0x0fedcba9; v\_permlane16\_b32 v1, v0, s0, s1; // ROW 0: // v1.lane[0] <- v0.lane[1] // v1.lane[1] <- v0.lane[2]
-
-// ... // v1.lane[14] <- v0.lane[15] // v1.lane[15] <- v0.lane[0] // // ROW 1: // v1.lane[16] <- v0.lane[17] // v1.lane[17] <- v0.lane[18] // ... // v1.lane[30] <- v0.lane[31] // v1.lane[31] <- v0.lane[16]
+```text
+v_mov_b32 s0, 0x87654321;
+v_mov_b32 s1, 0x0fedcba9;
+v_permlane16_b32 v1, v0, s0, s1;
+// ROW 0:
+// v1.lane[0] <- v0.lane[1]
+// v1.lane[1] <- v0.lane[2]
+// ...
+// v1.lane[14] <- v0.lane[15]
+// v1.lane[15] <- v0.lane[0]
+//
+// ROW 1:
+// v1.lane[16] <- v0.lane[17]
+// v1.lane[17] <- v0.lane[18]
+// ...
+// v1.lane[30] <- v0.lane[31]
+// v1.lane[31] <- v0.lane[16]
+```
 
 #### **V\_PERMLANEX16\_B32 604**
 
@@ -13981,7 +16562,25 @@ OPSEL is not used in its typical manner for this instruction. For this instructi
 
 Compare with V\_PERMLANE16\_B32.
 
-declare tmp : 32'B[64]; lanesel = { S2.u32, S1.u32 }; // Concatenate lane select bits for i in 0 : WAVE32 ? 31 : 63 do // Copy original S0 in case D==S0 tmp[i] = VGPR[i][SRC0.u32] endfor; for row in 0 : WAVE32 ? 1 : 3 do // Implement arbitrary swizzle across two rows altrow = { row[1], ~row[0] }; // 1<->0, 3<->2 for i in 0 : 15 do if EXEC[row \* 16 + i].u1 then VGPR[row \* 16 + i][VDST.u32] = tmp[64'B(altrow.i32 \* 16) + lanesel[i \* 4 + 3 : i \* 4]] endif endfor endfor
+```text
+declare tmp : 32'B[64];
+lanesel = { S2.u32, S1.u32 };
+// Concatenate lane select bits
+for i in 0 : WAVE32 ? 31 : 63 do
+      // Copy original S0 in case D==S0
+      tmp[i] = VGPR[i][SRC0.u32]
+endfor;
+for row in 0 : WAVE32 ? 1 : 3 do
+      // Implement arbitrary swizzle across two rows
+      altrow = { row[1], ~row[0] };
+      // 1<->0, 3<->2
+      for i in 0 : 15 do
+          if EXEC[row * 16 + i].u1 then
+               VGPR[row * 16 + i][VDST.u32] = tmp[64'B(altrow.i32 * 16) + lanesel[i * 4 + 3 : i * 4]]
+          endif
+      endfor
+endfor
+```
 
 # **Notes**
 
@@ -13989,15 +16588,43 @@ ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
 Example implementing a rotation across an entire wave32 wavefront:
 
-// Note for this to work, source and destination VGPRs must be different. // For this rotation, lane 15 gets data from lane 16, lane 31 gets data from lane 0. // These are the only two lanes that need to use v\_permlanex16\_b32.
+```text
+// Note for this to work, source and destination VGPRs must be different.
+// For this rotation, lane 15 gets data from lane 16, lane 31 gets data from lane 0.
+// These are the only two lanes that need to use v_permlanex16_b32.
+ // Enable only the threads that get data from their own row.
+v_mov_b32 exec_lo, 0x7fff7fff; // Lanes getting data from their own row
+v_mov_b32 s0, 0x87654321;
+v_mov_b32 s1, 0x0fedcba9;
+v_permlane16_b32 v1, v0, s0, s1 fi; // FI bit needed for lanes 14 and 30
+// ROW 0:
+// v1.lane[0] <- v0.lane[1]
+// v1.lane[1] <- v0.lane[2]
+// ...
+// v1.lane[14] <- v0.lane[15] (needs FI to read)
+// v1.lane[15] unset
+//
+// ROW 1:
+// v1.lane[16] <- v0.lane[17]
+// v1.lane[17] <- v0.lane[18]
+// ...
+// v1.lane[30] <- v0.lane[31] (needs FI to read)
+// v1.lane[31] unset
+```
 
- // Enable only the threads that get data from their own row. v\_mov\_b32 exec\_lo, 0x7fff7fff; // Lanes getting data from their own row v\_mov\_b32 s0, 0x87654321; v\_mov\_b32 s1, 0x0fedcba9; v\_permlane16\_b32 v1, v0, s0, s1 fi; // FI bit needed for lanes 14 and 30 // ROW 0: // v1.lane[0] <- v0.lane[1] // v1.lane[1] <- v0.lane[2] // ... // v1.lane[14] <- v0.lane[15] (needs FI to read) // v1.lane[15] unset // // ROW 1: // v1.lane[16] <- v0.lane[17] // v1.lane[17] <- v0.lane[18] // ... // v1.lane[30] <- v0.lane[31] (needs FI to read) // v1.lane[31] unset // Enable only the threads that get data from the other row. v\_mov\_b32 exec\_lo, 0x80008000; // Lanes getting data from the other row v\_permlanex16\_b32 v1, v0, s0, s1 fi; // FI bit needed for lanes 15 and 31 // v1.lane[15] <- v0.lane[16] // v1.lane[31] <- v0.lane[0]
+```text
+// Enable only the threads that get data from the other row.
+v_mov_b32 exec_lo, 0x80008000; // Lanes getting data from the other row
+v_permlanex16_b32 v1, v0, s0, s1 fi; // FI bit needed for lanes 15 and 31
+// v1.lane[15] <- v0.lane[16]
+// v1.lane[31] <- v0.lane[0]
+```
 
 #### **V\_CNDMASK\_B16 605**
 
 Copy data from one of two inputs based on the per-lane condition code and store the result into a vector register.
 
-D0.u16 = VCC.u64[laneId] ? S1.u16 : S0.u16
+`D0.u16 = VCC.u64[laneId] ? S1.u16 : S0.u16`
 
 ### **Notes**
 
@@ -14015,7 +16642,7 @@ Support input denorm control, allow output denorm value. Exceptions are supporte
 
 Select the minimum of the first two single-precision float inputs and then select the maximum of that result and third single-precision float input. Store the final result into a vector register.
 
-D0.f32 = v\_max\_f32(v\_min\_f32(S0.f32, S1.f32), S2.f32)
+`D0.f32 = v_max_f32(v_min_f32(S0.f32, S1.f32), S2.f32)`
 
 #### **Notes**
 
@@ -14025,7 +16652,7 @@ Support input denorm control, allow output denorm value. Exceptions are supporte
 
 Select the maximum of the first two half-precision float inputs and then select the minimum of that result and third half-precision float input. Store the final result into a vector register.
 
-D0.f16 = v\_min\_f16(v\_max\_f16(S0.f16, S1.f16), S2.f16)
+`D0.f16 = v_min_f16(v_max_f16(S0.f16, S1.f16), S2.f16)`
 
 #### **Notes**
 
@@ -14035,7 +16662,7 @@ Support input denorm control, allow output denorm value. Exceptions are supporte
 
 Select the minimum of the first two half-precision float inputs and then select the maximum of that result and third half-precision float input. Store the final result into a vector register.
 
-D0.f16 = v\_max\_f16(v\_min\_f16(S0.f16, S1.f16), S2.f16)
+`D0.f16 = v_max_f16(v_min_f16(S0.f16, S1.f16), S2.f16)`
 
 #### **Notes**
 
@@ -14045,31 +16672,36 @@ Support input denorm control, allow output denorm value. Exceptions are supporte
 
 Select the maximum of the first two unsigned 32-bit integer inputs and then select the minimum of that result and third unsigned 32-bit integer input. Store the final result into a vector register.
 
-D0.u32 = v\_min\_u32(v\_max\_u32(S0.u32, S1.u32), S2.u32)
+`D0.u32 = v_min_u32(v_max_u32(S0.u32, S1.u32), S2.u32)`
 
 #### **V\_MINMAX\_U32 611**
 
 Select the minimum of the first two unsigned 32-bit integer inputs and then select the maximum of that result and third unsigned 32-bit integer input. Store the final result into a vector register.
 
-D0.u32 = v\_max\_u32(v\_min\_u32(S0.u32, S1.u32), S2.u32)
+`D0.u32 = v_max_u32(v_min_u32(S0.u32, S1.u32), S2.u32)`
 
 #### **V\_MAXMIN\_I32 612**
 
 Select the maximum of the first two signed 32-bit integer inputs and then select the minimum of that result and third signed 32-bit integer input. Store the final result into a vector register.
 
-D0.i32 = v\_min\_i32(v\_max\_i32(S0.i32, S1.i32), S2.i32)
+`D0.i32 = v_min_i32(v_max_i32(S0.i32, S1.i32), S2.i32)`
 
 #### **V\_MINMAX\_I32 613**
 
 Select the minimum of the first two signed 32-bit integer inputs and then select the maximum of that result and third signed 32-bit integer input. Store the final result into a vector register.
 
-D0.i32 = v\_max\_i32(v\_min\_i32(S0.i32, S1.i32), S2.i32)
+`D0.i32 = v_max_i32(v_min_i32(S0.i32, S1.i32), S2.i32)`
 
 #### **V\_DOT2\_F16\_F16 614**
 
 Compute the dot product of two packed 2-D half-precision float inputs, add the third input and store the result into a vector register.
 
-tmp = S2.f16; tmp += S0[15 : 0].f16 \* S1[15 : 0].f16; tmp += S0[31 : 16].f16 \* S1[31 : 16].f16; D0.f16 = tmp
+```text
+tmp = S2.f16;
+tmp += S0[15 : 0].f16 * S1[15 : 0].f16;
+tmp += S0[31 : 16].f16 * S1[31 : 16].f16;
+D0.f16 = tmp
+```
 
 #### **Notes**
 
@@ -14079,7 +16711,12 @@ OPSEL[2] controls which half of S2 is read and OPSEL[3] controls which half of D
 
 Compute the dot product of two packed 2-D BF16 float inputs, add the third input and store the result into a vector register.
 
-tmp = S2.bf16; tmp += S0[15 : 0].bf16 \* S1[15 : 0].bf16; tmp += S0[31 : 16].bf16 \* S1[31 : 16].bf16; D0.bf16 = tmp
+```text
+tmp = S2.bf16;
+tmp += S0[15 : 0].bf16 * S1[15 : 0].bf16;
+tmp += S0[31 : 16].bf16 * S1[31 : 16].bf16;
+D0.bf16 = tmp
+```
 
 #### **Notes**
 
@@ -14091,9 +16728,38 @@ Given a single-precision float value to scale in the first input, a denominator 
 
 This operation is designed for use in a high precision division macro. The first input should be the same value as either the second or third input; other scale values produce predictable results but may not be mathematically useful. The vector condition code is used by V\_DIV\_FMAS\_F32 to determine if the quotient requires post-scaling.
 
-VCC = 0x0LL; if ((64'F(S2.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then D0.f32 = NAN.f32 elsif exponent(S2.f32) - exponent(S1.f32) >= 96 then // N/D near MAX\_FLOAT\_F32 VCC = 0x1LL; if S0.f32 == S1.f32 then // Only scale the denominator D0.f32 = ldexp(S0.f32, 64) endif elsif S1.f32 == DENORM.f32 then D0.f32 = ldexp(S0.f32, 64) elsif ((1.0 / 64'F(S1.f32) == DENORM.f64) && (S2.f32 / S1.f32 == DENORM.f32)) then VCC = 0x1LL; if S0.f32 == S1.f32 then // Only scale the denominator D0.f32 = ldexp(S0.f32, 64) endif elsif 1.0 / 64'F(S1.f32) == DENORM.f64 then D0.f32 = ldexp(S0.f32, -64) elsif S2.f32 / S1.f32 == DENORM.f32 then VCC = 0x1LL; if S0.f32 == S2.f32 then
-
- // Only scale the numerator D0.f32 = ldexp(S0.f32, 64) endif elsif exponent(S2.f32) <= 23 then // Numerator is tiny D0.f32 = ldexp(S0.f32, 64) endif
+```text
+VCC = 0x0LL;
+if ((64'F(S2.f32) == 0.0) || (64'F(S1.f32) == 0.0)) then
+      D0.f32 = NAN.f32
+elsif exponent(S2.f32) - exponent(S1.f32) >= 96 then
+      // N/D near MAX_FLOAT_F32
+      VCC = 0x1LL;
+      if S0.f32 == S1.f32 then
+          // Only scale the denominator
+          D0.f32 = ldexp(S0.f32, 64)
+      endif
+elsif S1.f32 == DENORM.f32 then
+      D0.f32 = ldexp(S0.f32, 64)
+elsif ((1.0 / 64'F(S1.f32) == DENORM.f64) && (S2.f32 / S1.f32 == DENORM.f32)) then
+      VCC = 0x1LL;
+      if S0.f32 == S1.f32 then
+          // Only scale the denominator
+          D0.f32 = ldexp(S0.f32, 64)
+      endif
+elsif 1.0 / 64'F(S1.f32) == DENORM.f64 then
+      D0.f32 = ldexp(S0.f32, -64)
+elsif S2.f32 / S1.f32 == DENORM.f32 then
+      VCC = 0x1LL;
+      if S0.f32 == S2.f32 then
+          // Only scale the numerator
+          D0.f32 = ldexp(S0.f32, 64)
+      endif
+elsif exponent(S2.f32) <= 23 then
+      // Numerator is tiny
+      D0.f32 = ldexp(S0.f32, 64)
+endif
+```
 
 # **Notes**
 
@@ -14105,9 +16771,38 @@ Given a double-precision float value to scale in the first input, a denominator 
 
 This operation is designed for use in a high precision division macro. The first input should be the same value as either the second or third input; other scale values produce predictable results but may not be mathematically useful. The vector condition code is used by V\_DIV\_FMAS\_F64 to determine if the quotient requires post-scaling.
 
-VCC = 0x0LL; if ((S2.f64 == 0.0) || (S1.f64 == 0.0)) then D0.f64 = NAN.f64 elsif exponent(S2.f64) - exponent(S1.f64) >= 768 then // N/D near MAX\_FLOAT\_F64 VCC = 0x1LL; if S0.f64 == S1.f64 then // Only scale the denominator D0.f64 = ldexp(S0.f64, 128) endif elsif S1.f64 == DENORM.f64 then D0.f64 = ldexp(S0.f64, 128) elsif ((1.0 / S1.f64 == DENORM.f64) && (S2.f64 / S1.f64 == DENORM.f64)) then VCC = 0x1LL; if S0.f64 == S1.f64 then // Only scale the denominator D0.f64 = ldexp(S0.f64, 128) endif elsif 1.0 / S1.f64 == DENORM.f64 then D0.f64 = ldexp(S0.f64, -128) elsif S2.f64 / S1.f64 == DENORM.f64 then VCC = 0x1LL; if S0.f64 == S2.f64 then // Only scale the numerator
-
- D0.f64 = ldexp(S0.f64, 128) endif elsif exponent(S2.f64) <= 53 then // Numerator is tiny D0.f64 = ldexp(S0.f64, 128) endif
+```text
+VCC = 0x0LL;
+if ((S2.f64 == 0.0) || (S1.f64 == 0.0)) then
+      D0.f64 = NAN.f64
+elsif exponent(S2.f64) - exponent(S1.f64) >= 768 then
+      // N/D near MAX_FLOAT_F64
+      VCC = 0x1LL;
+      if S0.f64 == S1.f64 then
+          // Only scale the denominator
+          D0.f64 = ldexp(S0.f64, 128)
+      endif
+elsif S1.f64 == DENORM.f64 then
+      D0.f64 = ldexp(S0.f64, 128)
+elsif ((1.0 / S1.f64 == DENORM.f64) && (S2.f64 / S1.f64 == DENORM.f64)) then
+      VCC = 0x1LL;
+      if S0.f64 == S1.f64 then
+          // Only scale the denominator
+          D0.f64 = ldexp(S0.f64, 128)
+      endif
+elsif 1.0 / S1.f64 == DENORM.f64 then
+      D0.f64 = ldexp(S0.f64, -128)
+elsif S2.f64 / S1.f64 == DENORM.f64 then
+      VCC = 0x1LL;
+      if S0.f64 == S2.f64 then
+          // Only scale the numerator
+          D0.f64 = ldexp(S0.f64, 128)
+      endif
+elsif exponent(S2.f64) <= 53 then
+      // Numerator is tiny
+      D0.f64 = ldexp(S0.f64, 128)
+endif
+```
 
 #### **Notes**
 
@@ -14117,7 +16812,7 @@ V\_DIV\_SCALE\_F64, V\_DIV\_FMAS\_F64 and V\_DIV\_FIXUP\_F64 are all designed fo
 
 Multiply two unsigned integer inputs, add a third unsigned integer input, store the result into a 64-bit vector register and store the overflow/carryout into a scalar mask register.
 
-{ D1.u1, D0.u64 } = 65'B(65'U(S0.u32) \* 65'U(S1.u32) + 65'U(S2.u64))
+`{ D1.u1, D0.u64 } = 65'B(65'U(S0.u32) * 65'U(S1.u32) + 65'U(S2.u64))`
 
 #### **Notes**
 
@@ -14127,7 +16822,7 @@ In VOP3 the VCC destination may be an arbitrary SGPR-pair.
 
 Multiply two signed integer inputs, add a third signed integer input, store the result into a 64-bit vector register and store the overflow/carryout into a scalar mask register.
 
-{ D1.i1, D0.i64 } = 65'B(65'I(S0.i32) \* 65'I(S1.i32) + 65'I(S2.i64))
+`{ D1.i1, D0.i64 } = 65'B(65'I(S0.i32) * 65'I(S1.i32) + 65'I(S2.i64))`
 
 # **Notes**
 
@@ -14149,7 +16844,12 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Subtract the second unsigned 32-bit integer input from the first input, store the result into a vector register and store the carry-out mask into a scalar register.
 
-tmp = S0.u32 - S1.u32; VCC.u64[laneId] = S1.u32 > S0.u32 ? 1'1U : 1'0U; // VCC is an UNSIGNED overflow/carry-out for V\_SUB\_CO\_CI\_U32. D0.u32 = tmp.u32
+```text
+tmp = S0.u32 - S1.u32;
+VCC.u64[laneId] = S1.u32 > S0.u32 ? 1'1U : 1'0U;
+// VCC is an UNSIGNED overflow/carry-out for V_SUB_CO_CI_U32.
+D0.u32 = tmp.u32
+```
 
 #### **Notes**
 
@@ -14190,7 +16890,7 @@ Supports saturation (unsigned 16-bit integer domain).
 
 Subtract the second unsigned 16-bit integer input from the first input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u16 = S0.u16 - S1.u16
+`D0.u16 = S0.u16 - S1.u16`
 
 #### **Notes**
 
@@ -14200,7 +16900,7 @@ Supports saturation (unsigned 16-bit integer domain).
 
 Multiply two unsigned 16-bit integer inputs and store the low bits of the result into a vector register.
 
-D0.u16 = S0.u16 \* S1.u16
+`D0.u16 = S0.u16 * S1.u16`
 
 #### **Notes**
 
@@ -14210,31 +16910,41 @@ Supports saturation (unsigned 16-bit integer domain).
 
 Convert two single-precision float inputs into a packed signed 16-bit integer value and store the result into a vector register.
 
-declare tmp : 32'B; tmp[31 : 16] = 16'B(v\_cvt\_i16\_f32(S1.f32)); tmp[15 : 0] = 16'B(v\_cvt\_i16\_f32(S0.f32)); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[31 : 16] = 16'B(v_cvt_i16_f32(S1.f32));
+tmp[15 : 0] = 16'B(v_cvt_i16_f32(S0.f32));
+D0 = tmp.b32
+```
 
 #### **V\_CVT\_PK\_U16\_F32 775**
 
 Convert two single-precision float inputs into a packed unsigned 16-bit integer value and store the result into a vector register.
 
-declare tmp : 32'B; tmp[31 : 16] = 16'B(v\_cvt\_u16\_f32(S1.f32)); tmp[15 : 0] = 16'B(v\_cvt\_u16\_f32(S0.f32)); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[31 : 16] = 16'B(v_cvt_u16_f32(S1.f32));
+tmp[15 : 0] = 16'B(v_cvt_u16_f32(S0.f32));
+D0 = tmp.b32
+```
 
 #### **V\_MAX\_U16 777**
 
 Select the maximum of two unsigned 16-bit integer inputs and store the selected value into a vector register.
 
-D0.u16 = S0.u16 >= S1.u16 ? S0.u16 : S1.u16
+`D0.u16 = S0.u16 >= S1.u16 ? S0.u16 : S1.u16`
 
 #### **V\_MAX\_I16 778**
 
 Select the maximum of two signed 16-bit integer inputs and store the selected value into a vector register.
 
-D0.i16 = S0.i16 >= S1.i16 ? S0.i16 : S1.i16
+`D0.i16 = S0.i16 >= S1.i16 ? S0.i16 : S1.i16`
 
 #### **V\_MIN\_U16 779**
 
 Select the minimum of two unsigned 16-bit integer inputs and store the selected value into a vector register.
 
-D0.u16 = S0.u16 < S1.u16 ? S0.u16 : S1.u16
+`D0.u16 = S0.u16 < S1.u16 ? S0.u16 : S1.u16`
 
 #### **V\_MIN\_I16 780**
 
@@ -14260,7 +16970,7 @@ Supports saturation (signed 16-bit integer domain).
 
 Subtract the second signed 16-bit integer input from the first input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.i16 = S0.i16 - S1.i16
+`D0.i16 = S0.i16 - S1.i16`
 
 #### **Notes**
 
@@ -14270,25 +16980,38 @@ Supports saturation (signed 16-bit integer domain).
 
 Pack two half-precision float values into a single 32-bit value and store the result into a vector register.
 
-D0[31 : 16].f16 = S1.f16; D0[15 : 0].f16 = S0.f16
+```text
+D0[31 : 16].f16 = S1.f16;
+D0[15 : 0].f16 = S0.f16
+```
 
 #### **V\_CVT\_PK\_NORM\_I16\_F16 786**
 
 Convert from two half-precision float inputs to a packed signed normalized short and store the result into a vector register.
 
-declare tmp : 32'B; tmp[15 : 0].i16 = f16\_to\_snorm(S0.f16); tmp[31 : 16].i16 = f16\_to\_snorm(S1.f16); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[15 : 0].i16 = f16_to_snorm(S0.f16);
+tmp[31 : 16].i16 = f16_to_snorm(S1.f16);
+D0 = tmp.b32
+```
 
 #### **V\_CVT\_PK\_NORM\_U16\_F16 787**
 
 Convert from two half-precision float inputs to a packed unsigned normalized short and store the result into a vector register.
 
-declare tmp : 32'B; tmp[15 : 0].u16 = f16\_to\_unorm(S0.f16); tmp[31 : 16].u16 = f16\_to\_unorm(S1.f16); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[15 : 0].u16 = f16_to_unorm(S0.f16);
+tmp[31 : 16].u16 = f16_to_unorm(S1.f16);
+D0 = tmp.b32
+```
 
 #### **V\_LDEXP\_F32 796**
 
 Multiply the first input, a floating point value, by an integral power of 2 specified in the second input, a signed integer value, and store the floating point result into a vector register.
 
-D0.f32 = S0.f32 \* 2.0F \*\* S1.i32
+`D0.f32 = S0.f32 * 2.0F ** S1.i32`
 
 #### **Notes**
 
@@ -14298,13 +17021,20 @@ Compare with the ldexp() function in C.
 
 Calculate a bitfield mask given a field offset and size and store the result into a vector register.
 
-D0.u32 = (((1U << S0[4 : 0].u32) - 1U) << S1[4 : 0].u32)
+`D0.u32 = (((1U << S0[4 : 0].u32) - 1U) << S1[4 : 0].u32)`
 
 #### **V\_BCNT\_U32\_B32 798**
 
 Count the number of "1" bits in the vector input and store the result into a vector register.
 
-tmp = S1.u32; for i in 0 : 31 do tmp += S0[i].u32; // count i'th bit endfor; D0.u32 = tmp
+```text
+tmp = S1.u32;
+for i in 0 : 31 do
+      tmp += S0[i].u32;
+      // count i'th bit
+endfor;
+D0.u32 = tmp
+```
 
 #### **V\_MBCNT\_LO\_U32\_B32 799**
 
@@ -14312,7 +17042,15 @@ For each lane 0 <= N < 32, examine the N least significant bits of the first inp
 
 In conjunction with V\_MBCNT\_HI\_U32\_B32 and with a vector condition code as input, this counts the number of lanes at or below the current lane number that have set their vector condition code bit.
 
-ThreadMask = (1LL << laneId.u32) - 1LL; MaskedValue = (S0.u32 & ThreadMask[31 : 0].u32); tmp = S1.u32; for i in 0 : 31 do tmp += MaskedValue[i] == 1'1U ? 1U : 0U endfor; D0.u32 = tmp
+```text
+ThreadMask = (1LL << laneId.u32) - 1LL;
+MaskedValue = (S0.u32 & ThreadMask[31 : 0].u32);
+tmp = S1.u32;
+for i in 0 : 31 do
+      tmp += MaskedValue[i] == 1'1U ? 1U : 0U
+endfor;
+D0.u32 = tmp
+```
 
 # **Notes**
 
@@ -14324,17 +17062,33 @@ For each lane 32 <= N < 64, examine the N least significant bits of the first in
 
 In conjunction with V\_MBCNT\_LO\_U32\_B32 and with a vector condition code as input, this counts the number of lanes at or below the current lane number that have set their vector condition code bit.
 
-ThreadMask = (1LL << laneId.u32) - 1LL; MaskedValue = (S0.u32 & ThreadMask[63 : 32].u32); tmp = S1.u32; for i in 0 : 31 do tmp += MaskedValue[i] == 1'1U ? 1U : 0U endfor; D0.u32 = tmp
+```text
+ThreadMask = (1LL << laneId.u32) - 1LL;
+MaskedValue = (S0.u32 & ThreadMask[63 : 32].u32);
+tmp = S1.u32;
+for i in 0 : 31 do
+      tmp += MaskedValue[i] == 1'1U ? 1U : 0U
+endfor;
+D0.u32 = tmp
+```
 
 # **Notes**
 
 Example to compute each lane's position in 0..63:
 
- v\_mbcnt\_lo\_u32\_b32 v0, -1, 0 v\_mbcnt\_hi\_u32\_b32 v0, -1, v0 // v0 now contains laneId
+```text
+v_mbcnt_lo_u32_b32 v0, -1, 0
+v_mbcnt_hi_u32_b32 v0, -1, v0
+// v0 now contains laneId
+```
 
 Example to compute each lane's position in a list of all lanes whose VCC bits are set, where the first lane with VCC set is assigned position 1, the second lane with VCC set is assigned position 2, etc.:
 
- v\_mbcnt\_lo\_u32\_b32 v0, vcc\_lo, 0 v\_mbcnt\_hi\_u32\_b32 v0, vcc\_hi, v0 // Note vcc\_hi is passed in for second instruction // v0 now contains position among lanes with VCC=1
+```text
+v_mbcnt_lo_u32_b32 v0, vcc_lo, 0
+v_mbcnt_hi_u32_b32 v0, vcc_hi, v0 // Note vcc_hi is passed in for second instruction
+// v0 now contains position among lanes with VCC=1
+```
 
 See also V\_MBCNT\_LO\_U32\_B32.
 
@@ -14342,19 +17096,34 @@ See also V\_MBCNT\_LO\_U32\_B32.
 
 Convert from two single-precision float inputs to a packed signed normalized short and store the result into a vector register.
 
-declare tmp : 32'B; tmp[15 : 0].i16 = f32\_to\_snorm(S0.f32); tmp[31 : 16].i16 = f32\_to\_snorm(S1.f32); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[15 : 0].i16 = f32_to_snorm(S0.f32);
+tmp[31 : 16].i16 = f32_to_snorm(S1.f32);
+D0 = tmp.b32
+```
 
 #### **V\_CVT\_PK\_NORM\_U16\_F32 802**
 
 Convert from two single-precision float inputs to a packed unsigned normalized short and store the result into a vector register.
 
-declare tmp : 32'B; tmp[15 : 0].u16 = f32\_to\_unorm(S0.f32); tmp[31 : 16].u16 = f32\_to\_unorm(S1.f32); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[15 : 0].u16 = f32_to_unorm(S0.f32);
+tmp[31 : 16].u16 = f32_to_unorm(S1.f32);
+D0 = tmp.b32
+```
 
 #### **V\_CVT\_PK\_U16\_U32 803**
 
 Convert from two unsigned 32-bit integer inputs to a packed unsigned 16-bit integer value and store the result into a vector register.
 
-declare tmp : 32'B; tmp[15 : 0].u16 = u32\_to\_u16(S0.u32); tmp[31 : 16].u16 = u32\_to\_u16(S1.u32); D0 = tmp.b32
+```text
+declare tmp : 32'B;
+tmp[15 : 0].u16 = u32_to_u16(S0.u32);
+tmp[31 : 16].u16 = u32_to_u16(S1.u32);
+D0 = tmp.b32
+```
 
 #### **V\_CVT\_PK\_I16\_I32 804**
 
@@ -14366,7 +17135,7 @@ declare tmp : 32'B; tmp[15 : 0].i16 = i32\_to\_i16(S0.i32); tmp[31 : 16].i16 = i
 
 Subtract the second signed 32-bit integer input from the first input and store the result into a vector register. No carry-in or carry-out support.
 
-D0.i32 = S0.i32 - S1.i32
+`D0.i32 = S0.i32 - S1.i32`
 
 #### **Notes**
 
@@ -14376,7 +17145,7 @@ Supports saturation (signed 32-bit integer domain).
 
 Add two signed 32-bit integer inputs and store the result into a vector register. No carry-in or carry-out support.
 
-D0.i32 = S0.i32 + S1.i32
+`D0.i32 = S0.i32 + S1.i32`
 
 #### **Notes**
 
@@ -14386,7 +17155,7 @@ Supports saturation (signed 32-bit integer domain).
 
 Add two floating point inputs and store the result into a vector register.
 
-D0.f64 = S0.f64 + S1.f64
+`D0.f64 = S0.f64 + S1.f64`
 
 ### **Notes**
 
@@ -14402,7 +17171,40 @@ Multiply two floating point inputs and store the result into a vector register.
 
 Select the minimum of two double-precision float inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((abs(a) == 0.0) && (abs(b) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(S0.f64) then D0.f64 = cvtToQuietNAN(S0.f64) elsif isSignalNAN(S1.f64) then D0.f64 = cvtToQuietNAN(S1.f64) elsif isQuietNAN(S1.f64) then D0.f64 = S0.f64 elsif isQuietNAN(S0.f64) then D0.f64 = S1.f64 elsif LT\_NEG\_ZERO(S0.f64, S1.f64) then // NOTE: -0<+0 is TRUE in this comparison D0.f64 = S0.f64 else D0.f64 = S1.f64 endif else if isNAN(S1.f64) then D0.f64 = S0.f64 elsif isNAN(S0.f64) then D0.f64 = S1.f64 elsif LT\_NEG\_ZERO(S0.f64, S1.f64) then // NOTE: -0<+0 is TRUE in this comparison D0.f64 = S0.f64 else D0.f64 = S1.f64 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((abs(a) == 0.0) && (abs(b) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(S0.f64) then
+          D0.f64 = cvtToQuietNAN(S0.f64)
+      elsif isSignalNAN(S1.f64) then
+          D0.f64 = cvtToQuietNAN(S1.f64)
+      elsif isQuietNAN(S1.f64) then
+          D0.f64 = S0.f64
+      elsif isQuietNAN(S0.f64) then
+          D0.f64 = S1.f64
+      elsif LT_NEG_ZERO(S0.f64, S1.f64) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f64 = S0.f64
+      else
+          D0.f64 = S1.f64
+      endif
+else
+      if isNAN(S1.f64) then
+          D0.f64 = S0.f64
+      elsif isNAN(S0.f64) then
+          D0.f64 = S1.f64
+      elsif LT_NEG_ZERO(S0.f64, S1.f64) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f64 = S0.f64
+      else
+          D0.f64 = S1.f64
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **Notes**
 
@@ -14414,7 +17216,40 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Select the maximum of two double-precision float inputs and store the result into a vector register.
 
-GT\_NEG\_ZERO = lambda(a, b) ( ((a > b) || ((abs(a) == 0.0) && (abs(b) == 0.0) && !sign(a) && sign(b)))); // Version of comparison where +0.0 > -0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(S0.f64) then D0.f64 = cvtToQuietNAN(S0.f64) elsif isSignalNAN(S1.f64) then D0.f64 = cvtToQuietNAN(S1.f64) elsif isQuietNAN(S1.f64) then D0.f64 = S0.f64 elsif isQuietNAN(S0.f64) then D0.f64 = S1.f64 elsif GT\_NEG\_ZERO(S0.f64, S1.f64) then // NOTE: +0>-0 is TRUE in this comparison D0.f64 = S0.f64 else D0.f64 = S1.f64 endif else if isNAN(S1.f64) then D0.f64 = S0.f64 elsif isNAN(S0.f64) then D0.f64 = S1.f64 elsif GT\_NEG\_ZERO(S0.f64, S1.f64) then // NOTE: +0>-0 is TRUE in this comparison D0.f64 = S0.f64 else D0.f64 = S1.f64 endif endif; // Inequalities in the above pseudocode behave differently from IEEE // when both inputs are +-0.
+```text
+GT_NEG_ZERO = lambda(a, b) (
+      ((a > b) || ((abs(a) == 0.0) && (abs(b) == 0.0) && !sign(a) && sign(b))));
+// Version of comparison where +0.0 > -0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(S0.f64) then
+          D0.f64 = cvtToQuietNAN(S0.f64)
+      elsif isSignalNAN(S1.f64) then
+          D0.f64 = cvtToQuietNAN(S1.f64)
+      elsif isQuietNAN(S1.f64) then
+          D0.f64 = S0.f64
+      elsif isQuietNAN(S0.f64) then
+          D0.f64 = S1.f64
+      elsif GT_NEG_ZERO(S0.f64, S1.f64) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f64 = S0.f64
+      else
+          D0.f64 = S1.f64
+      endif
+else
+      if isNAN(S1.f64) then
+          D0.f64 = S0.f64
+      elsif isNAN(S0.f64) then
+          D0.f64 = S1.f64
+      elsif GT_NEG_ZERO(S0.f64, S1.f64) then
+          // NOTE: +0>-0 is TRUE in this comparison
+          D0.f64 = S0.f64
+      else
+          D0.f64 = S1.f64
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 # **Notes**
 
@@ -14426,7 +17261,7 @@ Denorm flushing for this operation is effectively controlled by the input denorm
 
 Multiply the first input, a floating point value, by an integral power of 2 specified in the second input, a signed integer value, and store the floating point result into a vector register.
 
-D0.f64 = S0.f64 \* 2.0 \*\* S1.i32
+`D0.f64 = S0.f64 * 2.0 ** S1.i32`
 
 #### **Notes**
 
@@ -14436,7 +17271,7 @@ Compare with the ldexp() function in C.
 
 Multiply two unsigned 32-bit integer inputs and store the result into a vector register.
 
-D0.u32 = S0.u32 \* S1.u32
+`D0.u32 = S0.u32 * S1.u32`
 
 #### **Notes**
 
@@ -14446,7 +17281,7 @@ To multiply integers with small magnitudes consider V\_MUL\_U32\_U24, which is i
 
 Multiply two unsigned 32-bit integer inputs and store the high 32 bits of the result into a vector register.
 
-D0.u32 = 32'U((64'U(S0.u32) \* 64'U(S1.u32)) >> 32U)
+`D0.u32 = 32'U((64'U(S0.u32) * 64'U(S1.u32)) >> 32U)`
 
 #### **Notes**
 
@@ -14456,7 +17291,7 @@ To multiply integers with small magnitudes consider V\_MUL\_HI\_U32\_U24, which 
 
 Multiply two signed 32-bit integer inputs and store the high 32 bits of the result into a vector register.
 
-D0.i32 = 32'I((64'I(S0.i32) \* 64'I(S1.i32)) >> 32U)
+`D0.i32 = 32'I((64'I(S0.i32) * 64'I(S1.i32)) >> 32U)`
 
 ### **Notes**
 
@@ -14468,7 +17303,23 @@ Look up a 53-bit segment of 2/PI using an integer segment select in the second i
 
 This operation returns an aligned, double precision segment of 2/PI needed to do trigonometric argument reduction on the floating point input. Multiple segments can be accessed using the first input. Rounding is toward zero. Large floating point inputs (with an exponent > 1968) are scaled to avoid loss of precision through denormalization.
 
-shift = 32'I(S1[4 : 0].u32) \* 53; if exponent(S0.f64) > 1077 then shift += exponent(S0.f64) - 1077 endif; // (2.0/PI) == 0.{b\_1200, b\_1199, b\_1198, ..., b\_1, b\_0} // b\_1200 is the MSB of the fractional part of 2.0/PI // Left shift operation indicates which bits are brought // into the whole part of the number. // Only whole part of result is kept. result = 64'F((1201'B(2.0 / PI)[1200 : 0] << shift.u32) & 1201'0x1fffffffffffff); scale = -53 - shift; if exponent(S0.f64) >= 1968 then scale += 128 endif; D0.f64 = ldexp(result, scale)
+```text
+shift = 32'I(S1[4 : 0].u32) * 53;
+if exponent(S0.f64) > 1077 then
+      shift += exponent(S0.f64) - 1077
+endif;
+// (2.0/PI) == 0.{b_1200, b_1199, b_1198, ..., b_1, b_0}
+// b_1200 is the MSB of the fractional part of 2.0/PI
+// Left shift operation indicates which bits are brought
+// into the whole part of the number.
+// Only whole part of result is kept.
+result = 64'F((1201'B(2.0 / PI)[1200 : 0] << shift.u32) & 1201'0x1fffffffffffff);
+scale = -53 - shift;
+if exponent(S0.f64) >= 1968 then
+      scale += 128
+endif;
+D0.f64 = ldexp(result, scale)
+```
 
 # **Notes**
 
@@ -14478,7 +17329,7 @@ For a more complete treatment of trigonometric argument reduction refer to Argum
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
-D0.u16 = (S1.u16 << S0[3 : 0].u32)
+`D0.u16 = (S1.u16 << S0[3 : 0].u32)`
 
 # **Notes**
 
@@ -14488,7 +17339,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the logical shift right of the second vector input and store the result into a vector register.
 
-D0.u16 = (S1.u16 >> S0[3 : 0].u32)
+`D0.u16 = (S1.u16 >> S0[3 : 0].u32)`
 
 #### **Notes**
 
@@ -14498,7 +17349,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
-D0.i16 = (S1.i16 >> S0[3 : 0].u32)
+`D0.i16 = (S1.i16 >> S0[3 : 0].u32)`
 
 #### **Notes**
 
@@ -14508,7 +17359,7 @@ DPP operates on the shift count, not the data being shifted.
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
-D0.u64 = (S1.u64 << S0[5 : 0].u32)
+`D0.u64 = (S1.u64 << S0[5 : 0].u32)`
 
 #### **Notes**
 
@@ -14518,7 +17369,7 @@ DPP operates on the shift count, not the data being shifted. Only one scalar bro
 
 Given a shift count in the first vector input, calculate the logical shift right of the second vector input and store the result into a vector register.
 
-D0.u64 = (S1.u64 >> S0[5 : 0].u32)
+`D0.u64 = (S1.u64 >> S0[5 : 0].u32)`
 
 # **Notes**
 
@@ -14528,7 +17379,7 @@ DPP operates on the shift count, not the data being shifted. Only one scalar bro
 
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
-D0.i64 = (S1.i64 >> S0[5 : 0].u32)
+`D0.i64 = (S1.i64 >> S0[5 : 0].u32)`
 
 #### **Notes**
 
@@ -14538,7 +17389,17 @@ DPP operates on the shift count, not the data being shifted. Only one scalar bro
 
 Read the scalar value in the specified lane of the first input where the lane select is in the second input. Store the result into a scalar register.
 
-declare lane : 32'U; if WAVE32 then lane = S1.u32[4 : 0].u32; // Lane select for wave32 else lane = S1.u32[5 : 0].u32; // Lane select for wave64 endif; D0.b32 = VGPR[lane][SRC0.u32]
+```text
+declare lane : 32'U;
+if WAVE32 then
+      lane = S1.u32[4 : 0].u32;
+      // Lane select for wave32
+else
+      lane = S1.u32[5 : 0].u32;
+      // Lane select for wave64
+endif;
+D0.b32 = VGPR[lane][SRC0.u32]
+```
 
 #### **Notes**
 
@@ -14548,7 +17409,17 @@ Overrides EXEC mask for the VGPR read. Input and output modifiers not supported;
 
 Write the scalar value in the first input into the specified lane of a vector register where the lane select is in the second input.
 
-declare lane : 32'U; if WAVE32 then lane = S1.u32[4 : 0].u32; // Lane select for wave32 else lane = S1.u32[5 : 0].u32; // Lane select for wave64 endif; VGPR[lane][VDST.u32] = S0.b32
+```text
+declare lane : 32'U;
+if WAVE32 then
+      lane = S1.u32[4 : 0].u32;
+      // Lane select for wave32
+else
+      lane = S1.u32[5 : 0].u32;
+      // Lane select for wave64
+endif;
+VGPR[lane][VDST.u32] = S0.b32
+```
 
 Overrides EXEC mask for the VGPR write. Input and output modifiers not supported; this is an untyped operation.
 
@@ -14556,7 +17427,7 @@ Overrides EXEC mask for the VGPR write. Input and output modifiers not supported
 
 Calculate bitwise AND on two vector inputs and store the result into a vector register.
 
-D0.u16 = (S0.u16 & S1.u16)
+`D0.u16 = (S0.u16 & S1.u16)`
 
 #### **Notes**
 
@@ -14566,7 +17437,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise OR on two vector inputs and store the result into a vector register.
 
-D0.u16 = (S0.u16 | S1.u16)
+`D0.u16 = (S0.u16 | S1.u16)`
 
 #### **Notes**
 
@@ -14576,7 +17447,7 @@ Input and output modifiers not supported.
 
 Calculate bitwise XOR on two vector inputs and store the result into a vector register.
 
-D0.u16 = (S0.u16 ^ S1.u16)
+`D0.u16 = (S0.u16 ^ S1.u16)`
 
 # **Notes**
 
@@ -14594,7 +17465,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 < S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 < S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14604,7 +17478,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 == S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 == S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -14614,7 +17491,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 <= S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 <= S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14622,7 +17502,10 @@ D0.u64[laneId] = S0.f16 <= S1.f16; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 > S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 > S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14632,7 +17515,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 <> S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 <> S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14642,7 +17528,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f16 >= S1.f16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f16 >= S1.f16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14652,7 +17541,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16))); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14662,7 +17554,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16))); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14672,7 +17567,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same operation as < // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 >= S1.f16);
+// With NAN inputs this is not the same operation as <
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14682,7 +17581,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same operation as == // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 <> S1.f16);
+// With NAN inputs this is not the same operation as ==
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -14690,7 +17593,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 > S1.f16); // With NAN inputs this is not the same operation as <= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 > S1.f16);
+// With NAN inputs this is not the same operation as <=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14700,7 +17607,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 <= S1.f16); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 <= S1.f16);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14710,7 +17621,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 == S1.f16); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 == S1.f16);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -14718,7 +17633,11 @@ D0.u64[laneId] = !(S0.f16 == S1.f16); // With NAN inputs this is not the same op
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f16 < S1.f16); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f16 < S1.f16);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14728,7 +17647,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -14738,7 +17660,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14756,7 +17681,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 == S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 == S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14766,7 +17694,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 <= S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 <= S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -14776,7 +17707,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 > S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 > S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14784,7 +17718,10 @@ D0.u64[laneId] = S0.f32 > S1.f32; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 <> S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 <> S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14794,7 +17731,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f32 >= S1.f32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f32 >= S1.f32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14804,7 +17744,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32))); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14814,7 +17757,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32))); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (isNAN(64'F(S0.f32)) || isNAN(64'F(S1.f32)));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14824,7 +17770,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 >= S1.f32); // With NAN inputs this is not the same operation as < // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 >= S1.f32);
+// With NAN inputs this is not the same operation as <
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14834,7 +17784,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 <> S1.f32); // With NAN inputs this is not the same operation as == // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 <> S1.f32);
+// With NAN inputs this is not the same operation as ==
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14844,7 +17798,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 > S1.f32); // With NAN inputs this is not the same operation as <= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 > S1.f32);
+// With NAN inputs this is not the same operation as <=
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -14852,7 +17810,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 <= S1.f32); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 <= S1.f32);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14862,7 +17824,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 == S1.f32); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 == S1.f32);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14872,7 +17838,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f32 < S1.f32); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f32 < S1.f32);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -14880,7 +17850,10 @@ D0.u64[laneId] = !(S0.f32 < S1.f32); // With NAN inputs this is not the same ope
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14890,7 +17863,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14900,7 +17876,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 < S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 < S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14918,7 +17897,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 <= S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 <= S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14928,7 +17910,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 > S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 > S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -14938,7 +17923,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 <> S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 <> S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14946,7 +17934,10 @@ D0.u64[laneId] = S0.f64 <> S1.f64; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.f64 >= S1.f64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.f64 >= S1.f64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14956,7 +17947,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64)); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14966,7 +17960,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64)); // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64));
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14976,7 +17973,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 >= S1.f64); // With NAN inputs this is not the same operation as < // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 >= S1.f64);
+// With NAN inputs this is not the same operation as <
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14986,7 +17987,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 <> S1.f64); // With NAN inputs this is not the same operation as == // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 <> S1.f64);
+// With NAN inputs this is not the same operation as ==
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -14996,7 +18001,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 > S1.f64); // With NAN inputs this is not the same operation as <= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 > S1.f64);
+// With NAN inputs this is not the same operation as <=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15006,7 +18015,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 <= S1.f64); // With NAN inputs this is not the same operation as > // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 <= S1.f64);
+// With NAN inputs this is not the same operation as >
+// D0 = VCC in VOPC encoding.
+```
 
 Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15014,7 +18027,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 == S1.f64); // With NAN inputs this is not the same operation as != // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 == S1.f64);
+// With NAN inputs this is not the same operation as !=
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15024,7 +18041,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = !(S0.f64 < S1.f64); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 < S1.f64);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15034,7 +18055,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15044,7 +18068,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 < S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 < S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15054,7 +18081,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 == S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 == S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15064,7 +18094,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 <= S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 <= S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -15082,7 +18115,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 <> S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 <> S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15092,7 +18128,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i16 >= S1.i16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i16 >= S1.i16;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15102,7 +18141,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 < S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 < S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15110,7 +18152,10 @@ D0.u64[laneId] = S0.u16 < S1.u16; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 == S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 == S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15120,7 +18165,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 <= S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 <= S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15130,7 +18178,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 > S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 > S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15140,7 +18191,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 <> S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 <> S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15150,7 +18204,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u16 >= S1.u16; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u16 >= S1.u16;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15160,7 +18217,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15170,13 +18230,19 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 < S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 < S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **V\_CMP\_EQ\_I32 66**
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 == S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 == S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15186,7 +18252,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 <= S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 <= S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15196,7 +18265,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 > S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 > S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15206,7 +18278,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 <> S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 <> S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15216,7 +18291,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i32 >= S1.i32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i32 >= S1.i32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15226,7 +18304,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15236,7 +18317,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15244,7 +18328,10 @@ D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 < S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 < S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15254,7 +18341,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 == S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 == S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15264,7 +18354,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 <= S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 <= S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -15282,7 +18375,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 <> S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 <> S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15292,7 +18388,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u32 >= S1.u32; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u32 >= S1.u32;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15302,7 +18401,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15310,7 +18412,10 @@ D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15320,7 +18425,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 < S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 < S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15330,7 +18438,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 == S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 == S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15348,7 +18459,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 > S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 > S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15358,7 +18472,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 <> S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 <> S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15368,7 +18485,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.i64 >= S1.i64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.i64 >= S1.i64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15376,7 +18496,10 @@ D0.u64[laneId] = S0.i64 >= S1.i64; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15386,7 +18509,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'0U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'0U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15396,7 +18522,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 < S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 < S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15414,7 +18543,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 <= S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 <= S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15424,7 +18556,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 > S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 > S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15434,7 +18569,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 <> S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 <> S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15442,7 +18580,10 @@ D0.u64[laneId] = S0.u64 <> S1.u64; // D0 = VCC in VOPC encoding.
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = S0.u64 >= S1.u64; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u64 >= S1.u64;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15452,7 +18593,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 1. Store the result into VCC or a scalar register.
 
-D0.u64[laneId] = 1'1U; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = 1'1U;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -15480,9 +18624,28 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f32)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f32)) then result = S1.u32[1] elsif exponent(S0.f32) == 255 then // +-INF
-
- result = S1.u32[sign(S0.f32) ? 2 : 9] elsif exponent(S0.f32) > 0 then // +-normal value result = S1.u32[sign(S0.f32) ? 3 : 8] elsif 64'F(abs(S0.f32)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f32) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f32) ? 5 : 6] endif; D0.u64[laneId] = result; // D0 = VCC in VOPC encoding.
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f32)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f32)) then
+      result = S1.u32[1]
+elsif exponent(S0.f32) == 255 then
+      // +-INF
+      result = S1.u32[sign(S0.f32) ? 2 : 9]
+elsif exponent(S0.f32) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f32) ? 3 : 8]
+elsif 64'F(abs(S0.f32)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f32) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f32) ? 5 : 6]
+endif;
+D0.u64[laneId] = result;
+// D0 = VCC in VOPC encoding.
+```
 
 # **Notes**
 
@@ -15496,9 +18659,28 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(S0.f64) then result = S1.u32[0] elsif isQuietNAN(S0.f64) then result = S1.u32[1] elsif exponent(S0.f64) == 2047 then // +-INF result = S1.u32[sign(S0.f64) ? 2 : 9] elsif exponent(S0.f64) > 0 then // +-normal value result = S1.u32[sign(S0.f64) ? 3 : 8] elsif abs(S0.f64) > 0.0 then // +-denormal value
-
- result = S1.u32[sign(S0.f64) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f64) ? 5 : 6] endif; D0.u64[laneId] = result; // D0 = VCC in VOPC encoding.
+```text
+declare result : 1'U;
+if isSignalNAN(S0.f64) then
+      result = S1.u32[0]
+elsif isQuietNAN(S0.f64) then
+      result = S1.u32[1]
+elsif exponent(S0.f64) == 2047 then
+      // +-INF
+      result = S1.u32[sign(S0.f64) ? 2 : 9]
+elsif exponent(S0.f64) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f64) ? 3 : 8]
+elsif abs(S0.f64) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f64) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f64) ? 5 : 6]
+endif;
+D0.u64[laneId] = result;
+// D0 = VCC in VOPC encoding.
+```
 
 ### **Notes**
 
@@ -15508,7 +18690,7 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -15518,7 +18700,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 < S1.f16
+`EXEC.u64[laneId] = S0.f16 < S1.f16`
 
 #### **Notes**
 
@@ -15528,7 +18710,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 == S1.f16
+`EXEC.u64[laneId] = S0.f16 == S1.f16`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15536,7 +18718,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 <= S1.f16
+`EXEC.u64[laneId] = S0.f16 <= S1.f16`
 
 #### **Notes**
 
@@ -15546,7 +18728,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 > S1.f16
+`EXEC.u64[laneId] = S0.f16 > S1.f16`
 
 #### **Notes**
 
@@ -15556,7 +18738,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 <> S1.f16
+`EXEC.u64[laneId] = S0.f16 <> S1.f16`
 
 #### **Notes**
 
@@ -15566,7 +18748,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f16 >= S1.f16
+`EXEC.u64[laneId] = S0.f16 >= S1.f16`
 
 #### **Notes**
 
@@ -15576,7 +18758,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))
+`EXEC.u64[laneId] = (!isNAN(64'F(S0.f16)) && !isNAN(64'F(S1.f16)))`
 
 #### **Notes**
 
@@ -15586,7 +18768,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))
+`EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))`
 
 #### **Notes**
 
@@ -15596,7 +18778,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same operation as <
+```text
+EXEC.u64[laneId] = !(S0.f16 >= S1.f16);
+// With NAN inputs this is not the same operation as <
+```
 
 ### **Notes**
 
@@ -15604,7 +18789,10 @@ EXEC.u64[laneId] = !(S0.f16 >= S1.f16); // With NAN inputs this is not the same 
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 <> S1.f16); // With NAN inputs this is not the same operation as ==
+```text
+EXEC.u64[laneId] = !(S0.f16 <> S1.f16);
+// With NAN inputs this is not the same operation as ==
+```
 
 ### **Notes**
 
@@ -15614,7 +18802,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 > S1.f16); // With NAN inputs this is not the same operation as <=
+```text
+EXEC.u64[laneId] = !(S0.f16 > S1.f16);
+// With NAN inputs this is not the same operation as <=
+```
 
 #### **Notes**
 
@@ -15624,7 +18815,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 <= S1.f16); // With NAN inputs this is not the same operation as >
+```text
+EXEC.u64[laneId] = !(S0.f16 <= S1.f16);
+// With NAN inputs this is not the same operation as >
+```
 
 # **Notes**
 
@@ -15642,7 +18836,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f16 < S1.f16); // With NAN inputs this is not the same operation as >=
+```text
+EXEC.u64[laneId] = !(S0.f16 < S1.f16);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **Notes**
 
@@ -15652,7 +18849,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -15686,7 +18883,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 == S1.f32
+`EXEC.u64[laneId] = S0.f32 == S1.f32`
 
 #### **Notes**
 
@@ -15696,7 +18893,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 <= S1.f32
+`EXEC.u64[laneId] = S0.f32 <= S1.f32`
 
 #### **Notes**
 
@@ -15706,13 +18903,13 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 > S1.f32
+`EXEC.u64[laneId] = S0.f32 > S1.f32`
 
 #### **V\_CMPX\_LG\_F32 149**
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 <> S1.f32
+`EXEC.u64[laneId] = S0.f32 <> S1.f32`
 
 #### **Notes**
 
@@ -15722,7 +18919,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f32 >= S1.f32
+`EXEC.u64[laneId] = S0.f32 >= S1.f32`
 
 #### **Notes**
 
@@ -15732,7 +18929,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))
+`EXEC.u64[laneId] = (!isNAN(64'F(S0.f32)) && !isNAN(64'F(S1.f32)))`
 
 #### **Notes**
 
@@ -15748,7 +18945,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 >= S1.f32); // With NAN inputs this is not the same operation as <
+```text
+EXEC.u64[laneId] = !(S0.f32 >= S1.f32);
+// With NAN inputs this is not the same operation as <
+```
 
 #### **Notes**
 
@@ -15758,7 +18958,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 <> S1.f32); // With NAN inputs this is not the same operation as ==
+```text
+EXEC.u64[laneId] = !(S0.f32 <> S1.f32);
+// With NAN inputs this is not the same operation as ==
+```
 
 #### **Notes**
 
@@ -15794,7 +18997,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 == S1.f32); // With NAN inputs this is not the same operation as !=
+```text
+EXEC.u64[laneId] = !(S0.f32 == S1.f32);
+// With NAN inputs this is not the same operation as !=
+```
 
 # **Notes**
 
@@ -15804,7 +19010,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f32 < S1.f32); // With NAN inputs this is not the same operation as >=
+```text
+EXEC.u64[laneId] = !(S0.f32 < S1.f32);
+// With NAN inputs this is not the same operation as >=
+```
 
 #### **Notes**
 
@@ -15814,7 +19023,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -15822,7 +19031,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -15832,7 +19041,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 < S1.f64
+`EXEC.u64[laneId] = S0.f64 < S1.f64`
 
 #### **Notes**
 
@@ -15842,7 +19051,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 == S1.f64
+`EXEC.u64[laneId] = S0.f64 == S1.f64`
 
 # **Notes**
 
@@ -15852,7 +19061,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 <= S1.f64
+`EXEC.u64[laneId] = S0.f64 <= S1.f64`
 
 #### **Notes**
 
@@ -15862,7 +19071,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 > S1.f64
+`EXEC.u64[laneId] = S0.f64 > S1.f64`
 
 #### **Notes**
 
@@ -15872,7 +19081,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 <> S1.f64
+`EXEC.u64[laneId] = S0.f64 <> S1.f64`
 
 #### **Notes**
 
@@ -15882,7 +19091,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.f64 >= S1.f64
+`EXEC.u64[laneId] = S0.f64 >= S1.f64`
 
 # **Notes**
 
@@ -15892,7 +19101,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64))
+`EXEC.u64[laneId] = (!isNAN(S0.f64) && !isNAN(S1.f64))`
 
 #### **Notes**
 
@@ -15902,7 +19111,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not orderable to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64))
+`EXEC.u64[laneId] = (isNAN(S0.f64) || isNAN(S1.f64))`
 
 #### **Notes**
 
@@ -15912,7 +19121,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 >= S1.f64); // With NAN inputs this is not the same operation as <
+```text
+EXEC.u64[laneId] = !(S0.f64 >= S1.f64);
+// With NAN inputs this is not the same operation as <
+```
 
 #### **Notes**
 
@@ -15928,7 +19140,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 > S1.f64); // With NAN inputs this is not the same operation as <=
+```text
+EXEC.u64[laneId] = !(S0.f64 > S1.f64);
+// With NAN inputs this is not the same operation as <=
+```
 
 #### **Notes**
 
@@ -15938,7 +19153,10 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = !(S0.f64 <= S1.f64); // With NAN inputs this is not the same operation as >
+```text
+EXEC.u64[laneId] = !(S0.f64 <= S1.f64);
+// With NAN inputs this is not the same operation as >
+```
 
 #### **Notes**
 
@@ -15974,7 +19192,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -15984,7 +19202,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 < S1.i16
+`EXEC.u64[laneId] = S0.i16 < S1.i16`
 
 ### **Notes**
 
@@ -15994,13 +19212,13 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 == S1.i16
+`EXEC.u64[laneId] = S0.i16 == S1.i16`
 
 #### **V\_CMPX\_LE\_I16 179**
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 <= S1.i16
+`EXEC.u64[laneId] = S0.i16 <= S1.i16`
 
 #### **Notes**
 
@@ -16010,7 +19228,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 > S1.i16
+`EXEC.u64[laneId] = S0.i16 > S1.i16`
 
 #### **Notes**
 
@@ -16020,7 +19238,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i16 <> S1.i16
+`EXEC.u64[laneId] = S0.i16 <> S1.i16`
 
 #### **Notes**
 
@@ -16036,7 +19254,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 < S1.u16
+`EXEC.u64[laneId] = S0.u16 < S1.u16`
 
 #### **Notes**
 
@@ -16046,7 +19264,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 == S1.u16
+`EXEC.u64[laneId] = S0.u16 == S1.u16`
 
 #### **Notes**
 
@@ -16056,7 +19274,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 <= S1.u16
+`EXEC.u64[laneId] = S0.u16 <= S1.u16`
 
 #### **Notes**
 
@@ -16066,7 +19284,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 > S1.u16
+`EXEC.u64[laneId] = S0.u16 > S1.u16`
 
 #### **Notes**
 
@@ -16076,7 +19294,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 <> S1.u16
+`EXEC.u64[laneId] = S0.u16 <> S1.u16`
 
 #### **Notes**
 
@@ -16086,7 +19304,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u16 >= S1.u16
+`EXEC.u64[laneId] = S0.u16 >= S1.u16`
 
 #### **Notes**
 
@@ -16120,7 +19338,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 == S1.i32
+`EXEC.u64[laneId] = S0.i32 == S1.i32`
 
 #### **Notes**
 
@@ -16130,7 +19348,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 <= S1.i32
+`EXEC.u64[laneId] = S0.i32 <= S1.i32`
 
 #### **Notes**
 
@@ -16140,13 +19358,13 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 > S1.i32
+`EXEC.u64[laneId] = S0.i32 > S1.i32`
 
 #### **V\_CMPX\_NE\_I32 197**
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 <> S1.i32
+`EXEC.u64[laneId] = S0.i32 <> S1.i32`
 
 #### **Notes**
 
@@ -16156,7 +19374,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i32 >= S1.i32
+`EXEC.u64[laneId] = S0.i32 >= S1.i32`
 
 #### **Notes**
 
@@ -16166,7 +19384,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -16176,7 +19394,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -16184,7 +19402,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 < S1.u32
+`EXEC.u64[laneId] = S0.u32 < S1.u32`
 
 #### **Notes**
 
@@ -16194,7 +19412,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 == S1.u32
+`EXEC.u64[laneId] = S0.u32 == S1.u32`
 
 #### **Notes**
 
@@ -16204,7 +19422,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 <= S1.u32
+`EXEC.u64[laneId] = S0.u32 <= S1.u32`
 
 #### **Notes**
 
@@ -16214,7 +19432,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 > S1.u32
+`EXEC.u64[laneId] = S0.u32 > S1.u32`
 
 #### **Notes**
 
@@ -16224,7 +19442,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 <> S1.u32
+`EXEC.u64[laneId] = S0.u32 <> S1.u32`
 
 #### **Notes**
 
@@ -16234,7 +19452,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u32 >= S1.u32
+`EXEC.u64[laneId] = S0.u32 >= S1.u32`
 
 #### **Notes**
 
@@ -16268,7 +19486,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 < S1.i64
+`EXEC.u64[laneId] = S0.i64 < S1.i64`
 
 #### **Notes**
 
@@ -16278,7 +19496,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 == S1.i64
+`EXEC.u64[laneId] = S0.i64 == S1.i64`
 
 #### **Notes**
 
@@ -16288,7 +19506,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 <= S1.i64
+`EXEC.u64[laneId] = S0.i64 <= S1.i64`
 
 # **Notes**
 
@@ -16296,7 +19514,7 @@ EXEC.u64[laneId] = S0.i64 <= S1.i64
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 > S1.i64
+`EXEC.u64[laneId] = S0.i64 > S1.i64`
 
 #### **Notes**
 
@@ -16306,7 +19524,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 <> S1.i64
+`EXEC.u64[laneId] = S0.i64 <> S1.i64`
 
 #### **Notes**
 
@@ -16316,7 +19534,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.i64 >= S1.i64
+`EXEC.u64[laneId] = S0.i64 >= S1.i64`
 
 ### **Notes**
 
@@ -16326,7 +19544,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -16334,7 +19552,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 0. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'0U
+`EXEC.u64[laneId] = 1'0U`
 
 #### **Notes**
 
@@ -16344,7 +19562,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 < S1.u64
+`EXEC.u64[laneId] = S0.u64 < S1.u64`
 
 #### **Notes**
 
@@ -16354,7 +19572,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 == S1.u64
+`EXEC.u64[laneId] = S0.u64 == S1.u64`
 
 # **Notes**
 
@@ -16364,7 +19582,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is less than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 <= S1.u64
+`EXEC.u64[laneId] = S0.u64 <= S1.u64`
 
 #### **Notes**
 
@@ -16374,7 +19592,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 > S1.u64
+`EXEC.u64[laneId] = S0.u64 > S1.u64`
 
 #### **Notes**
 
@@ -16384,7 +19602,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is not equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 <> S1.u64
+`EXEC.u64[laneId] = S0.u64 <> S1.u64`
 
 #### **Notes**
 
@@ -16394,7 +19612,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1 iff the first input is greater than or equal to the second input. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = S0.u64 >= S1.u64
+`EXEC.u64[laneId] = S0.u64 >= S1.u64`
 
 # **Notes**
 
@@ -16404,7 +19622,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Set the per-lane condition code to 1. Store the result into the EXEC mask.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -16418,7 +19636,27 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] value is a signaling NAN. S1.u[1] value is a quiet NAN. S1.u[2] value is negative infinity. S1.u[3] value is a negative normal value. S1.u[4] value is a negative denormal value. S1.u[5] value is negative zero. S1.u[6] value is positive zero. S1.u[7] value is a positive denormal value. S1.u[8] value is a positive normal value. S1.u[9] value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f16)) then result = S1.u32[0] elsif isQuietNAN(64'F(S0.f16)) then result = S1.u32[1] elsif exponent(S0.f16) == 31 then // +-INF result = S1.u32[sign(S0.f16) ? 2 : 9] elsif exponent(S0.f16) > 0 then // +-normal value result = S1.u32[sign(S0.f16) ? 3 : 8] elsif 64'F(abs(S0.f16)) > 0.0 then // +-denormal value result = S1.u32[sign(S0.f16) ? 4 : 7] else // +-0.0 result = S1.u32[sign(S0.f16) ? 5 : 6] endif; EXEC.u64[laneId] = result
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f16)) then
+      result = S1.u32[0]
+elsif isQuietNAN(64'F(S0.f16)) then
+      result = S1.u32[1]
+elsif exponent(S0.f16) == 31 then
+      // +-INF
+      result = S1.u32[sign(S0.f16) ? 2 : 9]
+elsif exponent(S0.f16) > 0 then
+      // +-normal value
+      result = S1.u32[sign(S0.f16) ? 3 : 8]
+elsif 64'F(abs(S0.f16)) > 0.0 then
+      // +-denormal value
+      result = S1.u32[sign(S0.f16) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u32[sign(S0.f16) ? 5 : 6]
+endif;
+EXEC.u64[laneId] = result
+```
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
@@ -16581,7 +19819,10 @@ The overall calculation is:
 
 \[ + \begin{aligned} + R &= \left( P\sb{0} + P\sb{10} \cdot I \right) + P\sb{20} \cdot J \\ + P\sb{i0} &= P\sb{i} - P\sb{0} \quad i \in \{1, 2\} \\ + P\sb{i} &= \text{attribute value at vertex \$\harpoon{v}\sb{i}\$} \quad i \in \{0, 1, 2\} \\ + \unitvector{\imath} + &= \harpoon{v}\sb{1} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$I\$ coordinate} \\ + \unitvector{\jmath} + &= \harpoon{v}\sb{2} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$J\$ coordinate} \\ + \end{aligned} + \]
 
-D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 1U][SRC0.u32].f16), S1.f32, 32'F(VGPR[laneId.u32 & 0xfffffffcU][SRC2.u32].f16))
+```text
+D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 1U][SRC0.u32].f16), S1.f32, 32'F(VGPR[laneId.u32 &
+0xfffffffcU][SRC2.u32].f16))
+```
 
 # **Notes**
 
@@ -16605,7 +19846,7 @@ The overall calculation is:
 
 \[ + \begin{aligned} + R &= \left( P\sb{0} + P\sb{10} \cdot I \right) + P\sb{20} \cdot J \\ + P\sb{i0} &= P\sb{i} - P\sb{0} \quad i \in \{1, 2\} \\ + P\sb{i} &= \text{attribute value at vertex \$\harpoon{v}\sb{i}\$} \quad i \in \{0, 1, 2\} \\ + \unitvector{\imath} + &= \harpoon{v}\sb{1} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$I\$ coordinate} \\ + \unitvector{\jmath} + &= \harpoon{v}\sb{2} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$J\$ coordinate} \\ + \end{aligned} + \]
 
-D0.f16 = 16'F(fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 2U][SRC0.u32].f16), S1.f32, S2.f32))
+`D0.f16 = 16'F(fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 2U][SRC0.u32].f16), S1.f32, S2.f32))`
 
 # **Notes**
 
@@ -16627,7 +19868,10 @@ The overall calculation is:
 
 \[ + \begin{aligned} + R &= \left( P\sb{0} + P\sb{10} \cdot I \right) + P\sb{20} \cdot J \\ + P\sb{i0} &= P\sb{i} - P\sb{0} \quad i \in \{1, 2\} \\ + P\sb{i} &= \text{attribute value at vertex \$\harpoon{v}\sb{i}\$} \quad i \in \{0, 1, 2\} \\ + \unitvector{\imath} + &= \harpoon{v}\sb{1} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$I\$ coordinate} \\ + \unitvector{\jmath} + &= \harpoon{v}\sb{2} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$J\$ coordinate} \\ + \end{aligned} + \]
 
-D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 1U][SRC0.u32].f16), S1.f32, 32'F(VGPR[laneId.u32 & 0xfffffffcU][SRC2.u32].f16))
+```text
+D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 1U][SRC0.u32].f16), S1.f32, 32'F(VGPR[laneId.u32 &
+0xfffffffcU][SRC2.u32].f16))
+```
 
 # **Notes**
 
@@ -16653,7 +19897,7 @@ The overall calculation is:
 
 \[ + \begin{aligned} + R &= \left( P\sb{0} + P\sb{10} \cdot I \right) + P\sb{20} \cdot J \\ + P\sb{i0} &= P\sb{i} - P\sb{0} \quad i \in \{1, 2\} \\ + P\sb{i} &= \text{attribute value at vertex \$\harpoon{v}\sb{i}\$} \quad i \in \{0, 1, 2\} \\ + \unitvector{\imath} + &= \harpoon{v}\sb{1} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$I\$ coordinate} \\ + \unitvector{\jmath} + &= \harpoon{v}\sb{2} - \harpoon{v}\sb{0} \quad\text{Basis vector for \$J\$ coordinate} \\ + \end{aligned} + \]
 
-D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 2U][SRC0.u32].f16), S1.f32, S2.f32)
+`D0.f32 = fma(32'F(VGPR[(laneId.u32 & 0xfffffffcU) + 2U][SRC0.u32].f16), S1.f32, S2.f32)`
 
 LDS\_PARAM\_LOAD instruction.
 
@@ -16695,7 +19939,16 @@ This suite of instructions operates on data stored within the data share memory.
 
 The bitfield map for the LDS/GDS is:
 
-OFFSET0 = Unsigned byte offset added to the address from the ADDR VGPR. OFFSET1 = Unsigned byte offset added to the address from the ADDR VGPR. GDS = Set if GDS, cleared if LDS. OP = DS instruction opcode ADDR = Source LDS address VGPR 0 - 255. DATA0 = Source data0 VGPR 0 - 255. DATA1 = Source data1 VGPR 0 - 255. VDST = Destination VGPR 0- 255.
+```text
+OFFSET0   = Unsigned byte offset added to the address from the ADDR VGPR.
+OFFSET1   = Unsigned byte offset added to the address from the ADDR VGPR.
+GDS       = Set if GDS, cleared if LDS.
+OP        = DS instruction opcode
+ADDR      = Source LDS address VGPR 0 - 255.
+DATA0     = Source data0 VGPR 0 - 255.
+DATA1     = Source data1 VGPR 0 - 255.
+VDST      = Destination VGPR 0- 255.
+```
 
 All instructions with RTN in the name return the value that was in memory before the operation was performed.
 
@@ -16703,103 +19956,173 @@ All instructions with RTN in the name return the value that was in memory before
 
 Add two unsigned 32-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_SUB\_U32 1**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in a data share.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_RSUB\_U32 2**
 
 Subtract an unsigned 32-bit integer value stored in a location in a data share from a value stored in the data register.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 = DATA.u32 - MEM[ADDR].u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 = DATA.u32 - MEM[ADDR].u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_INC\_U32 3**
 
 Increment an unsigned 32-bit integer value from a location in a data share with wraparound to 0 if the value exceeds a value in the data register.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_DEC\_U32 4**
 
 Decrement an unsigned 32-bit integer value from a location in a data share with wraparound to a value in the data register if the decrement yields a negative value.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_MIN\_I32 5**
 
 Select the minimum of two signed 32-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src < tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src < tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **DS\_MAX\_I32 6**
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **DS\_MIN\_U32 7**
 
 Select the minimum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src < tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src < tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_MAX\_U32 8**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_AND\_B32 9**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_OR\_B32 10**
 
 Calculate bitwise OR given two unsigned 32-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp | DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp | DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_XOR\_B32 11**
 
 Calculate bitwise XOR given two unsigned 32-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp ^ DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp ^ DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_MSKOR\_B32 12**
 
 Calculate masked bitwise OR on an unsigned 32-bit integer location in a data share, given mask value and bits to OR in the data registers.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = ((tmp & ~DATA.b32) | DATA2.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = ((tmp & ~DATA.b32) | DATA2.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_STORE\_B32 13**
 
 Store 32 bits of data from a vector input register into a data share.
 
-MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0]
+`MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0]`
 
 #### **DS\_STORE\_2ADDR\_B32 14**
 
 Store 32 bits of data from one vector input register and then 32 bits of data from a second vector input register into a data share.
 
-MEM[ADDR + OFFSET0.u32 \* 4U].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET1.u32 \* 4U].b32 = DATA2[31 : 0]
+```text
+MEM[ADDR + OFFSET0.u32 * 4U].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET1.u32 * 4U].b32 = DATA2[31 : 0]
+```
 
 #### **DS\_STORE\_2ADDR\_STRIDE64\_B32 15**
 
 Store 32 bits of data from one vector input register and then 32 bits of data from a second vector input register into a data share. Treat each offset as an index and multiply by a stride of 64 elements (256 bytes) to generate an offset for each DS address.
 
-MEM[ADDR + OFFSET0.u32 \* 256U].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET1.u32 \* 256U].b32 = DATA2[31 : 0]
+```text
+MEM[ADDR + OFFSET0.u32 * 256U].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET1.u32 * 256U].b32 = DATA2[31 : 0]
+```
 
 #### **DS\_CMPSTORE\_B32 16**
 
 Compare an unsigned 32-bit integer value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].b32; src = DATA.b32; cmp = DATA2.b32; MEM[ADDR].b32 = tmp == cmp ? src : tmp; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+src = DATA.b32;
+cmp = DATA2.b32;
+MEM[ADDR].b32 = tmp == cmp ? src : tmp;
+RETURN_DATA.b32 = tmp
+```
 
 #### **Notes**
 
@@ -16809,7 +20132,13 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Compare a single-precision float value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; cmp = DATA2.f32; MEM[ADDR].f32 = tmp == cmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+cmp = DATA2.f32;
+MEM[ADDR].f32 = tmp == cmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 ### **Notes**
 
@@ -16819,7 +20148,12 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Select the minimum of two single-precision float inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src < tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -16829,7 +20163,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the maximum of two single-precision float inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src > tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src > tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -16865,67 +20204,113 @@ MEM[ADDR].b8 = DATA[7 : 0]
 
 Store 16 bits of data from a vector register into a data share.
 
-MEM[ADDR].b16 = DATA[15 : 0]
+`MEM[ADDR].b16 = DATA[15 : 0]`
 
 #### **DS\_ADD\_RTN\_U32 32**
 
 Add two unsigned 32-bit integer values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_SUB\_RTN\_U32 33**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_RSUB\_RTN\_U32 34**
 
 Subtract an unsigned 32-bit integer value stored in a location in a data share from a value stored in the data register. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 = DATA.u32 - MEM[ADDR].u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 = DATA.u32 - MEM[ADDR].u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_INC\_RTN\_U32 35**
 
 Increment an unsigned 32-bit integer value from a location in a data share with wraparound to 0 if the value exceeds a value in the data register. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_DEC\_RTN\_U32 36**
 
 Decrement an unsigned 32-bit integer value from a location in a data share with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_MIN\_RTN\_I32 37**
 
 Select the minimum of two signed 32-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src < tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src < tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **DS\_MAX\_RTN\_I32 38**
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **DS\_MIN\_RTN\_U32 39**
 
 Select the minimum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src < tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src < tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_MAX\_RTN\_U32 40**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **DS\_AND\_RTN\_B32 41**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_OR\_RTN\_B32 42**
 
@@ -16951,13 +20336,21 @@ RETURN_DATA.b32 = tmp
 
 Calculate masked bitwise OR on an unsigned 32-bit integer location in a data share, given mask value and bits to OR in the data registers.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = ((tmp & ~DATA.b32) | DATA2.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = ((tmp & ~DATA.b32) | DATA2.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_STOREXCHG\_RTN\_B32 45**
 
 Swap an unsigned 32-bit integer value in the data register with a location in a data share.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = DATA.b32; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = DATA.b32;
+RETURN_DATA.b32 = tmp
+```
 
 #### **DS\_STOREXCHG\_2ADDR\_RTN\_B32 46**
 
@@ -16995,7 +20388,13 @@ RETURN_DATA[63 : 32] = tmp2
 
 Compare an unsigned 32-bit integer value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].b32; src = DATA.b32; cmp = DATA2.b32; MEM[ADDR].b32 = tmp == cmp ? src : tmp; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+src = DATA.b32;
+cmp = DATA2.b32;
+MEM[ADDR].b32 = tmp == cmp ? src : tmp;
+RETURN_DATA.b32 = tmp
+```
 
 #### **Notes**
 
@@ -17036,7 +20435,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the maximum of two single-precision float inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src > tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src > tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 ### **Notes**
 
@@ -17048,7 +20452,11 @@ Given a minuend from a location in data share and a subtrahend from a vector reg
 
 This calculation provides flexible wraparound semantics for subtraction.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 = tmp >= DATA.u32 ? tmp - DATA.u32 : tmp + DATA2.u32; RETURN\_DATA = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 = tmp >= DATA.u32 ? tmp - DATA.u32 : tmp + DATA2.u32;
+RETURN_DATA = tmp
+```
 
 # **Notes**
 
@@ -17102,55 +20510,108 @@ SWAPX2 : xor\_mask = 0x02, or\_mask = 0x00, and\_mask = 0x1f
 
 REVERSEX32 : xor\_mask = 0x1f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX16 : xor\_mask = 0x0f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX8 : xor\_mask = 0x07, or\_mask = 0x00, and\_mask = 0x1f REVERSEX4 : xor\_mask = 0x03, or\_mask = 0x00, and\_mask = 0x1f REVERSEX2 : xor\_mask = 0x01 or\_mask = 0x00, and\_mask = 0x1f BCASTX32: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x00 BCASTX16: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x10 BCASTX8: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x18 BCASTX4: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1c BCASTX2: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1e Pseudocode follows:
 
-offset = offset1:offset0; if (offset >= 0xe000) { // FFT decomposition mask = offset[4:0]; for (i = 0; i < 64; i++) { j = reverse\_bits(i & 0x1f); j = (j >> count\_ones(mask)); j |= (i & mask); j |= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; }
+`offset = offset1:offset0;`
 
-} elsif (offset >= 0xc000) { // rotate rotate = offset[9:5]; mask = offset[4:0]; if (offset[10]) { rotate = -rotate; } for (i = 0; i < 64; i++) { j = (i & mask) | ((i + rotate) & ~mask); j |= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; }
+```text
+if (offset >= 0xe000) {
+    // FFT decomposition
+    mask = offset[4:0];
+    for (i = 0; i < 64; i++) {
+         j = reverse_bits(i & 0x1f);
+         j = (j >> count_ones(mask));
+         j |= (i & mask);
+         j |= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+    }
+```
 
-} elsif (offset[15]) { // full data sharing within 4 consecutive threads for (i = 0; i < 64; i+=4) { thread\_out[i+0] = thread\_valid[i+offset[1:0]]?thread\_in[i+offset[1:0]]:0;  thread\_out[i+1] = thread\_valid[i+offset[3:2]]?thread\_in[i+offset[3:2]]:0; thread\_out[i+2] = thread\_valid[i+offset[5:4]]?thread\_in[i+offset[5:4]]:0; thread\_out[i+3] = thread\_valid[i+offset[7:6]]?thread\_in[i+offset[7:6]]:0; }
+```text
+} elsif (offset >= 0xc000) {
+    // rotate
+    rotate = offset[9:5];
+    mask = offset[4:0];
+    if (offset[10]) {
+         rotate = -rotate;
+    }
+    for (i = 0; i < 64; i++) {
+         j = (i & mask) | ((i + rotate) & ~mask);
+         j |= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+    }
+```
 
-} else { // offset[15] == 0 // limited data sharing within 32 consecutive threads xor\_mask = offset[14:10]; or\_mask = offset[9:5]; and\_mask = offset[4:0]; for (i = 0; i < 64; i++) { j = (((i & 0x1f) & and\_mask) | or\_mask) ^ xor\_mask; j |= (i & 0x20); // which group of 32 thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } }
+```text
+} elsif (offset[15]) {
+    // full data sharing within 4 consecutive threads
+    for (i = 0; i < 64; i+=4) {
+         thread_out[i+0] = thread_valid[i+offset[1:0]]?thread_in[i+offset[1:0]]:0;
+         thread_out[i+1] = thread_valid[i+offset[3:2]]?thread_in[i+offset[3:2]]:0;
+         thread_out[i+2] = thread_valid[i+offset[5:4]]?thread_in[i+offset[5:4]]:0;
+         thread_out[i+3] = thread_valid[i+offset[7:6]]?thread_in[i+offset[7:6]]:0;
+    }
+```
+
+```text
+} else { // offset[15] == 0
+    // limited data sharing within 32 consecutive threads
+    xor_mask = offset[14:10];
+    or_mask = offset[9:5];
+    and_mask = offset[4:0];
+    for (i = 0; i < 64; i++) {
+         j = (((i & 0x1f) & and_mask) | or_mask) ^ xor_mask;
+         j |= (i & 0x20); // which group of 32
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+    }
+}
+```
 
 #### **DS\_LOAD\_B32 54**
 
 Load 32 bits of data from a data share into a vector register.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32
+`RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32`
 
 #### **DS\_LOAD\_2ADDR\_B32 55**
 
 Load 32 bits of data from one location in a data share and then 32 bits of data from a second location in a data share and store the results into a 64-bit vector register.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 \* 4U].b32; RETURN\_DATA[63 : 32] = MEM[ADDR + OFFSET1.u32 \* 4U].b32
+```text
+RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 * 4U].b32;
+RETURN_DATA[63 : 32] = MEM[ADDR + OFFSET1.u32 * 4U].b32
+```
 
 #### **DS\_LOAD\_2ADDR\_STRIDE64\_B32 56**
 
 Load 32 bits of data from one location in a data share and then 32 bits of data from a second location in a data share and store the results into a 64-bit vector register. Treat each offset as an index and multiply by a stride of 64 elements (256 bytes) to generate an offset for each DS address.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 \* 256U].b32; RETURN\_DATA[63 : 32] = MEM[ADDR + OFFSET1.u32 \* 256U].b32
+```text
+RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 * 256U].b32;
+RETURN_DATA[63 : 32] = MEM[ADDR + OFFSET1.u32 * 256U].b32
+```
 
 #### **DS\_LOAD\_I8 57**
 
 Load 8 bits of signed data from a data share, sign extend to 32 bits and store the result into a vector register.
 
-RETURN\_DATA.i32 = 32'I(signext(MEM[ADDR].i8))
+`RETURN_DATA.i32 = 32'I(signext(MEM[ADDR].i8))`
 
 #### **DS\_LOAD\_U8 58**
 
 Load 8 bits of unsigned data from a data share, zero extend to 32 bits and store the result into a vector register.
 
-RETURN\_DATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })
+`RETURN_DATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })`
 
 #### **DS\_LOAD\_I16 59**
 
 Load 16 bits of signed data from a data share, sign extend to 32 bits and store the result into a vector register.
 
-RETURN\_DATA.i32 = 32'I(signext(MEM[ADDR].i16))
+`RETURN_DATA.i32 = 32'I(signext(MEM[ADDR].i16))`
 
 #### **DS\_LOAD\_U16 60**
 
 Load 16 bits of unsigned data from a data share, zero extend to 32 bits and store the result into a vector register.
 
-RETURN\_DATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })
+`RETURN_DATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })`
 
 #### **DS\_CONSUME 61**
 
@@ -17162,7 +20623,12 @@ For GDS (system wide) consume, the compiler must use a zero for {offset1,offset0
 
 Inside DS, do one atomic add for first valid lane and broadcast result to all valid lanes. Offset = 0ffset1:offset0; Interpreted as byte offset. Only aligned atomics are supported, so 2 LSBs of offset must be set to zero.
 
-addr = M0.base + offset; // offset by LDS HWBASE, limit to M.size rtnval = LDS(addr); LDS(addr) = LDS(addr) - countbits(valid mask); GPR[VDST] = rtnval; // return to all valid threads
+```text
+addr = M0.base + offset; // offset by LDS HWBASE, limit to M.size
+rtnval =   LDS(addr);
+LDS(addr) = LDS(addr) - countbits(valid mask);
+GPR[VDST] = rtnval; // return to all valid threads
+```
 
 #### **DS\_APPEND 62**
 
@@ -17174,7 +20640,12 @@ For GDS (system wide) consume, the compiler must use a zero for {offset1,offset0
 
 Inside DS, do one atomic add for first valid lane and broadcast result to all valid lanes. Offset = 0ffset1:offset0; Interpreted as byte offset. Only aligned atomics are supported, so 2 LSBs of offset must be set to zero.
 
-addr = M0.base + offset; // offset by LDS HWBASE, limit to M.size rtnval = LDS(addr); LDS(addr) = LDS(addr) + countbits(valid mask); GPR[VDST] = rtnval; // return to all valid threads
+```text
+addr = M0.base + offset; // offset by LDS HWBASE, limit to M.size
+rtnval =   LDS(addr);
+LDS(addr) = LDS(addr) + countbits(valid mask);
+GPR[VDST] = rtnval; // return to all valid threads
+```
 
 #### **DS\_ORDERED\_COUNT 63**
 
@@ -17199,13 +20670,21 @@ The wave type is determined automatically based on the ME\_ID and QUEUE\_ID of t
 
 Add two unsigned 64-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 += DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 += DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_SUB\_U64 65**
 
 Subtract an unsigned 64-bit integer value stored in the data register from a value stored in a location in a data share.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 -= DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 -= DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_RSUB\_U64 66**
 
@@ -17234,13 +20713,23 @@ RETURN_DATA.u64 = tmp
 
 Decrement an unsigned 64-bit integer value from a location in a data share with wraparound to a value in the data register if the decrement yields a negative value.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_MIN\_I64 69**
 
 Select the minimum of two signed 64-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src < tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src < tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **DS\_MAX\_I64 70**
 
@@ -17270,43 +20759,72 @@ RETURN_DATA.u64 = tmp
 
 Select the maximum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src >= tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src >= tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_AND\_B64 73**
 
 Calculate bitwise AND given two unsigned 64-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp & DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp & DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_OR\_B64 74**
 
 Calculate bitwise OR given two unsigned 64-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp | DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp | DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_XOR\_B64 75**
 
 Calculate bitwise XOR given two unsigned 64-bit integer values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp ^ DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp ^ DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_MSKOR\_B64 76**
 
 Calculate masked bitwise OR on an unsigned 64-bit integer location in a data share, given mask value and bits to OR in the data registers.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = ((tmp & ~DATA.b64) | DATA2.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = ((tmp & ~DATA.b64) | DATA2.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_STORE\_B64 77**
 
 Store 64 bits of data from a vector input register into a data share.
 
-MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32]
+```text
+MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32]
+```
 
 #### **DS\_STORE\_2ADDR\_B64 78**
 
 Store 64 bits of data from one vector input register and then 64 bits of data from a second vector input register into a data share.
 
-MEM[ADDR + OFFSET0.u32 \* 8U].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET0.u32 \* 8U + 4U].b32 = DATA[63 : 32]; MEM[ADDR + OFFSET1.u32 \* 8U].b32 = DATA2[31 : 0]; MEM[ADDR + OFFSET1.u32 \* 8U + 4U].b32 = DATA2[63 : 32]
+```text
+MEM[ADDR + OFFSET0.u32 * 8U].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET0.u32 * 8U + 4U].b32 = DATA[63 : 32];
+MEM[ADDR + OFFSET1.u32 * 8U].b32 = DATA2[31 : 0];
+MEM[ADDR + OFFSET1.u32 * 8U + 4U].b32 = DATA2[63 : 32]
+```
 
 #### **DS\_STORE\_2ADDR\_STRIDE64\_B64 79**
 
@@ -17318,7 +20836,13 @@ MEM[ADDR + OFFSET0.u32 \* 512U].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET0.u32 \* 51
 
 Compare an unsigned 64-bit integer value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].b64; src = DATA.b64; cmp = DATA2.b64; MEM[ADDR].b64 = tmp == cmp ? src : tmp; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+src = DATA.b64;
+cmp = DATA2.b64;
+MEM[ADDR].b64 = tmp == cmp ? src : tmp;
+RETURN_DATA.b64 = tmp
+```
 
 #### **Notes**
 
@@ -17328,7 +20852,13 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Compare a double-precision float value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; cmp = DATA2.f64; MEM[ADDR].f64 = tmp == cmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+cmp = DATA2.f64;
+MEM[ADDR].f64 = tmp == cmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 #### **Notes**
 
@@ -17338,7 +20868,12 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Select the minimum of two double-precision float inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; MEM[ADDR].f64 = src < tmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+MEM[ADDR].f64 = src < tmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 Floating-point compare handles NAN/INF/denorm.
 
@@ -17346,7 +20881,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the maximum of two double-precision float inputs, given two values stored in the data register and a location in a data share.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; MEM[ADDR].f64 = src > tmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+MEM[ADDR].f64 = src > tmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 #### **Notes**
 
@@ -17356,13 +20896,21 @@ Floating-point compare handles NAN/INF/denorm.
 
 Add two unsigned 64-bit integer values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 += DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 += DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_SUB\_RTN\_U64 97**
 
 Subtract an unsigned 64-bit integer value stored in the data register from a value stored in a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 -= DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 -= DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_RSUB\_RTN\_U64 98**
 
@@ -17374,19 +20922,34 @@ MEM[ADDR].u64 = DATA.u64 - MEM[ADDR].u64; RETURN\_DATA.u64 = tmp
 
 Increment an unsigned 64-bit integer value from a location in a data share with wraparound to 0 if the value exceeds a value in the data register. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_DEC\_RTN\_U64 100**
 
 Decrement an unsigned 64-bit integer value from a location in a data share with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_MIN\_RTN\_I64 101**
 
 Select the minimum of two signed 64-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src < tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src < tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **DS\_MAX\_RTN\_I64 102**
 
@@ -17398,19 +20961,33 @@ src = DATA.i64; MEM[ADDR].i64 = src >= tmp ? src : tmp; RETURN\_DATA.i64 = tmp
 
 Select the minimum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src < tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src < tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_MAX\_RTN\_U64 104**
 
 Select the maximum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src >= tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src >= tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_AND\_RTN\_B64 105**
 
 Calculate bitwise AND given two unsigned 64-bit integer values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp & DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp & DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_OR\_RTN\_B64 106**
 
@@ -17420,19 +20997,31 @@ Calculate bitwise OR given two unsigned 64-bit integer values stored in the data
 
 Calculate bitwise XOR given two unsigned 64-bit integer values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp ^ DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp ^ DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_MSKOR\_RTN\_B64 108**
 
 Calculate masked bitwise OR on an unsigned 64-bit integer location in a data share, given mask value and bits to OR in the data registers.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = ((tmp & ~DATA.b64) | DATA2.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = ((tmp & ~DATA.b64) | DATA2.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_STOREXCHG\_RTN\_B64 109**
 
 Swap an unsigned 64-bit integer value in the data register with a location in a data share.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **DS\_STOREXCHG\_2ADDR\_RTN\_B64 110**
 
@@ -17444,13 +21033,29 @@ addr1 = ADDR\_BASE.u32 + OFFSET0.u32 \* 8U; addr2 = ADDR\_BASE.u32 + OFFSET1.u32
 
 Swap two unsigned 64-bit integer values in the data registers with two locations in a data share. Treat each offset as an index and multiply by a stride of 64 elements (256 bytes) to generate an offset for each DS address.
 
-addr1 = ADDR\_BASE.u32 + OFFSET0.u32 \* 512U; addr2 = ADDR\_BASE.u32 + OFFSET1.u32 \* 512U; tmp1 = MEM[addr1].b64; tmp2 = MEM[addr2].b64; MEM[addr1].b64 = DATA.b64; MEM[addr2].b64 = DATA2.b64; // Note DATA2 can be any other register RETURN\_DATA[63 : 0] = tmp1; RETURN\_DATA[127 : 64] = tmp2
+```text
+addr1 = ADDR_BASE.u32 + OFFSET0.u32 * 512U;
+addr2 = ADDR_BASE.u32 + OFFSET1.u32 * 512U;
+tmp1 = MEM[addr1].b64;
+tmp2 = MEM[addr2].b64;
+MEM[addr1].b64 = DATA.b64;
+MEM[addr2].b64 = DATA2.b64;
+// Note DATA2 can be any other register
+RETURN_DATA[63 : 0] = tmp1;
+RETURN_DATA[127 : 64] = tmp2
+```
 
 #### **DS\_CMPSTORE\_RTN\_B64 112**
 
 Compare an unsigned 64-bit integer value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].b64; src = DATA.b64; cmp = DATA2.b64; MEM[ADDR].b64 = tmp == cmp ? src : tmp; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+src = DATA.b64;
+cmp = DATA2.b64;
+MEM[ADDR].b64 = tmp == cmp ? src : tmp;
+RETURN_DATA.b64 = tmp
+```
 
 #### **Notes**
 
@@ -17460,7 +21065,13 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Compare a double-precision float value in the data comparison register with a location in a data share, and modify the memory location with a value in the data source register if the comparison is equal.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; cmp = DATA2.f64; MEM[ADDR].f64 = tmp == cmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+cmp = DATA2.f64;
+MEM[ADDR].f64 = tmp == cmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMPSWAP opcode.
 
@@ -17468,7 +21079,12 @@ In this architecture the order of src and cmp agree with the BUFFER\_ATOMIC\_CMP
 
 Select the minimum of two double-precision float inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; MEM[ADDR].f64 = src < tmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+MEM[ADDR].f64 = src < tmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 #### **Notes**
 
@@ -17478,7 +21094,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the maximum of two double-precision float inputs, given two values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].f64; src = DATA.f64; MEM[ADDR].f64 = src > tmp ? src : tmp; RETURN\_DATA.f64 = tmp
+```text
+tmp = MEM[ADDR].f64;
+src = DATA.f64;
+MEM[ADDR].f64 = src > tmp ? src : tmp;
+RETURN_DATA.f64 = tmp
+```
 
 #### **Notes**
 
@@ -17508,13 +21129,22 @@ RETURN_DATA[127 : 96] = MEM[ADDR + OFFSET1.u32 * 8U + 4U].b32
 
 Load 64 bits of data from one location in a data share and then 64 bits of data from a second location in a data share and store the results into a 128-bit vector register. Treat each offset as an index and multiply by a stride of 64 elements (256 bytes) to generate an offset for each DS address.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 \* 512U].b32; RETURN\_DATA[63 : 32] = MEM[ADDR + OFFSET0.u32 \* 512U + 4U].b32; RETURN\_DATA[95 : 64] = MEM[ADDR + OFFSET1.u32 \* 512U].b32; RETURN\_DATA[127 : 96] = MEM[ADDR + OFFSET1.u32 \* 512U + 4U].b32
+```text
+RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET0.u32 * 512U].b32;
+RETURN_DATA[63 : 32] = MEM[ADDR + OFFSET0.u32 * 512U + 4U].b32;
+RETURN_DATA[95 : 64] = MEM[ADDR + OFFSET1.u32 * 512U].b32;
+RETURN_DATA[127 : 96] = MEM[ADDR + OFFSET1.u32 * 512U + 4U].b32
+```
 
 #### **DS\_ADD\_RTN\_F32 121**
 
 Add two single-precision float values stored in the data register and a location in a data share. Store the original value from data share into a vector register.
 
-tmp = MEM[ADDR].f32; MEM[ADDR].f32 += DATA.f32; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+MEM[ADDR].f32 += DATA.f32;
+RETURN_DATA.f32 = tmp
+```
 
 ### **Notes**
 
@@ -17526,7 +21156,19 @@ Perform an atomic add to data in specific registers embedded in GDS rather than 
 
 The return value may be 32 bits or 64 bits depending on the GS register accessed. The data value is 32 bits.
 
-if OFFSET0[5:2] > 7 // 64-bit GS register access addr = (OFFSET0[5:2] - 8) \* 2 + 8;  VDST[0] = GS\_REGS(addr + 0); VDST[1] = GS\_REGS(addr + 1); {GS\_REGS(addr + 1), GS\_REGS(addr)} += DATA0[0]; // source is 32 bit else addr = OFFSET0[5:2]; VDST[0] = GS\_REGS(addr); GS\_REGS(addr) += DATA0[0]; endif.
+```text
+if OFFSET0[5:2] > 7
+      // 64-bit GS register access
+      addr = (OFFSET0[5:2] - 8) * 2 + 8;
+    VDST[0] = GS_REGS(addr + 0);
+    VDST[1] = GS_REGS(addr + 1);
+    {GS_REGS(addr + 1), GS_REGS(addr)} += DATA0[0]; // source is 32 bit
+else
+    addr = OFFSET0[5:2];
+    VDST[0] = GS_REGS(addr);
+    GS_REGS(addr) += DATA0[0];
+endif.
+```
 
 #### **32-bit GS registers:**
 
@@ -17542,9 +21184,19 @@ Perform an atomic subtraction from data in specific registers embedded in GDS ra
 
 The return value may be 32 bits or 64 bits depending on the GS register accessed. The data value is 32 bits.
 
-if OFFSET0[5:2] > 7 // 64-bit GS register access addr = (OFFSET0[5:2] - 8) \* 2 + 8; VDST[0] = GS\_REGS(addr + 0); VDST[1] = GS\_REGS(addr + 1); {GS\_REGS(addr + 1), GS\_REGS(addr)} -= DATA0[0]; // source is 32 bit else addr = OFFSET0[5:2]; VDST[0] = GS\_REGS(addr);
-
- GS\_REGS(addr) -= DATA0[0]; endif.
+```text
+if OFFSET0[5:2] > 7
+    // 64-bit GS register access
+    addr = (OFFSET0[5:2] - 8) * 2 + 8;
+    VDST[0] = GS_REGS(addr + 0);
+    VDST[1] = GS_REGS(addr + 1);
+    {GS_REGS(addr + 1), GS_REGS(addr)} -= DATA0[0]; // source is 32 bit
+else
+    addr = OFFSET0[5:2];
+    VDST[0] = GS_REGS(addr);
+    GS_REGS(addr) -= DATA0[0];
+endif.
+```
 
 #### **32-bit GS registers:**
 
@@ -17558,55 +21210,90 @@ offset[5:2] Register 8 GDS\_STRMOUT\_PRIMS\_NEEDED\_0 9 GDS\_STRMOUT\_PRIMS\_WRI
 
 Perform 2 conditional write exchanges, where each conditional write exchange writes a 32 bit value from a data register to a location in data share iff the most significant bit of the data value is set.
 
-declare OFFSET0 : 8'U; declare OFFSET1 : 8'U; declare RETURN\_DATA : 32'U[2]; ADDR = S0.u32; DATA = S1.u64; offset = { OFFSET1, OFFSET0 }; ADDR0 = ((ADDR + offset.u32) & 0xfff8U); ADDR1 = ADDR0 + 4U; RETURN\_DATA[0] = LDS[ADDR0].u32; if DATA[31] then LDS[ADDR0] = { 1'0, DATA[30 : 0] } endif; RETURN\_DATA[1] = LDS[ADDR1].u32; if DATA[63] then LDS[ADDR1] = { 1'0, DATA[62 : 32] } endif
+```text
+declare OFFSET0 : 8'U;
+declare OFFSET1 : 8'U;
+declare RETURN_DATA : 32'U[2];
+ADDR = S0.u32;
+DATA = S1.u64;
+offset = { OFFSET1, OFFSET0 };
+ADDR0 = ((ADDR + offset.u32) & 0xfff8U);
+ADDR1 = ADDR0 + 4U;
+RETURN_DATA[0] = LDS[ADDR0].u32;
+if DATA[31] then
+    LDS[ADDR0] = { 1'0, DATA[30 : 0] }
+endif;
+RETURN_DATA[1] = LDS[ADDR1].u32;
+if DATA[63] then
+    LDS[ADDR1] = { 1'0, DATA[62 : 32] }
+endif
+```
 
 #### **DS\_STORE\_B8\_D16\_HI 160**
 
 Store 8 bits of data from the high bits of a vector register into a data share.
 
-MEM[ADDR].b8 = DATA[23 : 16]
+`MEM[ADDR].b8 = DATA[23 : 16]`
 
 #### **DS\_STORE\_B16\_D16\_HI 161**
 
 Store 16 bits of data from the high bits of a vector register into a data share.
 
-MEM[ADDR].b16 = DATA[31 : 16]
+`MEM[ADDR].b16 = DATA[31 : 16]`
 
 #### **DS\_LOAD\_U8\_D16 162**
 
 Load 8 bits of unsigned data from a data share, zero extend to 16 bits and store the result into the low 16 bits of a vector register.
 
-RETURN\_DATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // RETURN\_DATA[31:16] is preserved.
+```text
+RETURN_DATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// RETURN_DATA[31:16] is preserved.
+```
 
 #### **DS\_LOAD\_U8\_D16\_HI 163**
 
 Load 8 bits of unsigned data from a data share, zero extend to 16 bits and store the result into the high 16 bits of a vector register.
 
-RETURN\_DATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // RETURN\_DATA[15:0] is preserved.
+```text
+RETURN_DATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// RETURN_DATA[15:0] is preserved.
+```
 
 #### **DS\_LOAD\_I8\_D16 164**
 
 Load 8 bits of signed data from a data share, sign extend to 16 bits and store the result into the low 16 bits of a vector register.
 
-RETURN\_DATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8)); // RETURN\_DATA[31:16] is preserved.
+```text
+RETURN_DATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8));
+// RETURN_DATA[31:16] is preserved.
+```
 
 #### **DS\_LOAD\_I8\_D16\_HI 165**
 
 Load 8 bits of signed data from a data share, sign extend to 16 bits and store the result into the high 16 bits of a vector register.
 
-RETURN\_DATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8)); // RETURN\_DATA[15:0] is preserved.
+```text
+RETURN_DATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8));
+// RETURN_DATA[15:0] is preserved.
+```
 
 #### **DS\_LOAD\_U16\_D16 166**
 
 Load 16 bits of unsigned data from a data share and store the result into the low 16 bits of a vector register.
 
-RETURN\_DATA[15 : 0].u16 = MEM[ADDR].u16; // RETURN\_DATA[31:16] is preserved.
+```text
+RETURN_DATA[15 : 0].u16 = MEM[ADDR].u16;
+// RETURN_DATA[31:16] is preserved.
+```
 
 #### **DS\_LOAD\_U16\_D16\_HI 167**
 
 Load 16 bits of unsigned data from a data share and store the result into the high 16 bits of a vector register.
 
-RETURN\_DATA[31 : 16].u16 = MEM[ADDR].u16; // RETURN\_DATA[15:0] is preserved.
+```text
+RETURN_DATA[31 : 16].u16 = MEM[ADDR].u16;
+// RETURN_DATA[15:0] is preserved.
+```
 
 #### **DS\_BVH\_STACK\_RTN\_B32 173**
 
@@ -17620,13 +21307,52 @@ DATA0 contains the last node pointer for BVH.
 
 DATA1 contains up to 4 valid data DWORDs for each thread. At a high level the first 3 DWORDs (DATA1[0:2]) is pushed to the stack if they are valid, and the last DWORD (DATA1[3]) is returned. If the last DWORD is invalid then pop the stack and return the value from memory.
 
- (stack\_base, stack\_index) = DECODE\_ADDR(ADDR, OFFSET1); last\_node\_ptr = DATA0; // First 3 passes: push data onto stack for i = 0..2 do if DATA\_VALID(DATA1[i]) MEM[stack\_base + stack\_index] = DATA1[i]; Increment stack\_index elsif DATA1[i] == last\_node\_ptr // Treat all further data as invalid as well. break endif endfor // Fourth pass: return data or pop if DATA\_VALID(DATA1[3]) VGPR\_RTN = DATA1[3] else VGPR\_RTN = MEM[stack\_base + stack\_index]; MEM[stack\_base + stack\_index] = INVALID\_NODE; Decrement stack\_index endif ADDR = ENCODE\_ADDR(stack\_base, stack\_index). function DATA\_VALID(data): if data == INVALID\_NODE return false elsif last\_node\_ptr != INVALID\_NODE && data == last\_node\_ptr // Match last\_node\_ptr return false else return true endif endfunction.
+```text
+(stack_base, stack_index) = DECODE_ADDR(ADDR, OFFSET1);
+last_node_ptr = DATA0;
+// First 3 passes: push data onto stack
+for i = 0..2 do
+     if DATA_VALID(DATA1[i])
+         MEM[stack_base + stack_index] = DATA1[i];
+         Increment stack_index
+     elsif DATA1[i] == last_node_ptr
+         // Treat all further data as invalid as well.
+         break
+     endif
+endfor
+// Fourth pass: return data or pop
+if DATA_VALID(DATA1[3])
+     VGPR_RTN = DATA1[3]
+else
+     VGPR_RTN = MEM[stack_base + stack_index];
+     MEM[stack_base + stack_index] = INVALID_NODE;
+     Decrement stack_index
+endif
+ADDR = ENCODE_ADDR(stack_base, stack_index).
+```
+
+```text
+function DATA_VALID(data):
+    if data == INVALID_NODE
+         return false
+    elsif last_node_ptr != INVALID_NODE && data == last_node_ptr
+         // Match last_node_ptr
+         return false
+    else
+         return true
+    endif
+endfunction.
+```
 
 #### **DS\_STORE\_ADDTID\_B32 176**
 
 Store 32 bits of data from a vector input register into a data share. The memory base address is provided as an immediate value and the lane ID is used as an offset.
 
-declare OFFSET0 : 8'U; declare OFFSET1 : 8'U; MEM[32'I({ OFFSET1, OFFSET0 } + M0[15 : 0]) + laneID.i32 \* 4].u32 = DATA0.u32
+```text
+declare OFFSET0 : 8'U;
+declare OFFSET1 : 8'U;
+MEM[32'I({ OFFSET1, OFFSET0 } + M0[15 : 0]) + laneID.i32 * 4].u32 = DATA0.u32
+```
 
 #### **DS\_LOAD\_ADDTID\_B32 177**
 
@@ -17644,7 +21370,35 @@ If multiple sources map to the same destination lane, it is not deterministic wh
 
 See also DS\_BPERMUTE\_B32.
 
-// VGPR[laneId][index] is the VGPR RAM // VDST, ADDR and DATA0 are from the microcode DS encoding declare tmp : 32'B[64]; declare OFFSET : 16'U; declare DATA0 : 32'U; declare VDST : 32'U; for i in 0 : WAVE64 ? 63 : 31 do tmp[i] = 0x0 endfor; for i in 0 : WAVE64 ? 63 : 31 do // If a source thread is disabled, it does not propagate data. if EXEC[i].u1 then // ADDR needs to be divided by 4. // High-order bits are ignored. // NOTE: destination lane is MOD 32 regardless of wave size. dst\_lane = 32'I(VGPR[i][ADDR] + OFFSET.b32) / 4 % 32; tmp[dst\_lane] = VGPR[i][DATA0] endif endfor; // Copy data into destination VGPRs. If multiple sources // select the same destination thread, the highest-numbered // source thread wins. for i in 0 : WAVE64 ? 63 : 31 do if EXEC[i].u1 then VGPR[i][VDST] = tmp[i] endif endfor
+```text
+// VGPR[laneId][index] is the VGPR RAM
+// VDST, ADDR and DATA0 are from the microcode DS encoding
+declare tmp : 32'B[64];
+declare OFFSET : 16'U;
+declare DATA0 : 32'U;
+declare VDST : 32'U;
+for i in 0 : WAVE64 ? 63 : 31 do
+      tmp[i] = 0x0
+endfor;
+for i in 0 : WAVE64 ? 63 : 31 do
+      // If a source thread is disabled, it does not propagate data.
+      if EXEC[i].u1 then
+          // ADDR needs to be divided by 4.
+          // High-order bits are ignored.
+          // NOTE: destination lane is MOD 32 regardless of wave size.
+          dst_lane = 32'I(VGPR[i][ADDR] + OFFSET.b32) / 4 % 32;
+          tmp[dst_lane] = VGPR[i][DATA0]
+      endif
+endfor;
+// Copy data into destination VGPRs. If multiple sources
+// select the same destination thread, the highest-numbered
+// source thread wins.
+for i in 0 : WAVE64 ? 63 : 31 do
+      if EXEC[i].u1 then
+          VGPR[i][VDST] = tmp[i]
+      endif
+endfor
+```
 
 # **Notes**
 
@@ -17652,7 +21406,12 @@ Examples (simplified 4-thread wavefronts):
 
  VGPR[SRC0] = { A, B, C, D } VGPR[ADDR] = { 0, 0, 12, 4 } EXEC = 0xF, OFFSET = 0
 
- VGPR[SRC0] = { A, B, C, D } VGPR[ADDR] = { 0, 0, 12, 4 } EXEC = 0xA, OFFSET = 0 VGPR[VDST] = { -, D, -, 0 }
+```text
+VGPR[SRC0] = { A, B, C, D }
+VGPR[ADDR] = { 0, 0, 12, 4 }
+EXEC = 0xA, OFFSET = 0
+VGPR[VDST] = { -, D, -, 0 }
+```
 
 #### **DS\_BPERMUTE\_B32 179**
 
@@ -17664,37 +21423,92 @@ Note that EXEC mask is applied to both VGPR read and write. If src\_lane selects
 
 See also DS\_PERMUTE\_B32.
 
-// VGPR[laneId][index] is the VGPR RAM // VDST, ADDR and DATA0 are from the microcode DS encoding declare tmp : 32'B[64]; declare OFFSET : 16'U; declare DATA0 : 32'U; declare VDST : 32'U; for i in 0 : WAVE64 ? 63 : 31 do tmp[i] = 0x0 endfor; for i in 0 : WAVE64 ? 63 : 31 do // ADDR needs to be divided by 4. // High-order bits are ignored. // NOTE: destination lane is MOD 32 regardless of wave size. src\_lane = 32'I(VGPR[i][ADDR] + OFFSET.b32) / 4 % 32; // EXEC is applied to the source VGPR reads. if EXEC[src\_lane].u1 then tmp[i] = VGPR[src\_lane][DATA0] endif endfor; // Copy data into destination VGPRs. Some source // data may be broadcast to multiple lanes. for i in 0 : WAVE64 ? 63 : 31 do if EXEC[i].u1 then VGPR[i][VDST] = tmp[i] endif endfor
+```text
+// VGPR[laneId][index] is the VGPR RAM
+// VDST, ADDR and DATA0 are from the microcode DS encoding
+declare tmp : 32'B[64];
+declare OFFSET : 16'U;
+declare DATA0 : 32'U;
+declare VDST : 32'U;
+for i in 0 : WAVE64 ? 63 : 31 do
+      tmp[i] = 0x0
+endfor;
+for i in 0 : WAVE64 ? 63 : 31 do
+      // ADDR needs to be divided by 4.
+      // High-order bits are ignored.
+      // NOTE: destination lane is MOD 32 regardless of wave size.
+      src_lane = 32'I(VGPR[i][ADDR] + OFFSET.b32) / 4 % 32;
+      // EXEC is applied to the source VGPR reads.
+      if EXEC[src_lane].u1 then
+          tmp[i] = VGPR[src_lane][DATA0]
+      endif
+endfor;
+// Copy data into destination VGPRs. Some source
+// data may be broadcast to multiple lanes.
+for i in 0 : WAVE64 ? 63 : 31 do
+      if EXEC[i].u1 then
+          VGPR[i][VDST] = tmp[i]
+      endif
+endfor
+```
 
 # **Notes**
 
- VGPR[SRC0] = { A, B, C, D } VGPR[ADDR] = { 0, 0, 12, 4 } EXEC = 0xF, OFFSET = 0 VGPR[VDST] = { A, A, D, B }
+```text
+VGPR[SRC0] = { A, B, C, D }
+VGPR[ADDR] = { 0, 0, 12, 4 }
+EXEC = 0xF, OFFSET = 0
+VGPR[VDST] = { A, A, D, B }
+```
 
- VGPR[SRC0] = { A, B, C, D } VGPR[ADDR] = { 0, 0, 12, 4 } EXEC = 0xA, OFFSET = 0 VGPR[VDST] = { -, 0, -, B }
+```text
+VGPR[SRC0] = { A, B, C, D }
+VGPR[ADDR] = { 0, 0, 12, 4 }
+EXEC = 0xA, OFFSET = 0
+VGPR[VDST] = { -, 0, -, B }
+```
 
 #### **DS\_STORE\_B96 222**
 
 Store 96 bits of data from a vector input register into a data share.
 
-MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32]; MEM[ADDR + OFFSET.u32 + 8U].b32 = DATA[95 : 64]
+```text
+MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32];
+MEM[ADDR + OFFSET.u32 + 8U].b32 = DATA[95 : 64]
+```
 
 #### **DS\_STORE\_B128 223**
 
 Store 128 bits of data from a vector input register into a data share.
 
-MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0]; MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32]; MEM[ADDR + OFFSET.u32 + 8U].b32 = DATA[95 : 64]; MEM[ADDR + OFFSET.u32 + 12U].b32 = DATA[127 : 96]
+```text
+MEM[ADDR + OFFSET.u32].b32 = DATA[31 : 0];
+MEM[ADDR + OFFSET.u32 + 4U].b32 = DATA[63 : 32];
+MEM[ADDR + OFFSET.u32 + 8U].b32 = DATA[95 : 64];
+MEM[ADDR + OFFSET.u32 + 12U].b32 = DATA[127 : 96]
+```
 
 #### **DS\_LOAD\_B96 254**
 
 Load 96 bits of data from a data share into a vector register.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32; RETURN\_DATA[63 : 32] = MEM[ADDR + OFFSET.u32 + 4U].b32; RETURN\_DATA[95 : 64] = MEM[ADDR + OFFSET.u32 + 8U].b32
+```text
+RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32;
+RETURN_DATA[63 : 32] = MEM[ADDR + OFFSET.u32 + 4U].b32;
+RETURN_DATA[95 : 64] = MEM[ADDR + OFFSET.u32 + 8U].b32
+```
 
 #### **DS\_LOAD\_B128 255**
 
 Load 128 bits of data from a data share into a vector register.
 
-RETURN\_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32; RETURN\_DATA[63 : 32] = MEM[ADDR + OFFSET.u32 + 4U].b32; RETURN\_DATA[95 : 64] = MEM[ADDR + OFFSET.u32 + 8U].b32; RETURN\_DATA[127 : 96] = MEM[ADDR + OFFSET.u32 + 12U].b32
+```text
+RETURN_DATA[31 : 0] = MEM[ADDR + OFFSET.u32].b32;
+RETURN_DATA[63 : 32] = MEM[ADDR + OFFSET.u32 + 4U].b32;
+RETURN_DATA[95 : 64] = MEM[ADDR + OFFSET.u32 + 8U].b32;
+RETURN_DATA[127 : 96] = MEM[ADDR + OFFSET.u32 + 12U].b32
+```
 
 # <span id="page-580-0"></span>**16.15.1. LDS Instruction Limitations**
 
@@ -17716,13 +21530,20 @@ The bitfield map of the MUBUF format is:
 
 Load 1-component formatted data from a buffer surface, convert the data to 32 bit integral or floating point format, then store the result into a vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format
+```text
+VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+```
 
 #### **BUFFER\_LOAD\_FORMAT\_XY 1**
 
 Load 2-component formatted data from a buffer surface, convert the data to 32 bit integral or floating point format, then store the result into a vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format VDATA[63 : 32].b32 = ConvertFromFormat(MEM[TADDR.Y])
+```text
+VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+VDATA[63 : 32].b32 = ConvertFromFormat(MEM[TADDR.Y])
+```
 
 #### **BUFFER\_LOAD\_FORMAT\_XYZ 2**
 
@@ -17752,13 +21573,20 @@ VDATA[127 : 96].b32 = ConvertFromFormat(MEM[TADDR.W])
 
 Convert 32 bits of data from vector input registers into 1-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32); // Mem access size depends on format
+```text
+MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32);
+// Mem access size depends on format
+```
 
 #### **BUFFER\_STORE\_FORMAT\_XY 5**
 
 Convert 64 bits of data from vector input registers into 2-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(VDATA[63 : 32].b32)
+```text
+MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32);
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(VDATA[63 : 32].b32)
+```
 
 #### **BUFFER\_STORE\_FORMAT\_XYZ 6**
 
@@ -17790,67 +21618,105 @@ MEM[TADDR.W] = ConvertToFormat(VDATA[127 : 96].b32)
 
 Load 1-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into the low 16 bits of a 32-bit vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format // VDATA[31:16].b16 is preserved.
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+// VDATA[31:16].b16 is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_FORMAT\_XY 9**
 
 Load 2-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]))
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]))
+```
 
 #### **BUFFER\_LOAD\_D16\_FORMAT\_XYZ 10**
 
 Load 3-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y])); VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z])); // VDATA[63:48].b16 is preserved.
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]));
+VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z]));
+// VDATA[63:48].b16 is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_FORMAT\_XYZW 11**
 
 Load 4-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y])); VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z])); VDATA[63 : 48].b16 = 16'B(ConvertFromFormat(MEM[TADDR.W]))
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]));
+VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z]));
+VDATA[63 : 48].b16 = 16'B(ConvertFromFormat(MEM[TADDR.W]))
+```
 
 #### **BUFFER\_STORE\_D16\_FORMAT\_X 12**
 
 Convert 16 bits of data from the low 16 bits of a 32-bit vector input register into 1-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+```
 
 #### **BUFFER\_STORE\_D16\_FORMAT\_XY 13**
 
 Convert 32 bits of data from vector input registers into 2-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16))
+```
 
 #### **BUFFER\_STORE\_D16\_FORMAT\_XYZ 14**
 
 Convert 48 bits of data from vector input registers into 3-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16)); MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16));
+MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16))
+```
 
 #### **BUFFER\_STORE\_D16\_FORMAT\_XYZW 15**
 
 Convert 64 bits of data from vector input registers into 4-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16)); MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16)); MEM[TADDR.W] = ConvertToFormat(32'B(VDATA[63 : 48].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16));
+MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16));
+MEM[TADDR.W] = ConvertToFormat(32'B(VDATA[63 : 48].b16))
+```
 
 #### **BUFFER\_LOAD\_U8 16**
 
 Load 8 bits of unsigned data from a buffer surface, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })
+`VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })`
 
 #### **BUFFER\_LOAD\_I8 17**
 
 Load 8 bits of signed data from a buffer surface, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i8))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i8))`
 
 #### **BUFFER\_LOAD\_U16 18**
 
 Load 16 bits of unsigned data from a buffer surface, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })
+`VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })`
 
 #### **BUFFER\_LOAD\_I16 19**
 
@@ -17860,85 +21726,121 @@ Load 16 bits of signed data from a buffer surface, sign extend to 32 bits and st
 
 Load 32 bits of data from a buffer surface into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32
+`VDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **BUFFER\_LOAD\_B64 21**
 
 Load 64 bits of data from a buffer surface into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```
 
 #### **BUFFER\_LOAD\_B96 22**
 
 Load 96 bits of data from a buffer surface into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```
 
 #### **BUFFER\_LOAD\_B128 23**
 
 Load 128 bits of data from a buffer surface into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32; VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32;
+VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 #### **BUFFER\_STORE\_B8 24**
 
 Store 8 bits of data from a vector register into a buffer surface.
 
-MEM[ADDR].b8 = VDATA[7 : 0]
+`MEM[ADDR].b8 = VDATA[7 : 0]`
 
 #### **BUFFER\_STORE\_B16 25**
 
 Store 16 bits of data from a vector register into a buffer surface.
 
-MEM[ADDR].b16 = VDATA[15 : 0]
+`MEM[ADDR].b16 = VDATA[15 : 0]`
 
 #### **BUFFER\_STORE\_B32 26**
 
 Store 32 bits of data from vector input registers into a buffer surface.
 
-MEM[ADDR].b32 = VDATA[31 : 0]
+`MEM[ADDR].b32 = VDATA[31 : 0]`
 
 #### **BUFFER\_STORE\_B64 27**
 
 Store 64 bits of data from vector input registers into a buffer surface.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```
 
 #### **BUFFER\_STORE\_B96 28**
 
 Store 96 bits of data from vector input registers into a buffer surface.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```
 
 #### **BUFFER\_STORE\_B128 29**
 
 Store 128 bits of data from vector input registers into a buffer surface.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]; MEM[ADDR + 12U].b32 = VDATA[127 : 96]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64];
+MEM[ADDR + 12U].b32 = VDATA[127 : 96]
+```
 
 #### **BUFFER\_LOAD\_D16\_U8 30**
 
 Load 8 bits of unsigned data from a buffer surface, zero extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[31:16] is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_I8 31**
 
 Load 8 bits of signed data from a buffer surface, sign extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8)); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8));
+// VDATA[31:16] is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_B16 32**
 
 Load 16 bits of unsigned data from a buffer surface and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].b16 = MEM[ADDR].b16; // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].b16 = MEM[ADDR].b16;
+// VDATA[31:16] is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_HI\_U8 33**
 
 Load 8 bits of unsigned data from a buffer surface, zero extend to 16 bits and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[15:0] is preserved.
+```
 
 #### **BUFFER\_LOAD\_D16\_HI\_I8 34**
 
@@ -17948,31 +21850,41 @@ Load 8 bits of signed data from a buffer surface, sign extend to 16 bits and sto
 
 Load 16 bits of unsigned data from a buffer surface and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].b16 = MEM[ADDR].b16; // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].b16 = MEM[ADDR].b16;
+// VDATA[15:0] is preserved.
+```
 
 #### **BUFFER\_STORE\_D16\_HI\_B8 36**
 
 Store 8 bits of data from the high 16 bits of a 32-bit vector register into a buffer surface.
 
-MEM[ADDR].b8 = VDATA[23 : 16]
+`MEM[ADDR].b8 = VDATA[23 : 16]`
 
 #### **BUFFER\_STORE\_D16\_HI\_B16 37**
 
 Store 16 bits of data from the high 16 bits of a 32-bit vector register into a buffer surface.
 
-MEM[ADDR].b16 = VDATA[31 : 16]
+`MEM[ADDR].b16 = VDATA[31 : 16]`
 
 #### **BUFFER\_LOAD\_D16\_HI\_FORMAT\_X 38**
 
 Load 1-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into the high 16 bits of a 32-bit vector register. The resource descriptor specifies the data format of the surface.
 
-VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format // VDATA[15:0].b16 is preserved.
+```text
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+// VDATA[15:0].b16 is preserved.
+```
 
 #### **BUFFER\_STORE\_D16\_HI\_FORMAT\_X 39**
 
 Convert 16 bits of data from the high 16 bits of a 32-bit vector input register into 1-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[31 : 16].b16)); // Mem access size depends on format
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[31 : 16].b16));
+// Mem access size depends on format
+```
 
 #### **BUFFER\_GL0\_INV 43**
 
@@ -17986,31 +21898,59 @@ Invalidate the GL1 cache only. Returns ACK to shader.
 
 Swap an unsigned 32-bit integer value in the data register with a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = DATA.b32; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = DATA.b32;
+RETURN_DATA.b32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_CMPSWAP\_B32 52**
 
 Compare two unsigned 32-bit integer values stored in the data comparison register and a location in a buffer surface. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA[31 : 0].u32; cmp = DATA[63 : 32].u32; MEM[ADDR].u32 = tmp == cmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA[31 : 0].u32;
+cmp = DATA[63 : 32].u32;
+MEM[ADDR].u32 = tmp == cmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_ADD\_U32 53**
 
 Add two unsigned 32-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_SUB\_U32 54**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_CSUB\_U32 55**
 
 Subtract an unsigned 32-bit integer location in a buffer surface from a value in the data register and clamp the result to zero. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-declare new\_value : 32'U; old\_value = MEM[ADDR].u32; if old\_value < DATA.u32 then new\_value = 0U else new\_value = old\_value - DATA.u32 endif; MEM[ADDR].u32 = new\_value; RETURN\_DATA.u32 = old\_value
+```text
+declare new_value : 32'U;
+old_value = MEM[ADDR].u32;
+if old_value < DATA.u32 then
+    new_value = 0U
+else
+    new_value = old_value - DATA.u32
+endif;
+MEM[ADDR].u32 = new_value;
+RETURN_DATA.u32 = old_value
+```
 
 #### **BUFFER\_ATOMIC\_MIN\_I32 56**
 
@@ -18039,85 +21979,150 @@ RETURN_DATA.u32 = tmp
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MAX\_U32 59**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_AND\_B32 60**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_OR\_B32 61**
 
 Calculate bitwise OR given two unsigned 32-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp | DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp | DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_XOR\_B32 62**
 
 Calculate bitwise XOR given two unsigned 32-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp ^ DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp ^ DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_INC\_U32 63**
 
 Increment an unsigned 32-bit integer value from a location in a buffer surface with wraparound to 0 if the value exceeds a value in the data register. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_DEC\_U32 64**
 
 Decrement an unsigned 32-bit integer value from a location in a buffer surface with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_SWAP\_B64 65**
 
 Swap an unsigned 64-bit integer value in the data register with a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_CMPSWAP\_B64 66**
 
 Compare two unsigned 64-bit integer values stored in the data comparison register and a location in a buffer surface. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA[63 : 0].u64; cmp = DATA[127 : 64].u64; MEM[ADDR].u64 = tmp == cmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA[63 : 0].u64;
+cmp = DATA[127 : 64].u64;
+MEM[ADDR].u64 = tmp == cmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_ADD\_U64 67**
 
 Add two unsigned 64-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 += DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 += DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_SUB\_U64 68**
 
 Subtract an unsigned 64-bit integer value stored in the data register from a value stored in a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 -= DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 -= DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MIN\_I64 69**
 
 Select the minimum of two signed 64-bit integer inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src < tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src < tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MIN\_U64 70**
 
 Select the minimum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src < tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src < tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MAX\_I64 71**
 
 Select the maximum of two signed 64-bit integer inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src >= tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src >= tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MAX\_U64 72**
 
@@ -18129,37 +22134,65 @@ tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src >= tmp ? src : tmp;
 
 Calculate bitwise AND given two unsigned 64-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp & DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp & DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_OR\_B64 74**
 
 Calculate bitwise OR given two unsigned 64-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp | DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp | DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_XOR\_B64 75**
 
 Calculate bitwise XOR given two unsigned 64-bit integer values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp ^ DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp ^ DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_INC\_U64 76**
 
 Increment an unsigned 64-bit integer value from a location in a buffer surface with wraparound to 0 if the value exceeds a value in the data register. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_DEC\_U64 77**
 
 Decrement an unsigned 64-bit integer value from a location in a buffer surface with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_CMPSWAP\_F32 80**
 
 Compare two single-precision float values stored in the data comparison register and a location in a buffer surface. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA[31 : 0].f32; cmp = DATA[63 : 32].f32; MEM[ADDR].f32 = tmp == cmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA[31 : 0].f32;
+cmp = DATA[63 : 32].f32;
+MEM[ADDR].f32 = tmp == cmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 # **Notes**
 
@@ -18169,7 +22202,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the minimum of two single-precision float inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src < tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -18177,7 +22215,12 @@ tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETU
 
 Select the maximum of two single-precision float inputs, given two values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src > tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src > tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -18187,7 +22230,11 @@ Floating-point compare handles NAN/INF/denorm.
 
 Add two single-precision float values stored in the data register and a location in a buffer surface. Store the original value from buffer surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; MEM[ADDR].f32 += DATA.f32; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+MEM[ADDR].f32 += DATA.f32;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -18201,13 +22248,20 @@ The bitfield map of the MTBUF format is:
 
 Load 1-component formatted data from a buffer surface, convert the data to 32 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format
+```text
+VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+```
 
 #### **TBUFFER\_LOAD\_FORMAT\_XY 1**
 
 Load 2-component formatted data from a buffer surface, convert the data to 32 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format VDATA[63 : 32].b32 = ConvertFromFormat(MEM[TADDR.Y])
+```text
+VDATA[31 : 0].b32 = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+VDATA[63 : 32].b32 = ConvertFromFormat(MEM[TADDR.Y])
+```
 
 #### **TBUFFER\_LOAD\_FORMAT\_XYZ 2**
 
@@ -18236,13 +22290,20 @@ VDATA[127 : 96].b32 = ConvertFromFormat(MEM[TADDR.W])
 
 Convert 32 bits of data from vector input registers into 1-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32); // Mem access size depends on format
+```text
+MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32);
+// Mem access size depends on format
+```
 
 #### **TBUFFER\_STORE\_FORMAT\_XY 5**
 
 Convert 64 bits of data from vector input registers into 2-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(VDATA[63 : 32].b32)
+```text
+MEM[TADDR.X] = ConvertToFormat(VDATA[31 : 0].b32);
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(VDATA[63 : 32].b32)
+```
 
 #### **TBUFFER\_STORE\_FORMAT\_XYZ 6**
 
@@ -18274,49 +22335,87 @@ MEM[TADDR.W] = ConvertToFormat(VDATA[127 : 96].b32)
 
 Load 1-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format // VDATA[31:16].b16 is preserved.
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+// VDATA[31:16].b16 is preserved.
+```
 
 #### **TBUFFER\_LOAD\_D16\_FORMAT\_XY 9**
 
 Load 2-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]))
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]))
+```
 
 #### **TBUFFER\_LOAD\_D16\_FORMAT\_XYZ 10**
 
 Load 3-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y])); VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z])); // VDATA[63:48].b16 is preserved.
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]));
+VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z]));
+// VDATA[63:48].b16 is preserved.
+```
 
 #### **TBUFFER\_LOAD\_D16\_FORMAT\_XYZW 11**
 
 Load 4-component formatted data from a buffer surface, convert the data to packed 16 bit integral or floating point format, then store the result into a vector register. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X])); // Mem access size depends on format VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y])); VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z])); VDATA[63 : 48].b16 = 16'B(ConvertFromFormat(MEM[TADDR.W]))
+```text
+VDATA[15 : 0].b16 = 16'B(ConvertFromFormat(MEM[TADDR.X]));
+// Mem access size depends on format
+VDATA[31 : 16].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Y]));
+VDATA[47 : 32].b16 = 16'B(ConvertFromFormat(MEM[TADDR.Z]));
+VDATA[63 : 48].b16 = 16'B(ConvertFromFormat(MEM[TADDR.W]))
+```
 
 #### **TBUFFER\_STORE\_D16\_FORMAT\_X 12**
 
 Convert 16 bits of data from vector input registers into 1-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+```
 
 #### **TBUFFER\_STORE\_D16\_FORMAT\_XY 13**
 
 Convert 32 bits of data from vector input registers into 2-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16))
+```
 
 #### **TBUFFER\_STORE\_D16\_FORMAT\_XYZ 14**
 
 Convert 48 bits of data from vector input registers into 3-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16)); MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16));
+MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16))
+```
 
 #### **TBUFFER\_STORE\_D16\_FORMAT\_XYZW 15**
 
 Convert 64 bits of data from vector input registers into 4-component formatted data and store the data into a buffer surface. The instruction specifies the data format of the surface, overriding the resource descriptor.
 
-MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16)); // Mem access size depends on format MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16)); MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16)); MEM[TADDR.W] = ConvertToFormat(32'B(VDATA[63 : 48].b16))
+```text
+MEM[TADDR.X] = ConvertToFormat(32'B(VDATA[15 : 0].b16));
+// Mem access size depends on format
+MEM[TADDR.Y] = ConvertToFormat(32'B(VDATA[31 : 16].b16));
+MEM[TADDR.Z] = ConvertToFormat(32'B(VDATA[47 : 32].b16));
+MEM[TADDR.W] = ConvertToFormat(32'B(VDATA[63 : 48].b16))
+```
 
 # <span id="page-604-0"></span>**16.18. MIMG Instructions**
 
@@ -18370,7 +22469,11 @@ Store a texel from a vector register to a user-specified miplevel in an image su
 
 Swap an unsigned 32-bit integer value in the data register with a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = DATA.b32; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = DATA.b32;
+RETURN_DATA.b32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_CMPSWAP 11**
 
@@ -18382,19 +22485,32 @@ cmp = DATA[63 : 32].u32; MEM[ADDR].u32 = tmp == cmp ? src : tmp; RETURN\_DATA.u3
 
 Add two unsigned 32-bit integer values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_SUB 13**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_SMIN 14**
 
 Select the minimum of two signed 32-bit integer inputs, given two values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src < tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src < tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_UMIN 15**
 
@@ -18406,43 +22522,75 @@ src = DATA.u32; MEM[ADDR].u32 = src < tmp ? src : tmp; RETURN\_DATA.u32 = tmp
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_UMAX 17**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_AND 18**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_OR 19**
 
 Calculate bitwise OR given two unsigned 32-bit integer values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp | DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp | DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_XOR 20**
 
 Calculate bitwise XOR given two unsigned 32-bit integer values stored in the data register and a location in an image surface. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp ^ DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp ^ DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_INC 21**
 
 Increment an unsigned 32-bit integer value from a location in an image surface with wraparound to 0 if the value exceeds a value in the data register. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **IMAGE\_ATOMIC\_DEC 22**
 
 Decrement an unsigned 32-bit integer value from a location in an image surface with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from image surface into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **IMAGE\_GET\_RESINFO 23**
 
@@ -18786,79 +22934,98 @@ Flat instructions look at the per work-item address and determine for each work-
 
 Load 8 bits of unsigned data from the flat aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })
+`VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })`
 
 #### **FLAT\_LOAD\_I8 17**
 
 Load 8 bits of signed data from the flat aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i8))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i8))`
 
 #### **FLAT\_LOAD\_U16 18**
 
 Load 16 bits of unsigned data from the flat aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })
+`VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })`
 
 #### **FLAT\_LOAD\_I16 19**
 
 Load 16 bits of signed data from the flat aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i16))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i16))`
 
 #### **FLAT\_LOAD\_B32 20**
 
 Load 32 bits of data from the flat aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32
+`VDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **FLAT\_LOAD\_B64 21**
 
 Load 64 bits of data from the flat aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```
 
 #### **FLAT\_LOAD\_B96 22**
 
 Load 96 bits of data from the flat aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```
 
 #### **FLAT\_LOAD\_B128 23**
 
 Load 128 bits of data from the flat aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32; VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32;
+VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 #### **FLAT\_STORE\_B8 24**
 
 Store 8 bits of data from a vector register into the flat aperture.
 
-MEM[ADDR].b8 = VDATA[7 : 0]
+`MEM[ADDR].b8 = VDATA[7 : 0]`
 
 #### **FLAT\_STORE\_B16 25**
 
 Store 16 bits of data from a vector register into the flat aperture.
 
-MEM[ADDR].b16 = VDATA[15 : 0]
+`MEM[ADDR].b16 = VDATA[15 : 0]`
 
 #### **FLAT\_STORE\_B32 26**
 
 Store 32 bits of data from vector input registers into the flat aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]
+`MEM[ADDR].b32 = VDATA[31 : 0]`
 
 #### **FLAT\_STORE\_B64 27**
 
 Store 64 bits of data from vector input registers into the flat aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```
 
 #### **FLAT\_STORE\_B96 28**
 
 Store 96 bits of data from vector input registers into the flat aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```
 
 #### **FLAT\_STORE\_B128 29**
 
@@ -18870,19 +23037,28 @@ MEM[ADDR + 8U].b32 = VDATA[95 : 64]; MEM[ADDR + 12U].b32 = VDATA[127 : 96]
 
 Load 8 bits of unsigned data from the flat aperture, zero extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[31:16] is preserved.
+```
 
 #### **FLAT\_LOAD\_D16\_I8 31**
 
 Load 8 bits of signed data from the flat aperture, sign extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8)); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8));
+// VDATA[31:16] is preserved.
+```
 
 #### **FLAT\_LOAD\_D16\_B16 32**
 
 Load 16 bits of unsigned data from the flat aperture and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].b16 = MEM[ADDR].b16; // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].b16 = MEM[ADDR].b16;
+// VDATA[31:16] is preserved.
+```
 
 #### **FLAT\_LOAD\_D16\_HI\_U8 33**
 
@@ -18906,19 +23082,22 @@ VDATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8));
 
 Load 16 bits of unsigned data from the flat aperture and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].b16 = MEM[ADDR].b16; // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].b16 = MEM[ADDR].b16;
+// VDATA[15:0] is preserved.
+```
 
 #### **FLAT\_STORE\_D16\_HI\_B8 36**
 
 Store 8 bits of data from the high 16 bits of a 32-bit vector register into the flat aperture.
 
-MEM[ADDR].b8 = VDATA[23 : 16]
+`MEM[ADDR].b8 = VDATA[23 : 16]`
 
 #### **FLAT\_STORE\_D16\_HI\_B16 37**
 
 Store 16 bits of data from the high 16 bits of a 32-bit vector register into the flat aperture.
 
-MEM[ADDR].b16 = VDATA[31 : 16]
+`MEM[ADDR].b16 = VDATA[31 : 16]`
 
 #### **FLAT\_ATOMIC\_SWAP\_B32 51**
 
@@ -18946,13 +23125,21 @@ RETURN_DATA.u32 = tmp
 
 Add two unsigned 32-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_SUB\_U32 54**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MIN\_I32 56**
 
@@ -18980,49 +23167,85 @@ RETURN_DATA.u32 = tmp
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MAX\_U32 59**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_AND\_B32 60**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_OR\_B32 61**
 
 Calculate bitwise OR given two unsigned 32-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp | DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp | DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_XOR\_B32 62**
 
 Calculate bitwise XOR given two unsigned 32-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp ^ DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp ^ DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_INC\_U32 63**
 
 Increment an unsigned 32-bit integer value from a location in the flat aperture with wraparound to 0 if the value exceeds a value in the data register. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_DEC\_U32 64**
 
 Decrement an unsigned 32-bit integer value from a location in the flat aperture with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **FLAT\_ATOMIC\_SWAP\_B64 65**
 
 Swap an unsigned 64-bit integer value in the data register with a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_CMPSWAP\_B64 66**
 
@@ -19030,37 +23253,66 @@ Compare two unsigned 64-bit integer values stored in the data comparison registe
 
 NOTE: RETURN\_DATA[2:3] is not modified.
 
-tmp = MEM[ADDR].u64; src = DATA[63 : 0].u64; cmp = DATA[127 : 64].u64; MEM[ADDR].u64 = tmp == cmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA[63 : 0].u64;
+cmp = DATA[127 : 64].u64;
+MEM[ADDR].u64 = tmp == cmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_ADD\_U64 67**
 
 Add two unsigned 64-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 += DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 += DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_SUB\_U64 68**
 
 Subtract an unsigned 64-bit integer value stored in the data register from a value stored in a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 -= DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 -= DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MIN\_I64 69**
 
 Select the minimum of two signed 64-bit integer inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src < tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src < tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MIN\_U64 70**
 
 Select the minimum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src < tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src < tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MAX\_I64 71**
 
 Select the maximum of two signed 64-bit integer inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src >= tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src >= tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_MAX\_U64 72**
 
@@ -19072,37 +23324,65 @@ tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src >= tmp ? src : tmp;
 
 Calculate bitwise AND given two unsigned 64-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp & DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp & DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_OR\_B64 74**
 
 Calculate bitwise OR given two unsigned 64-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp | DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp | DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_XOR\_B64 75**
 
 Calculate bitwise XOR given two unsigned 64-bit integer values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp ^ DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp ^ DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_INC\_U64 76**
 
 Increment an unsigned 64-bit integer value from a location in the flat aperture with wraparound to 0 if the value exceeds a value in the data register. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_DEC\_U64 77**
 
 Decrement an unsigned 64-bit integer value from a location in the flat aperture with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_CMPSWAP\_F32 80**
 
 Compare two single-precision float values stored in the data comparison register and a location in the flat aperture. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA[31 : 0].f32; cmp = DATA[63 : 32].f32; MEM[ADDR].f32 = tmp == cmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA[31 : 0].f32;
+cmp = DATA[63 : 32].f32;
+MEM[ADDR].f32 = tmp == cmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 # **Notes**
 
@@ -19112,7 +23392,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the minimum of two single-precision float inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src < tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -19120,7 +23405,12 @@ tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETU
 
 Select the maximum of two single-precision float inputs, given two values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src > tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src > tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -19130,7 +23420,11 @@ Floating-point compare handles NAN/INF/denorm.
 
 Add two single-precision float values stored in the data register and a location in the flat aperture. Store the original value from flat aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; MEM[ADDR].f32 += DATA.f32; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+MEM[ADDR].f32 += DATA.f32;
+RETURN_DATA.f32 = tmp
+```
 
 #### **Notes**
 
@@ -19144,31 +23438,31 @@ Scratch instructions are like Flat, but assume all work-item addresses fall in s
 
 Load 8 bits of unsigned data from the scratch aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })
+`VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })`
 
 #### **SCRATCH\_LOAD\_I8 17**
 
 Load 8 bits of signed data from the scratch aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i8))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i8))`
 
 #### **SCRATCH\_LOAD\_U16 18**
 
 Load 16 bits of unsigned data from the scratch aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })
+`VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })`
 
 #### **SCRATCH\_LOAD\_I16 19**
 
 Load 16 bits of signed data from the scratch aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i16))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i16))`
 
 #### **SCRATCH\_LOAD\_B32 20**
 
 Load 32 bits of data from the scratch aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32
+`VDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **SCRATCH\_LOAD\_B64 21**
 
@@ -19193,19 +23487,24 @@ VDATA[95 : 64] = MEM[ADDR + 8U].b32
 
 Load 128 bits of data from the scratch aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32; VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32;
+VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 #### **SCRATCH\_STORE\_B8 24**
 
 Store 8 bits of data from a vector register into the scratch aperture.
 
-MEM[ADDR].b8 = VDATA[7 : 0]
+`MEM[ADDR].b8 = VDATA[7 : 0]`
 
 #### **SCRATCH\_STORE\_B16 25**
 
 Store 16 bits of data from a vector register into the scratch aperture.
 
-MEM[ADDR].b16 = VDATA[15 : 0]
+`MEM[ADDR].b16 = VDATA[15 : 0]`
 
 #### **SCRATCH\_STORE\_B32 26**
 
@@ -19228,49 +23527,76 @@ MEM[ADDR + 4U].b32 = VDATA[63 : 32]
 
 Store 96 bits of data from vector input registers into the scratch aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```
 
 #### **SCRATCH\_STORE\_B128 29**
 
 Store 128 bits of data from vector input registers into the scratch aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]; MEM[ADDR + 12U].b32 = VDATA[127 : 96]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64];
+MEM[ADDR + 12U].b32 = VDATA[127 : 96]
+```
 
 #### **SCRATCH\_LOAD\_D16\_U8 30**
 
 Load 8 bits of unsigned data from the scratch aperture, zero extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[31:16] is preserved.
+```
 
 #### **SCRATCH\_LOAD\_D16\_I8 31**
 
 Load 8 bits of signed data from the scratch aperture, sign extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8)); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8));
+// VDATA[31:16] is preserved.
+```
 
 #### **SCRATCH\_LOAD\_D16\_B16 32**
 
 Load 16 bits of unsigned data from the scratch aperture and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].b16 = MEM[ADDR].b16; // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].b16 = MEM[ADDR].b16;
+// VDATA[31:16] is preserved.
+```
 
 #### **SCRATCH\_LOAD\_D16\_HI\_U8 33**
 
 Load 8 bits of unsigned data from the scratch aperture, zero extend to 16 bits and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[15:0] is preserved.
+```
 
 #### **SCRATCH\_LOAD\_D16\_HI\_I8 34**
 
 Load 8 bits of signed data from the scratch aperture, sign extend to 16 bits and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8)); // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8));
+// VDATA[15:0] is preserved.
+```
 
 #### **SCRATCH\_LOAD\_D16\_HI\_B16 35**
 
 Load 16 bits of unsigned data from the scratch aperture and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].b16 = MEM[ADDR].b16; // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].b16 = MEM[ADDR].b16;
+// VDATA[15:0] is preserved.
+```
 
 #### **SCRATCH\_STORE\_D16\_HI\_B8 36**
 
@@ -19280,7 +23606,7 @@ Store 8 bits of data from the high 16 bits of a 32-bit vector register into the 
 
 Store 16 bits of data from the high 16 bits of a 32-bit vector register into the scratch aperture.
 
-MEM[ADDR].b16 = VDATA[31 : 16]
+`MEM[ADDR].b16 = VDATA[31 : 16]`
 
 # <span id="page-639-0"></span>**16.20.3. Global Instructions**
 
@@ -19290,79 +23616,98 @@ Global instructions are like Flat, but assume all work-item addresses fall in gl
 
 Load 8 bits of unsigned data from the global aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })
+`VDATA.u32 = 32'U({ 24'0U, MEM[ADDR].u8 })`
 
 #### **GLOBAL\_LOAD\_I8 17**
 
 Load 8 bits of signed data from the global aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i8))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i8))`
 
 #### **GLOBAL\_LOAD\_U16 18**
 
 Load 16 bits of unsigned data from the global aperture, zero extend to 32 bits and store the result into a vector register.
 
-VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })
+`VDATA.u32 = 32'U({ 16'0U, MEM[ADDR].u16 })`
 
 #### **GLOBAL\_LOAD\_I16 19**
 
 Load 16 bits of signed data from the global aperture, sign extend to 32 bits and store the result into a vector register.
 
-VDATA.i32 = 32'I(signext(MEM[ADDR].i16))
+`VDATA.i32 = 32'I(signext(MEM[ADDR].i16))`
 
 #### **GLOBAL\_LOAD\_B32 20**
 
 Load 32 bits of data from the global aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32
+`VDATA[31 : 0] = MEM[ADDR].b32`
 
 #### **GLOBAL\_LOAD\_B64 21**
 
 Load 64 bits of data from the global aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32
+```
 
 #### **GLOBAL\_LOAD\_B96 22**
 
 Load 96 bits of data from the global aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32
+```
 
 #### **GLOBAL\_LOAD\_B128 23**
 
 Load 128 bits of data from the global aperture into a vector register.
 
-VDATA[31 : 0] = MEM[ADDR].b32; VDATA[63 : 32] = MEM[ADDR + 4U].b32; VDATA[95 : 64] = MEM[ADDR + 8U].b32; VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```text
+VDATA[31 : 0] = MEM[ADDR].b32;
+VDATA[63 : 32] = MEM[ADDR + 4U].b32;
+VDATA[95 : 64] = MEM[ADDR + 8U].b32;
+VDATA[127 : 96] = MEM[ADDR + 12U].b32
+```
 
 #### **GLOBAL\_STORE\_B8 24**
 
 Store 8 bits of data from a vector register into the global aperture.
 
-MEM[ADDR].b8 = VDATA[7 : 0]
+`MEM[ADDR].b8 = VDATA[7 : 0]`
 
 #### **GLOBAL\_STORE\_B16 25**
 
 Store 16 bits of data from a vector register into the global aperture.
 
-MEM[ADDR].b16 = VDATA[15 : 0]
+`MEM[ADDR].b16 = VDATA[15 : 0]`
 
 #### **GLOBAL\_STORE\_B32 26**
 
 Store 32 bits of data from vector input registers into the global aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]
+`MEM[ADDR].b32 = VDATA[31 : 0]`
 
 #### **GLOBAL\_STORE\_B64 27**
 
 Store 64 bits of data from vector input registers into the global aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32]
+```
 
 #### **GLOBAL\_STORE\_B96 28**
 
 Store 96 bits of data from vector input registers into the global aperture.
 
-MEM[ADDR].b32 = VDATA[31 : 0]; MEM[ADDR + 4U].b32 = VDATA[63 : 32]; MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```text
+MEM[ADDR].b32 = VDATA[31 : 0];
+MEM[ADDR + 4U].b32 = VDATA[63 : 32];
+MEM[ADDR + 8U].b32 = VDATA[95 : 64]
+```
 
 #### **GLOBAL\_STORE\_B128 29**
 
@@ -19374,19 +23719,28 @@ MEM[ADDR + 8U].b32 = VDATA[95 : 64]; MEM[ADDR + 12U].b32 = VDATA[127 : 96]
 
 Load 8 bits of unsigned data from the global aperture, zero extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 }); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].u16 = 16'U({ 8'0U, MEM[ADDR].u8 });
+// VDATA[31:16] is preserved.
+```
 
 #### **GLOBAL\_LOAD\_D16\_I8 31**
 
 Load 8 bits of signed data from the global aperture, sign extend to 16 bits and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8)); // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].i16 = 16'I(signext(MEM[ADDR].i8));
+// VDATA[31:16] is preserved.
+```
 
 #### **GLOBAL\_LOAD\_D16\_B16 32**
 
 Load 16 bits of unsigned data from the global aperture and store the result into the low 16 bits of a 32-bit vector register.
 
-VDATA[15 : 0].b16 = MEM[ADDR].b16; // VDATA[31:16] is preserved.
+```text
+VDATA[15 : 0].b16 = MEM[ADDR].b16;
+// VDATA[31:16] is preserved.
+```
 
 #### **GLOBAL\_LOAD\_D16\_HI\_U8 33**
 
@@ -19410,19 +23764,22 @@ VDATA[31 : 16].i16 = 16'I(signext(MEM[ADDR].i8));
 
 Load 16 bits of unsigned data from the global aperture and store the result into the high 16 bits of a 32-bit vector register.
 
-VDATA[31 : 16].b16 = MEM[ADDR].b16; // VDATA[15:0] is preserved.
+```text
+VDATA[31 : 16].b16 = MEM[ADDR].b16;
+// VDATA[15:0] is preserved.
+```
 
 #### **GLOBAL\_STORE\_D16\_HI\_B8 36**
 
 Store 8 bits of data from the high 16 bits of a 32-bit vector register into the global aperture.
 
-MEM[ADDR].b8 = VDATA[23 : 16]
+`MEM[ADDR].b8 = VDATA[23 : 16]`
 
 #### **GLOBAL\_STORE\_D16\_HI\_B16 37**
 
 Store 16 bits of data from the high 16 bits of a 32-bit vector register into the global aperture.
 
-MEM[ADDR].b16 = VDATA[31 : 16]
+`MEM[ADDR].b16 = VDATA[31 : 16]`
 
 #### **GLOBAL\_LOAD\_ADDTID\_B32 40**
 
@@ -19446,169 +23803,305 @@ MEM[SGPR_ADDR[63 : 0] + INST_OFFSET[11 : 0].b64 + 64'B(laneID.i32 * 4)].u32 = DA
 
 Swap an unsigned 32-bit integer value in the data register with a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = DATA.b32; RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = DATA.b32;
+RETURN_DATA.b32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_CMPSWAP\_B32 52**
 
 Compare two unsigned 32-bit integer values stored in the data comparison register and a location in the global aperture. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA[31 : 0].u32; cmp = DATA[63 : 32].u32; MEM[ADDR].u32 = tmp == cmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA[31 : 0].u32;
+cmp = DATA[63 : 32].u32;
+MEM[ADDR].u32 = tmp == cmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_ADD\_U32 53**
 
 Add two unsigned 32-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 += DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 += DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_SUB\_U32 54**
 
 Subtract an unsigned 32-bit integer value stored in the data register from a value stored in a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; MEM[ADDR].u32 -= DATA.u32; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+MEM[ADDR].u32 -= DATA.u32;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_CSUB\_U32 55**
 
 Subtract an unsigned 32-bit integer location in the global aperture from a value in the data register and clamp the result to zero. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-declare new\_value : 32'U; old\_value = MEM[ADDR].u32; if old\_value < DATA.u32 then new\_value = 0U else new\_value = old\_value - DATA.u32 endif; MEM[ADDR].u32 = new\_value; RETURN\_DATA.u32 = old\_value
+```text
+declare new_value : 32'U;
+old_value = MEM[ADDR].u32;
+if old_value < DATA.u32 then
+    new_value = 0U
+else
+    new_value = old_value - DATA.u32
+endif;
+MEM[ADDR].u32 = new_value;
+RETURN_DATA.u32 = old_value
+```
 
 #### **GLOBAL\_ATOMIC\_MIN\_I32 56**
 
 Select the minimum of two signed 32-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src < tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src < tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MIN\_U32 57**
 
 Select the minimum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src < tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src < tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MAX\_I32 58**
 
 Select the maximum of two signed 32-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i32; src = DATA.i32; MEM[ADDR].i32 = src >= tmp ? src : tmp; RETURN\_DATA.i32 = tmp
+```text
+tmp = MEM[ADDR].i32;
+src = DATA.i32;
+MEM[ADDR].i32 = src >= tmp ? src : tmp;
+RETURN_DATA.i32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MAX\_U32 59**
 
 Select the maximum of two unsigned 32-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = src >= tmp ? src : tmp; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = src >= tmp ? src : tmp;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_AND\_B32 60**
 
 Calculate bitwise AND given two unsigned 32-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp & DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp & DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_OR\_B32 61**
 
 Calculate bitwise OR given two unsigned 32-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp | DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp | DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_XOR\_B32 62**
 
 Calculate bitwise XOR given two unsigned 32-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b32; MEM[ADDR].b32 = (tmp ^ DATA.b32); RETURN\_DATA.b32 = tmp
+```text
+tmp = MEM[ADDR].b32;
+MEM[ADDR].b32 = (tmp ^ DATA.b32);
+RETURN_DATA.b32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_INC\_U32 63**
 
 Increment an unsigned 32-bit integer value from a location in the global aperture with wraparound to 0 if the value exceeds a value in the data register. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = tmp >= src ? 0U : tmp + 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_DEC\_U32 64**
 
 Decrement an unsigned 32-bit integer value from a location in the global aperture with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u32; src = DATA.u32; MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U; RETURN\_DATA.u32 = tmp
+```text
+tmp = MEM[ADDR].u32;
+src = DATA.u32;
+MEM[ADDR].u32 = ((tmp == 0U) || (tmp > src)) ? src : tmp - 1U;
+RETURN_DATA.u32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_SWAP\_B64 65**
 
 Swap an unsigned 64-bit integer value in the data register with a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_CMPSWAP\_B64 66**
 
 Compare two unsigned 64-bit integer values stored in the data comparison register and a location in the global aperture. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA[63 : 0].u64; cmp = DATA[127 : 64].u64; MEM[ADDR].u64 = tmp == cmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA[63 : 0].u64;
+cmp = DATA[127 : 64].u64;
+MEM[ADDR].u64 = tmp == cmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_ADD\_U64 67**
 
 Add two unsigned 64-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 += DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 += DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_SUB\_U64 68**
 
 Subtract an unsigned 64-bit integer value stored in the data register from a value stored in a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; MEM[ADDR].u64 -= DATA.u64; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+MEM[ADDR].u64 -= DATA.u64;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MIN\_I64 69**
 
 Select the minimum of two signed 64-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src < tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src < tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MIN\_U64 70**
 
 Select the minimum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src < tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src < tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MAX\_I64 71**
 
 Select the maximum of two signed 64-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].i64; src = DATA.i64; MEM[ADDR].i64 = src >= tmp ? src : tmp; RETURN\_DATA.i64 = tmp
+```text
+tmp = MEM[ADDR].i64;
+src = DATA.i64;
+MEM[ADDR].i64 = src >= tmp ? src : tmp;
+RETURN_DATA.i64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MAX\_U64 72**
 
 Select the maximum of two unsigned 64-bit integer inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = src >= tmp ? src : tmp; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = src >= tmp ? src : tmp;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_AND\_B64 73**
 
 Calculate bitwise AND given two unsigned 64-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp & DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp & DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_OR\_B64 74**
 
 Calculate bitwise OR given two unsigned 64-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp | DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp | DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_XOR\_B64 75**
 
 Calculate bitwise XOR given two unsigned 64-bit integer values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].b64; MEM[ADDR].b64 = (tmp ^ DATA.b64); RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = (tmp ^ DATA.b64);
+RETURN_DATA.b64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_INC\_U64 76**
 
 Increment an unsigned 64-bit integer value from a location in the global aperture with wraparound to 0 if the value exceeds a value in the data register. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_DEC\_U64 77**
 
 Decrement an unsigned 64-bit integer value from a location in the global aperture with wraparound to a value in the data register if the decrement yields a negative value. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].u64; src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_CMPSWAP\_F32 80**
 
 Compare two single-precision float values stored in the data comparison register and a location in the global aperture. Modify the memory location with a value in the data source register iff the comparison is equal. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA[31 : 0].f32; cmp = DATA[63 : 32].f32; MEM[ADDR].f32 = tmp == cmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA[31 : 0].f32;
+cmp = DATA[63 : 32].f32;
+MEM[ADDR].f32 = tmp == cmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 # **Notes**
 
@@ -19618,7 +24111,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the minimum of two single-precision float inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src < tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src < tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 # **Notes**
 
@@ -19628,13 +24126,22 @@ Floating-point compare handles NAN/INF/denorm.
 
 Select the maximum of two single-precision float inputs, given two values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; src = DATA.f32; MEM[ADDR].f32 = src > tmp ? src : tmp; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+src = DATA.f32;
+MEM[ADDR].f32 = src > tmp ? src : tmp;
+RETURN_DATA.f32 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_ADD\_F32 86**
 
 Add two single-precision float values stored in the data register and a location in the global aperture. Store the original value from global aperture into a vector register iff the GLC bit is set.
 
-tmp = MEM[ADDR].f32; MEM[ADDR].f32 += DATA.f32; RETURN\_DATA.f32 = tmp
+```text
+tmp = MEM[ADDR].f32;
+MEM[ADDR].f32 += DATA.f32;
+RETURN_DATA.f32 = tmp
+```
 
 ### **Notes**
 
