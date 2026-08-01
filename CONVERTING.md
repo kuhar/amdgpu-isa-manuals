@@ -179,8 +179,7 @@ The preparation script performs these mechanical steps:
 8. Link each contents-table entry to the corresponding explicit page anchor.
    The script reports entries whose headings or anchors require manual repair.
 
-For manuals with explicit `Expression` headings, restore the source
-pseudocode layout after importing:
+For prose-style manuals, restore the source pseudocode layout after importing:
 
 ```sh
 ./scripts/format-manual-expressions.py \
@@ -189,18 +188,28 @@ pseudocode layout after importing:
 ```
 
 This pass uses Poppler's `pdftotext -layout` output as the source of line
-breaks and indentation. A simple expression of at most 100 characters is
-wrapped in inline code; multiline, control-flow, comment-bearing, and longer
-expressions use fenced `text` blocks. Markdown escapes inside matched code are
-removed because code spans and blocks display those characters literally.
+breaks and indentation. It automatically handles both explicitly labelled
+`Expression` sections, as in CDNA5, and unlabelled pseudocode between
+instruction entries, as in CDNA3/4 and RDNA3/3.5/4. A simple expression of at
+most 100 characters is wrapped in inline code; multiline, control-flow,
+comment-bearing, and longer expressions use fenced `text` blocks. Markdown
+escapes inside matched code are removed because code spans and blocks display
+those characters literally.
 
 Matching uses the instruction mnemonic and opcode when they are available,
-with document order and normalized source text as fallbacks. Only an explicit
-`Expression` section is replaced, so prose accidentally joined to it at a page
-boundary is moved below the code block. Exact source-suffix matches also restore
-code prefixes dropped by the conversion. Sections that cannot be matched are
-reported and left unchanged for manual comparison. The command is idempotent;
-use `--verbose` to list unmatched sections.
+with document order and normalized source text as fallbacks. In explicitly
+labelled manuals, prose accidentally joined to an expression at a page
+boundary is moved below the code block, and exact source-suffix matches restore
+dropped code prefixes. In unlabelled manuals, only exact normalized source
+matches inside the corresponding instruction entry are changed. Existing code
+spans and fences are retained. Sections that cannot be matched are reported
+and left unchanged for manual comparison. The command is idempotent; use
+`--verbose` to list unmatched sections.
+
+CDNA1/2, RDNA1/2, and the Vega manuals use a different publication layout:
+operations are already isolated in a dedicated Markdown table column. Do not
+run block formatting inside those cells because fenced blocks would break the
+table structure.
 
 For a white paper, select the alternate filenames and notice explicitly. The
 repeatable `--skip-image` option records images rejected during the visual
@@ -348,6 +357,22 @@ The pinned CPU stack and the TheRock-backed CPU run produced byte-identical
 Markdown and JPEGs on the 54-page smoke sample. Metadata differed only in
 sub-pixel floating-point polygon coordinates, which is why the committed full
 metadata is generated with the pinned CPU environment above.
+
+## Prose-style expression formatting records
+
+The unlabelled manuals were formatted from exact source-text matches. The
+"unchanged" column counts instruction entries for which the PDF contained a
+code-like candidate but the Markdown did not contain an exact normalized
+match; these entries were preserved for source comparison. Matches inside
+Markdown tables are also counted separately and preserved.
+
+| Family  | Matched source blocks | New inline spans | New fenced blocks | Existing formatted blocks | Protected table matches | Unchanged entries |
+|---------|----------------------:|-----------------:|------------------:|--------------------------:|------------------------:|------------------:|
+| CDNA3   | 1,414                 | 309              | 951               | 154                       | 13                      | 84                |
+| CDNA4   | 1,489                 | 325              | 979               | 185                       | 14                      | 93                |
+| RDNA3   | 1,300                 | 388              | 658               | 254                       | 0                       | 70                |
+| RDNA3.5 | 1,394                 | 481              | 783               | 130                       | 0                       | 71                |
+| RDNA4   | 1,450                 | 480              | 837               | 133                       | 0                       | 97                |
 
 ## White paper conversion records
 

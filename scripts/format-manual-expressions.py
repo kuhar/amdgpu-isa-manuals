@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Restore PDF pseudocode layout in explicitly headed expression sections."""
+"""Restore source PDF layout for pseudocode in converted ISA manuals."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pathlib import Path
 EXPRESSION_HEADING = re.compile(r"^#{1,6}\s+\*\*Expression\*\*\s*$")
 ANY_HEADING = re.compile(r"^#{1,6}\s+")
 PAGE_FOOTER = re.compile(r"\b\d+\s+of\s+\d+$")
-DOCUMENT_HEADER = re.compile(r'^".*" Instruction Set Architecture$')
+DOCUMENT_HEADER = re.compile(r'^.*Instruction Set Architecture$')
 SOURCE_INSTRUCTION = re.compile(
     r"^\s*([A-Z][A-Z0-9_]+)\s+(\d+(?:\s*,\s*\d+)*)\s*$"
 )
@@ -27,6 +27,11 @@ MARKDOWN_INSTRUCTION = re.compile(
 MARKDOWN_ESCAPES = frozenset(r"_*[]{}")
 CONTROL_FLOW = re.compile(
     r"(?:^|\W)(?:if|then|else|endif|for|while|do|endfor|endwhile)(?:\W|$)",
+    re.IGNORECASE,
+)
+CODE_SIGNAL = re.compile(
+    r"(?<![<>!])=(?!=)|==|!=|<=|>=|;|//|"
+    r"\b(?:if|elsif|else|endif|for|endfor|while|endwhile|declare|return|break)\b",
     re.IGNORECASE,
 )
 
@@ -42,6 +47,22 @@ class SourceExpression:
 @dataclass(frozen=True)
 class MarkdownExpression:
     instruction: tuple[str, str] | None
+    heading_index: int
+    body_start: int
+    body_end: int
+    line_number: int
+
+
+@dataclass(frozen=True)
+class SourceCodeBlock:
+    instruction: tuple[str, str]
+    text: str
+    normalized: str
+
+
+@dataclass(frozen=True)
+class MarkdownInstruction:
+    instruction: tuple[str, str]
     heading_index: int
     body_start: int
     body_end: int
@@ -203,6 +224,89 @@ def source_expressions(pdf: Path) -> list[SourceExpression]:
     return expressions
 
 
+def looks_like_code(text: str, normalized: str) -> bool:
+    """Reject indented tables, bullets, and prose surrounding pseudocode."""
+    if len(normalized) < 12:
+        return False
+    if text.lstrip().startswith(("•", "Table ", "where:", "Reserved")):
+        return False
+    return bool(CODE_SIGNAL.search(text))
+
+
+def source_instruction_blocks(pdf: Path) -> list[SourceCodeBlock]:
+    """Extract code-like indented blocks from unheaded instruction entries."""
+    lines = pdf_text(pdf).splitlines()
+    headers: list[tuple[int, tuple[str, str]]] = []
+    for index, line in enumerate(lines):
+        match = SOURCE_INSTRUCTION.fullmatch(line)
+        if not match or match.start(2) < 20:
+            continue
+        headers.append(
+            (
+                index,
+                (match.group(1), re.sub(r"\s+", "", match.group(2))),
+            )
+        )
+
+    blocks: list[SourceCodeBlock] = []
+    seen: set[tuple[tuple[str, str], str]] = set()
+    for header_index, (start, instruction) in enumerate(headers):
+        end = (
+            headers[header_index + 1][0]
+            if header_index + 1 < len(headers)
+            else len(lines)
+        )
+        index = start + 1
+        while index < end:
+            if (
+                not lines[index].strip()
+                or not lines[index][:1].isspace()
+                or is_page_furniture(lines[index])
+            ):
+                index += 1
+                continue
+
+            body: list[str] = []
+            while index < end:
+                if (
+                    lines[index].strip()
+                    and lines[index][:1].isspace()
+                    and not is_page_furniture(lines[index])
+                ):
+                    body.append(lines[index].rstrip())
+                    index += 1
+                    continue
+
+                lookahead = index
+                crossed_page = False
+                while lookahead < end and (
+                    not lines[lookahead].strip()
+                    or is_page_furniture(lines[lookahead])
+                ):
+                    crossed_page |= is_page_furniture(lines[lookahead])
+                    lookahead += 1
+                if (
+                    crossed_page
+                    and lookahead < end
+                    and lines[lookahead][:1].isspace()
+                ):
+                    index = lookahead
+                    continue
+                break
+
+            text = textwrap.dedent("\n".join(body)).strip()
+            normalized = normalize(text)
+            key = (instruction, normalized)
+            if (
+                normalized
+                and key not in seen
+                and looks_like_code(text, normalized)
+            ):
+                blocks.append(SourceCodeBlock(instruction, text, normalized))
+                seen.add(key)
+    return blocks
+
+
 def markdown_expressions(lines: list[str]) -> list[MarkdownExpression]:
     expressions: list[MarkdownExpression] = []
     instruction: tuple[str, str] | None = None
@@ -225,6 +329,35 @@ def markdown_expressions(lines: list[str]) -> list[MarkdownExpression]:
             )
         )
     return expressions
+
+
+def markdown_instructions(lines: list[str]) -> list[MarkdownInstruction]:
+    headings: list[tuple[int, tuple[str, str]]] = []
+    for index, line in enumerate(lines):
+        match = MARKDOWN_INSTRUCTION.fullmatch(line)
+        if not match:
+            continue
+        headings.append(
+            (
+                index,
+                (
+                    match.group(1).replace("\\", ""),
+                    re.sub(r"\s+", "", match.group(2)),
+                ),
+            )
+        )
+
+    instructions: list[MarkdownInstruction] = []
+    for heading_index, (start, instruction) in enumerate(headings):
+        end = (
+            headings[heading_index + 1][0]
+            if heading_index + 1 < len(headings)
+            else len(lines)
+        )
+        instructions.append(
+            MarkdownInstruction(instruction, start, start + 1, end, start + 1)
+        )
+    return instructions
 
 
 def formatted_parts(body: str) -> tuple[str, str] | None:
@@ -447,18 +580,176 @@ def format_markdown(
         lines[start:end] = replacement
 
     trailing_newline = "\n" if markdown.endswith("\n") else ""
-    return "\n".join(lines) + trailing_newline, counts
+    return "\n".join(lines).rstrip("\n") + trailing_newline, counts
+
+
+def formatted_ranges(markdown: str) -> list[tuple[int, int]]:
+    """Locate existing fenced and inline code in a Markdown fragment."""
+    ranges = [
+        match.span()
+        for match in re.finditer(
+            r"(?ms)^(`{3,})[^\n]*\n.*?^\1[ \t]*$", markdown
+        )
+    ]
+    ranges.extend(
+        match.span()
+        for match in re.finditer(r"(?<!`)`[^`\n]+`(?!`)", markdown)
+        if not any(
+            start <= match.start() and match.end() <= end
+            for start, end in ranges
+        )
+    )
+    return ranges
+
+
+def table_ranges(markdown: str) -> list[tuple[int, int]]:
+    """Locate Markdown table rows, where inserting block markup is unsafe."""
+    return [
+        match.span()
+        for match in re.finditer(r"(?m)^\|.*\|[ \t]*$", markdown)
+    ]
+
+
+def find_all(text: str, fragment: str) -> list[int]:
+    starts: list[int] = []
+    start = 0
+    while fragment and (found := text.find(fragment, start)) >= 0:
+        starts.append(found)
+        start = found + len(fragment)
+    return starts
+
+
+def format_unheaded_markdown(
+    markdown: str,
+    sources: list[SourceCodeBlock],
+    maximum_inline_length: int,
+    verbose: bool,
+) -> tuple[str, dict[str, int]]:
+    """Format exact PDF code matches inside unheaded instruction entries."""
+    lines = markdown.splitlines()
+    instructions = markdown_instructions(lines)
+    by_instruction: dict[tuple[str, str], list[SourceCodeBlock]] = {}
+    for source in sources:
+        by_instruction.setdefault(source.instruction, []).append(source)
+
+    replacements: list[tuple[int, int, list[str]]] = []
+    counts = {
+        "instructions": len(instructions),
+        "source_blocks": len(sources),
+        "matched": 0,
+        "inline": 0,
+        "block": 0,
+        "already": 0,
+        "table_skipped": 0,
+        "unmatched_instructions": 0,
+    }
+
+    for instruction in instructions:
+        candidates = by_instruction.get(instruction.instruction, [])
+        if not candidates:
+            continue
+        body = "\n".join(lines[instruction.body_start : instruction.body_end])
+        body_normalized, body_ends = normalize_with_ends(body)
+        existing_ranges = formatted_ranges(body)
+        protected_tables = table_ranges(body)
+        occupied: list[tuple[int, int]] = []
+        body_replacements: list[tuple[int, int, str]] = []
+        unique_candidates = {
+            source.normalized: source for source in candidates
+        }.values()
+
+        for source in sorted(
+            unique_candidates,
+            key=lambda candidate: len(candidate.normalized),
+            reverse=True,
+        ):
+            for normalized_start in find_all(
+                body_normalized, source.normalized
+            ):
+                normalized_end = normalized_start + len(source.normalized)
+                if any(
+                    normalized_start < end and normalized_end > start
+                    for start, end in occupied
+                ):
+                    continue
+                raw_start = (
+                    body_ends[normalized_start - 1]
+                    if normalized_start
+                    else 0
+                )
+                raw_end = body_ends[normalized_end - 1]
+                occupied.append((normalized_start, normalized_end))
+                if any(
+                    raw_start < end and raw_end > start
+                    for start, end in protected_tables
+                ):
+                    counts["table_skipped"] += 1
+                    continue
+                counts["matched"] += 1
+                if any(
+                    start <= raw_start and raw_end <= end
+                    for start, end in existing_ranges
+                ):
+                    counts["already"] += 1
+                    continue
+                rendered, style = render_expression(
+                    source.text, maximum_inline_length
+                )
+                counts[style] += 1
+                body_replacements.append((raw_start, raw_end, rendered))
+
+        if not occupied:
+            counts["unmatched_instructions"] += 1
+            if verbose:
+                name, opcode = instruction.instruction
+                print(
+                    f"No source code match for {name} {opcode} at Markdown "
+                    f"line {instruction.line_number}",
+                    file=sys.stderr,
+                )
+            continue
+        if not body_replacements:
+            continue
+
+        for start, end, rendered in sorted(body_replacements, reverse=True):
+            prefix = body[:start].rstrip()
+            suffix = body[end:].lstrip()
+            body = prefix
+            if body:
+                body += "\n\n"
+            body += rendered
+            if suffix:
+                body += "\n\n" + suffix
+        replacement = [""] + body.strip().splitlines() + [""]
+        replacements.append(
+            (instruction.body_start, instruction.body_end, replacement)
+        )
+
+    for start, end, replacement in reversed(replacements):
+        lines[start:end] = replacement
+
+    trailing_newline = "\n" if markdown.endswith("\n") else ""
+    return "\n".join(lines).rstrip("\n") + trailing_newline, counts
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Format explicitly headed Markdown expression sections using the "
-            "line layout retained in the source PDF."
+            "Format Markdown instruction pseudocode using the line layout "
+            "retained in the source PDF."
         )
     )
     parser.add_argument("source_pdf", type=Path)
     parser.add_argument("markdown", type=Path)
+    parser.add_argument(
+        "--mode",
+        choices=("auto", "headed", "unheaded"),
+        default="auto",
+        help=(
+            "select explicit Expression sections or unheaded instruction "
+            "entries (default: auto)"
+        ),
+    )
     parser.add_argument(
         "--inline-max",
         type=int,
@@ -488,22 +779,47 @@ def main() -> int:
         raise SystemExit(f"Markdown file not found: {args.markdown}")
 
     markdown = args.markdown.read_text(encoding="utf-8")
-    sources = source_expressions(args.source_pdf)
-    formatted, counts = format_markdown(
-        markdown, sources, args.inline_max, args.verbose
-    )
+    mode = args.mode
+    if mode == "auto":
+        mode = (
+            "headed"
+            if markdown_expressions(markdown.splitlines())
+            else "unheaded"
+        )
+
+    if mode == "headed":
+        sources = source_expressions(args.source_pdf)
+        formatted, counts = format_markdown(
+            markdown, sources, args.inline_max, args.verbose
+        )
+    else:
+        source_blocks = source_instruction_blocks(args.source_pdf)
+        formatted, counts = format_unheaded_markdown(
+            markdown, source_blocks, args.inline_max, args.verbose
+        )
     changed = formatted != markdown
 
-    print(
-        f"Expression sections: {counts['sections']} Markdown, "
-        f"{counts['source']} PDF; formatted {counts['inline']} inline and "
-        f"{counts['block']} as blocks; {counts['already']} already formatted; "
-        f"{counts['restored_prefixes']} missing code prefixes restored; "
-        f"{counts['trailers']} trailing text sections separated; "
-        f"{counts['unmatched']} left unchanged; "
-        f"{counts['source'] - counts['matched_source']} PDF expressions have "
-        f"no matched Markdown section"
-    )
+    if mode == "headed":
+        print(
+            f"Expression sections: {counts['sections']} Markdown, "
+            f"{counts['source']} PDF; formatted {counts['inline']} inline and "
+            f"{counts['block']} as blocks; {counts['already']} already "
+            f"formatted; {counts['restored_prefixes']} missing code prefixes "
+            f"restored; {counts['trailers']} trailing text sections separated; "
+            f"{counts['unmatched']} left unchanged; "
+            f"{counts['source'] - counts['matched_source']} PDF expressions "
+            f"have no matched Markdown section"
+        )
+    else:
+        print(
+            f"Instruction entries: {counts['instructions']} Markdown, "
+            f"{counts['source_blocks']} code-like PDF blocks; matched "
+            f"{counts['matched']}; formatted {counts['inline']} inline and "
+            f"{counts['block']} as blocks; {counts['already']} already "
+            f"formatted; {counts['table_skipped']} table matches preserved; "
+            f"{counts['unmatched_instructions']} instruction entries with "
+            f"source code but no exact Markdown match"
+        )
 
     if args.check:
         if changed:
