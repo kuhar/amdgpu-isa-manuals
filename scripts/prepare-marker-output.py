@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare one Marker 2.0 ISA conversion for this repository."""
+"""Import one Marker 2.0 ISA conversion into this repository."""
 
 from __future__ import annotations
 

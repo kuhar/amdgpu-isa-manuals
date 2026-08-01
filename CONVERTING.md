@@ -139,13 +139,13 @@ numbers are absent.
 ## Import and cleanup
 
 Marker writes a nested directory containing one Markdown file, one metadata
-JSON file, and JPEGs. Import it with `prepare-marker-output.py`:
+JSON file, and JPEGs. Import it with `scripts/prepare-marker-output.py`:
 
 ```sh
 family=cdna5
 metadata_name=amd-instinct-cdna5-instruction-set-architecture_meta.json
 
-./prepare-marker-output.py \
+./scripts/prepare-marker-output.py \
   "$conversion_out/$manual_slug" \
   "$family" \
   --slug "$manual_slug" \
