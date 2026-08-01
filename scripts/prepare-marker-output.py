@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import re
 import shutil
+import sys
 from pathlib import Path
 
 from PIL import Image
@@ -24,6 +25,16 @@ NOTICE = (
 
 IMAGE_REF = re.compile(r"!\[\]\(([^)]+\.jpeg)\)")
 PAGE_ID = re.compile(r"^_page_(\d+)_")
+PAGE_HEADING = re.compile(
+    r'^#{1,6}\s+<span id="([^"]+)"></span>(.+?)\s*$'
+)
+CONTENTS_HEADING = re.compile(
+    r"^#{1,6}\s+\**(?:table of )?contents\**\s*$", re.IGNORECASE
+)
+TOC_ROW = re.compile(
+    r"^(\|\s*)(.*?)(\s*\|\s*)(\d+(?:\s*[-–]\s*\d+)?)(\s*\|)$"
+)
+LINKED_LABEL = re.compile(r"^\[(.*)\]\(#[^)]+\)$")
 
 
 def image_order(path: Path) -> tuple[int, str]:
@@ -165,6 +176,83 @@ def compact_table_continuations(markdown: str) -> str:
     return "\n".join(line for _kind, segment in segments for line in segment)
 
 
+def plain_heading(text: str) -> str:
+    """Remove the small amount of Markdown used in headings and TOC labels."""
+    linked = LINKED_LABEL.fullmatch(text.strip())
+    if linked:
+        text = linked.group(1)
+    text = re.sub(r"<[^>]+>", " ", text)
+    return text.replace("\\", "").replace("*", "").replace("`", "").strip()
+
+
+def heading_key(text: str) -> str:
+    text = plain_heading(text).lower().replace("’", "'")
+    text = re.sub(r"^chapter\s+", "", text)
+    return " ".join(re.findall(r"[a-z0-9]+", text))
+
+
+def section_number(text: str) -> str | None:
+    match = re.match(
+        r"^(?:chapter\s+)?(\d+(?:\.\d+)*)(?:\.|\s)",
+        plain_heading(text),
+        re.IGNORECASE,
+    )
+    return match.group(1) if match else None
+
+
+def link_table_of_contents(markdown: str) -> tuple[str, int, list[str]]:
+    """Link numeric-page TOC rows to explicit page anchors in the document."""
+    lines = markdown.splitlines()
+    headings: list[tuple[str, str]] = []
+    first_page_heading: int | None = None
+    for index, line in enumerate(lines):
+        match = PAGE_HEADING.match(line)
+        if not match:
+            continue
+        if first_page_heading is None:
+            first_page_heading = index
+        headings.append((match.group(1), plain_heading(match.group(2))))
+
+    by_key: dict[str, list[str]] = {}
+    by_section: dict[str, list[str]] = {}
+    for anchor, title in headings:
+        by_key.setdefault(heading_key(title), []).append(anchor)
+        section = section_number(title)
+        if section:
+            by_section.setdefault(section, []).append(anchor)
+
+    contents_start = next(
+        (index for index, line in enumerate(lines) if CONTENTS_HEADING.match(line)),
+        None,
+    )
+    if contents_start is None:
+        return markdown, 0, ["Contents heading"]
+    contents_end = first_page_heading if first_page_heading is not None else len(lines)
+
+    linked_count = 0
+    unresolved: list[str] = []
+    for index in range(contents_start + 1, contents_end):
+        match = TOC_ROW.match(lines[index])
+        if not match:
+            continue
+        label = plain_heading(match.group(2))
+        candidates = by_key.get(heading_key(label), [])
+        if len(candidates) != 1:
+            section = section_number(label)
+            candidates = by_section.get(section, []) if section else candidates
+        if len(candidates) != 1:
+            unresolved.append(label)
+            continue
+        lines[index] = (
+            f"{match.group(1)}[{label}](#{candidates[0]})"
+            f"{match.group(3)}{match.group(4)}{match.group(5)}"
+        )
+        linked_count += 1
+
+    trailing_newline = "\n" if markdown.endswith("\n") else ""
+    return "\n".join(lines) + trailing_newline, linked_count, unresolved
+
+
 def prepare(args: argparse.Namespace) -> None:
     generated_dir = args.generated_dir.resolve()
     manual_dir = args.manual_dir.resolve()
@@ -191,6 +279,13 @@ def prepare(args: argparse.Namespace) -> None:
 
     body = compact_table_continuations("\n".join(output_lines)).strip()
     body = re.sub(r"\n{3,}", "\n\n", body)
+    body, linked_toc_rows, unresolved_toc_rows = link_table_of_contents(body)
+    if unresolved_toc_rows:
+        print(
+            "Unresolved TOC entries requiring manual headings or anchors: "
+            + ", ".join(unresolved_toc_rows),
+            file=sys.stderr,
+        )
     markdown = NOTICE.format(source_url=args.source_url) + "\n\n" + body + "\n"
 
     manual_dir.mkdir(parents=True, exist_ok=True)
@@ -206,7 +301,8 @@ def prepare(args: argparse.Namespace) -> None:
 
     print(
         f"Prepared {args.slug}: {len(retained)} technical images retained, "
-        f"{len(skipped)} decorative or duplicate images removed"
+        f"{len(skipped)} decorative or duplicate images removed, "
+        f"{linked_toc_rows} TOC entries linked"
     )
 
 

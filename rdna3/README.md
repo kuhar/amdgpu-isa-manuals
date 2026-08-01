@@ -34,241 +34,241 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 
 # **Contents**
 
-| Preface                                           | 1  |
+| [Preface](#page-9-0)                                           | 1  |
 |---------------------------------------------------|----|
-| About This Document                               | 1  |
-| Audience                                          | 1  |
-| Organization.                                     | 1  |
-| Related Documents                                 | 2  |
-| Additional Information                            | 2  |
-| 1. Introduction                                   | 3  |
-| 1.1. Terminology                                  | 3  |
-| 1.2. Hardware Overview                            | 5  |
-| 1.2.1. Work-group Processor (WGP)                 | 6  |
-| 1.2.2. Data Sharing                               | 6  |
-| 1.2.3. Device Memory                              | 7  |
-| 2. Shader Concepts                                | 9  |
-| 2.1. Wave32 and Wave64                            | 9  |
-| 2.2. Shader Types                                 | 10 |
-| 2.2.1. Compute Shaders.                           | 10 |
-| 2.2.2. Graphics Shaders                           | 10 |
-| 2.3. Work-groups                                  | 11 |
-| 2.4. Shader Padding Requirement                   | 12 |
-| 3. Wave State                                     | 13 |
-| 3.1. State Overview                               | 13 |
-| 3.2. Control State: PC and EXEC                   | 14 |
-| 3.2.1. Program Counter (PC)                       | 14 |
-| 3.2.2. EXECute Mask                               | 14 |
-| 3.2.3. Instruction Skipping: EXEC==0              | 15 |
-| 3.3. Storage State: SGPR, VGPR, LDS               | 15 |
-| 3.3.1. SGPRs                                      | 15 |
-| 3.3.2. VGPRs                                      | 17 |
-| 3.3.3. Memory Alignment and Out-of-Range Behavior | 18 |
-| 3.3.4. LDS                                        | 19 |
-| 3.4. Wave State Registers                         | 20 |
-| 3.4.1. Status register                            | 20 |
-| 3.4.2. Mode register                              | 22 |
-| 3.4.3. M0 : Miscellaneous Register                | 23 |
-| 3.4.4. NULL                                       | 23 |
-| 3.4.5. SCC: Scalar Condition Code                 | 23 |
-| 3.4.6. Vector Compares: VCC and VCCZ              | 24 |
-| 3.4.7. FLAT_SCRATCH                               | 24 |
-| 3.4.8. Hardware Internal Registers                | 25 |
-| 3.4.9. Trap and Exception registers              | 25 |
-| 3.4.10. Time                                     | 27 |
-| 3.5. Initial Wave State                          | 28 |
-| 3.5.1. EXEC initialization                       | 28 |
-| 3.5.2. FLAT_SCRATCH Initialization               | 28 |
-| 3.5.3. SGPR Initialization                       | 28 |
-| 3.5.4. Which VGPRs Get Initialized               | 31 |
-| 3.5.5. LDS Initialization                        | 33 |
-| 4. Shader Instruction Set                        | 34 |
-| 4.1. Common Instruction Fields                   | 34 |
-| 4.1.1. Cache Controls: SLC, GLC and DLC          | 35 |
-| 5. Program Flow Control                          | 38 |
-| 5.1. Program Control                             | 38 |
-| 5.2. Instruction Clauses                         | 39 |
-| 5.2.1. Clause Breaks                             | 40 |
-| 5.3. Send Message Types                          | 41 |
-| 5.4. Branching                                   | 42 |
-| 5.5. Work-groups and Barriers                    | 42 |
-| 5.6. Data Dependency Resolution                  | 43 |
-| 5.7. ALU Instruction Software Scheduling         | 44 |
-| 6. Scalar ALU Operations                         | 46 |
-| 6.1. SALU Instruction Formats                    | 46 |
-| 6.2. Scalar ALU Operands                         | 46 |
-| 6.3. Scalar Condition Code (SCC)                 | 49 |
-| 6.4. Integer Arithmetic Instructions             | 49 |
-| 6.5. Conditional Move Instructions               | 50 |
-| 6.6. Comparison Instructions                     | 50 |
-| 6.7. Bit-Wise Instructions                       | 50 |
-| 6.8. Access Instructions                         | 52 |
-| 6.9. Memory Aperture Query                       | 52 |
-| 7. Vector ALU Operations                         | 54 |
-| 7.1. Microcode Encodings                         | 54 |
-| 7.2. Operands                                    | 56 |
-| 7.2.1. Non-Standard Uses of Operand Fields       | 57 |
-| 7.2.2. Inputs Operands                           | 58 |
-| 7.2.3. Output Operands                           | 60 |
-| 7.2.4. Denormalized and Rounding Modes           | 61 |
-| 7.2.5. Instructions using SGPRs as Mask or Carry | 62 |
-| 7.2.6. Wave64 use of SGPRs                       | 62 |
-| 7.2.7. Out-of-Range GPRs                         | 62 |
-| 7.2.8. PERMLANE Specific Rules                   | 62 |
-| 7.3. Instructions                                               | 63  |
-| 7.4. 16-bit Math and VGPRs                                      | 65  |
-| 7.5. Packed Math                                                | 65  |
-| 7.5.1. Inline Constants with Packed Math                        | 67  |
-| 7.6. Dual Issue VALU                                            | 68  |
-| 7.7. Data Parallel Processing (DPP)                             | 69  |
-| 7.7.1. DPP16                                                    | 70  |
-| 7.7.2. DPP8                                                     | 72  |
-| 7.8. VGPR Indexing                                              | 72  |
-| 7.9. Wave Matrix Multiply Accumulate (WMMA)                     | 72  |
-| 8. Scalar Memory Operations                                     | 76  |
-| 8.1. Microcode Encoding                                         | 76  |
-| 8.1.1. Scalar Memory Addressing                                 | 77  |
-| 8.1.2. Loads using Buffer Constant                              | 77  |
-| 8.1.3. S_DCACHE_INV and S_GL1_INV                               | 77  |
-| 8.2. Dependency Checking                                        | 78  |
-| 8.3. Scalar Memory Clauses and Groups                           | 78  |
-| 8.4. Alignment and Bounds Checking.                             | 78  |
-| 8.4.1. Address and GPR Range Checking                           | 79  |
-| 9. Vector Memory Buffer Instructions                            | 80  |
-| 9.1. Buffer Instructions                                        | 80  |
-| 9.2. VGPR Usage                                                 | 84  |
-| 9.3. Buffer Data                                                | 86  |
-| 9.3.1. D16 Instructions                                         | 87  |
-| 9.3.2. LOAD/STORE_FORMAT and DATA-FORMAT mismatches             | 87  |
-| 9.4. Buffer Addressing                                          | 87  |
-| 9.4.1. Range Checking                                           | 88  |
-| 9.4.2. Swizzled Buffer Addressing                               | 90  |
-| 9.5. Alignment                                                  | 91  |
-| 9.6. Buffer Resource                                            | 92  |
-| 10. Vector Memory Image Instructions                            | 94  |
-| 10.1. Image Instructions                                        | 94  |
-| 10.1.1. Texture Fault Enable (TFE) and LOD Warning Enable (LWE) | 96  |
-| 10.1.2. D16 Instructions                                        | 97  |
-| 10.1.3. A16 Instructions                                        | 97  |
-| 10.1.4. G16 Instructions                                        | 97  |
-| 10.1.5. Image Non-Sequential Address (NSA)                      | 97  |
-| 10.2. Image Opcodes with No Sampler                             | 98  |
-| 10.3. Image Opcodes with a Sampler                              | 100 |
-| 10.4. VGPR Usage                                                | 101 |
-| 10.4.1. Data format in VGPRs                                    | 103 |
-| 10.5. Image Resource                              | 103 |
-| 10.6. Image Sampler                               | 104 |
-| 10.7. Data Formats                                | 106 |
-| 10.8. Vector Memory Instruction Data Dependencies | 107 |
-| 10.9. Ray Tracing                                 | 107 |
-| 10.9.1. Instruction definition and fields         | 107 |
-| 10.9.2. Using BVH with NSA                        | 108 |
-| 10.9.3. Texture Resource Definition               | 109 |
-| 10.10. Partially Resident Textures                | 110 |
-| 11. Global, Scratch and Flat Address Space        | 111 |
-| 11.1. Instructions                                | 113 |
-| 11.1.1. FLAT                                      | 113 |
-| 11.1.2. Global                                    | 114 |
-| 11.1.3. Scratch                                   | 114 |
-| 11.2. Addressing                                  | 115 |
-| 11.3. Memory Error Checking                       | 116 |
-| 11.4. Data                                        | 117 |
-| 12. Data Share Operations                         | 118 |
-| 12.1. Overview                                    | 118 |
-| 12.1.1. Dataflow in Memory Hierarchy              | 119 |
-| 12.1.2. LDS Modes and Allocation: CU vs. WGP Mode | 119 |
-| 12.1.3. LDS Access Methods                        | 119 |
-| 12.2. Pixel Parameter Interpolation               | 120 |
-| 12.2.1. LDS Parameter Loads                       | 120 |
-| 12.3. VALU Parameter Interpolation                | 123 |
-| 12.3.1. 16-bit Parameter Interpolation            | 124 |
-| 12.4. LDS Direct Load.                            | 124 |
-| 12.5. Data Share Indexed and Atomic Access        | 125 |
-| 12.5.1. LDS Atomic Ops                            | 128 |
-| 12.5.2. LDS Lane-permute Ops                      | 128 |
-| 12.5.3. DS Stack Operations for Ray Tracing       | 129 |
-| 12.6. Global Data Share                           | 130 |
-| 12.6.1. GS NGG Streamout Instructions             | 130 |
-| 12.7. Alignment and Errors                        | 131 |
-| 13. Float Memory Atomics                          | 132 |
-| 13.1. Rounding                                    | 132 |
-| 13.2. Denormals                                   | 132 |
-| 13.3. NaN Handling                                | 133 |
-| 13.4. Global Wave Sync & Atomic Ordered Count     | 134 |
-| 13.4.1. GWS and Ordered Count Programming Rule    | 134 |
-| 13.4.2. EXEC Handling                             | 134 |
-| 13.4.3. Ordered Count                                 | 134 |
-| 13.4.4. Global Wave Sync                              | 136 |
-| 14. Export: Position, Color/MRT                       | 139 |
-| 14.1. Pixel Shader Exports                            | 140 |
-| 14.2. Primitive Shader Exports (From GS shader stage) | 140 |
-| 14.3. Dependency Checking                             | 140 |
-| 15. Microcode Formats                                 | 142 |
-| 15.1. Scalar ALU and Control Formats                  | 144 |
-| 15.1.1. SOP2                                          | 144 |
-| 15.1.2. SOPK                                          | 145 |
-| 15.1.3. SOP1                                          | 146 |
-| 15.1.4. SOPC                                          | 148 |
-| 15.1.5. SOPP                                          | 150 |
-| 15.2. Scalar Memory Format                            | 151 |
-| 15.2.1. SMEM                                          | 151 |
-| 15.3. Vector ALU Formats                              | 152 |
-| 15.3.1. VOP2                                          | 152 |
-| 15.3.2. VOP1                                          | 153 |
-| 15.3.3. VOPC                                          | 155 |
-| 15.3.4. VOP3                                          | 159 |
-| 15.3.5. VOP3SD                                        | 165 |
-| 15.3.6. VOP3P                                         | 166 |
-| 15.3.7. VOPD                                          | 168 |
-| 15.3.8. DPP16                                         | 170 |
-| 15.3.9. DPP8                                          | 171 |
-| 15.4. Vector Parameter Interpolation Format           | 172 |
-| 15.4.1. VINTERP                                       | 172 |
-| 15.5. Parameter and Direct Load from LDS              | 173 |
-| 15.5.1. LDSDIR                                        | 173 |
-| 15.6. LDS and GDS Format                              | 175 |
-| 15.6.1. DS                                            | 175 |
-| 15.7. Vector Memory Buffer Formats                    | 177 |
-| 15.7.1. MTBUF                                         | 177 |
-| 15.7.2. MUBUF                                         | 178 |
-| 15.8. Vector Memory Image Format                      | 180 |
-| 15.8.1. MIMG                                          | 180 |
-| 15.9. Flat Formats.                                   | 183 |
-| 15.9.1. FLAT                                          | 183 |
-| 15.9.2. GLOBAL                                        | 184 |
-| 15.9.3. SCRATCH                                       | 185 |
-| 15.10. Export Format                                  | 186 |
-| 15.10.1. EXP                                           | 186 |
-| 16. Instructions                                       | 187 |
-| 16.1. SOP2 Instructions                                | 188 |
-| 16.2. SOPK Instructions                                | 200 |
-| 16.3. SOP1 Instructions                                | 208 |
-| 16.4. SOPC Instructions                                | 229 |
-| 16.5. SOPP Instructions                                | 233 |
-| 16.6. SMEM Instructions                                | 246 |
-| 16.7. VOP2 Instructions                                | 250 |
-| 16.7.1. VOP2 using VOP3 or VOP3SD encoding             | 264 |
-| 16.8. VOP1 Instructions                                | 265 |
-| 16.8.1. VOP1 using VOP3 encoding                       | 294 |
-| 16.9. VOPC Instructions                                | 295 |
-| 16.9.1. VOPC using VOP3 encoding                       | 350 |
-| 16.10. VOP3P Instructions                              | 351 |
-| 16.11. VOPD Instructions                               | 360 |
-| 16.11.1. VOPD X-Instructions                           | 360 |
-| 16.11.2. VOPD Y-Instructions                           | 362 |
-| 16.12. VOP3 & VOP3SD Instructions                      | 365 |
-| 16.13. VINTERP Instructions                            | 498 |
-| 16.14. Parameter and Direct Load from LDS Instructions | 501 |
-| 16.15. LDS & GDS Instructions                          | 502 |
-| 16.15.1. LDS Instruction Limitations                   | 537 |
-| 16.16. MUBUF Instructions                              | 538 |
-| 16.17. MTBUF Instructions                              | 554 |
-| 16.18. MIMG Instructions                               | 558 |
-| 16.19. EXPORT Instructions                             | 572 |
-| 16.20. FLAT, Scratch and Global Instructions           | 573 |
-| 16.20.1. Flat Instructions                             | 573 |
-| 16.20.2. Scratch Instructions                          | 584 |
-| 16.20.3. Global Instructions                           | 589 |
+| [About This Document](#page-9-1)                               | 1  |
+| [Audience](#page-9-2)                                          | 1  |
+| [Organization.](#page-9-3)                                     | 1  |
+| [Related Documents](#page-10-0)                                 | 2  |
+| [Additional Information](#page-10-1)                            | 2  |
+| [1. Introduction](#page-11-0)                                   | 3  |
+| [1.1. Terminology](#page-11-1)                                  | 3  |
+| [1.2. Hardware Overview](#page-13-0)                            | 5  |
+| [1.2.1. Work-group Processor (WGP)](#page-14-0)                 | 6  |
+| [1.2.2. Data Sharing](#page-14-1)                               | 6  |
+| [1.2.3. Device Memory](#page-15-1)                              | 7  |
+| [2. Shader Concepts](#page-17-0)                                | 9  |
+| [2.1. Wave32 and Wave64](#page-17-1)                            | 9  |
+| [2.2. Shader Types](#page-18-0)                                 | 10 |
+| [2.2.1. Compute Shaders.](#page-18-1)                           | 10 |
+| [2.2.2. Graphics Shaders](#page-18-2)                           | 10 |
+| [2.3. Work-groups](#page-19-0)                                  | 11 |
+| [2.4. Shader Padding Requirement](#page-20-0)                   | 12 |
+| [3. Wave State](#page-21-0)                                     | 13 |
+| [3.1. State Overview](#page-21-1)                               | 13 |
+| [3.2. Control State: PC and EXEC](#page-22-0)                   | 14 |
+| [3.2.1. Program Counter (PC)](#page-22-1)                       | 14 |
+| [3.2.2. EXECute Mask](#page-22-2)                               | 14 |
+| [3.2.3. Instruction Skipping: EXEC==0](#page-23-0)              | 15 |
+| [3.3. Storage State: SGPR, VGPR, LDS](#page-23-1)               | 15 |
+| [3.3.1. SGPRs](#page-23-2)                                      | 15 |
+| [3.3.2. VGPRs](#page-25-0)                                      | 17 |
+| [3.3.3. Memory Alignment and Out-of-Range Behavior](#page-26-0) | 18 |
+| [3.3.4. LDS](#page-27-0)                                        | 19 |
+| [3.4. Wave State Registers](#page-28-0)                         | 20 |
+| [3.4.1. Status register](#page-28-1)                            | 20 |
+| [3.4.2. Mode register](#page-30-0)                              | 22 |
+| [3.4.3. M0 : Miscellaneous Register](#page-31-0)                | 23 |
+| [3.4.4. NULL](#page-31-1)                                       | 23 |
+| [3.4.5. SCC: Scalar Condition Code](#page-31-2)                 | 23 |
+| [3.4.6. Vector Compares: VCC and VCCZ](#page-32-0)              | 24 |
+| [3.4.7. FLAT_SCRATCH](#page-32-1)                               | 24 |
+| [3.4.8. Hardware Internal Registers](#page-33-0)                | 25 |
+| [3.4.9. Trap and Exception registers](#page-33-1)              | 25 |
+| [3.4.10. Time](#page-35-0)                                     | 27 |
+| [3.5. Initial Wave State](#page-36-0)                          | 28 |
+| [3.5.1. EXEC initialization](#page-36-1)                       | 28 |
+| [3.5.2. FLAT_SCRATCH Initialization](#page-36-2)               | 28 |
+| [3.5.3. SGPR Initialization](#page-36-3)                       | 28 |
+| [3.5.4. Which VGPRs Get Initialized](#page-39-0)               | 31 |
+| [3.5.5. LDS Initialization](#page-41-0)                        | 33 |
+| [4. Shader Instruction Set](#page-42-0)                        | 34 |
+| [4.1. Common Instruction Fields](#page-42-1)                   | 34 |
+| [4.1.1. Cache Controls: SLC, GLC and DLC](#page-43-0)          | 35 |
+| [5. Program Flow Control](#page-46-0)                          | 38 |
+| [5.1. Program Control](#page-46-1)                             | 38 |
+| [5.2. Instruction Clauses](#page-47-0)                         | 39 |
+| [5.2.1. Clause Breaks](#page-48-0)                             | 40 |
+| [5.3. Send Message Types](#page-49-0)                          | 41 |
+| [5.4. Branching](#page-50-0)                                   | 42 |
+| [5.5. Work-groups and Barriers](#page-50-1)                    | 42 |
+| [5.6. Data Dependency Resolution](#page-51-0)                  | 43 |
+| [5.7. ALU Instruction Software Scheduling](#page-52-0)         | 44 |
+| [6. Scalar ALU Operations](#page-54-0)                         | 46 |
+| [6.1. SALU Instruction Formats](#page-54-1)                    | 46 |
+| [6.2. Scalar ALU Operands](#page-54-2)                         | 46 |
+| [6.3. Scalar Condition Code (SCC)](#page-57-0)                 | 49 |
+| [6.4. Integer Arithmetic Instructions](#page-57-1)             | 49 |
+| [6.5. Conditional Move Instructions](#page-58-0)               | 50 |
+| [6.6. Comparison Instructions](#page-58-1)                     | 50 |
+| [6.7. Bit-Wise Instructions](#page-58-2)                       | 50 |
+| [6.8. Access Instructions](#page-60-0)                         | 52 |
+| [6.9. Memory Aperture Query](#page-60-1)                       | 52 |
+| [7. Vector ALU Operations](#page-62-0)                         | 54 |
+| [7.1. Microcode Encodings](#page-62-1)                         | 54 |
+| [7.2. Operands](#page-64-0)                                    | 56 |
+| [7.2.1. Non-Standard Uses of Operand Fields](#page-65-0)       | 57 |
+| [7.2.2. Inputs Operands](#page-66-0)                           | 58 |
+| [7.2.3. Output Operands](#page-68-0)                           | 60 |
+| [7.2.4. Denormalized and Rounding Modes](#page-69-0)           | 61 |
+| [7.2.5. Instructions using SGPRs as Mask or Carry](#page-70-0) | 62 |
+| [7.2.6. Wave64 use of SGPRs](#page-70-1)                       | 62 |
+| [7.2.7. Out-of-Range GPRs](#page-70-2)                         | 62 |
+| [7.2.8. PERMLANE Specific Rules](#page-70-3)                   | 62 |
+| [7.3. Instructions](#page-71-0)                                               | 63  |
+| [7.4. 16-bit Math and VGPRs](#page-73-0)                                      | 65  |
+| [7.5. Packed Math](#page-73-1)                                                | 65  |
+| [7.5.1. Inline Constants with Packed Math](#page-75-0)                        | 67  |
+| [7.6. Dual Issue VALU](#page-76-0)                                            | 68  |
+| [7.7. Data Parallel Processing (DPP)](#page-77-0)                             | 69  |
+| [7.7.1. DPP16](#page-78-0)                                                    | 70  |
+| [7.7.2. DPP8](#page-80-0)                                                     | 72  |
+| [7.8. VGPR Indexing](#page-80-1)                                              | 72  |
+| [7.9. Wave Matrix Multiply Accumulate (WMMA)](#page-80-2)                     | 72  |
+| [8. Scalar Memory Operations](#page-84-0)                                     | 76  |
+| [8.1. Microcode Encoding](#page-84-1)                                         | 76  |
+| [8.1.1. Scalar Memory Addressing](#page-85-0)                                 | 77  |
+| [8.1.2. Loads using Buffer Constant](#page-85-1)                              | 77  |
+| [8.1.3. S_DCACHE_INV and S_GL1_INV](#page-85-2)                               | 77  |
+| [8.2. Dependency Checking](#page-86-0)                                        | 78  |
+| [8.3. Scalar Memory Clauses and Groups](#page-86-1)                           | 78  |
+| [8.4. Alignment and Bounds Checking.](#page-86-2)                             | 78  |
+| [8.4.1. Address and GPR Range Checking](#page-87-0)                           | 79  |
+| [9. Vector Memory Buffer Instructions](#page-88-0)                            | 80  |
+| [9.1. Buffer Instructions](#page-88-1)                                        | 80  |
+| [9.2. VGPR Usage](#page-92-0)                                                 | 84  |
+| [9.3. Buffer Data](#page-94-0)                                                | 86  |
+| [9.3.1. D16 Instructions](#page-95-0)                                         | 87  |
+| [9.3.2. LOAD/STORE_FORMAT and DATA-FORMAT mismatches](#page-95-1)             | 87  |
+| [9.4. Buffer Addressing](#page-95-2)                                          | 87  |
+| [9.4.1. Range Checking](#page-96-0)                                           | 88  |
+| [9.4.2. Swizzled Buffer Addressing](#page-98-0)                               | 90  |
+| [9.5. Alignment](#page-99-0)                                                  | 91  |
+| [9.6. Buffer Resource](#page-100-0)                                            | 92  |
+| [10. Vector Memory Image Instructions](#page-102-0)                            | 94  |
+| [10.1. Image Instructions](#page-102-1)                                        | 94  |
+| [10.1.1. Texture Fault Enable (TFE) and LOD Warning Enable (LWE)](#page-104-0) | 96  |
+| [10.1.2. D16 Instructions](#page-105-0)                                        | 97  |
+| [10.1.3. A16 Instructions](#page-105-1)                                        | 97  |
+| [10.1.4. G16 Instructions](#page-105-2)                                        | 97  |
+| [10.1.5. Image Non-Sequential Address (NSA)](#page-105-3)                      | 97  |
+| [10.2. Image Opcodes with No Sampler](#page-106-0)                             | 98  |
+| [10.3. Image Opcodes with a Sampler](#page-108-0)                              | 100 |
+| [10.4. VGPR Usage](#page-109-0)                                                | 101 |
+| [10.4.1. Data format in VGPRs](#page-111-0)                                    | 103 |
+| [10.5. Image Resource](#page-111-1)                              | 103 |
+| [10.6. Image Sampler](#page-112-0)                               | 104 |
+| [10.7. Data Formats](#page-114-0)                                | 106 |
+| [10.8. Vector Memory Instruction Data Dependencies](#page-115-0) | 107 |
+| [10.9. Ray Tracing](#page-115-1)                                 | 107 |
+| [10.9.1. Instruction definition and fields](#page-115-2)         | 107 |
+| [10.9.2. Using BVH with NSA](#page-116-0)                        | 108 |
+| [10.9.3. Texture Resource Definition](#page-117-0)               | 109 |
+| [10.10. Partially Resident Textures](#page-118-0)                | 110 |
+| [11. Global, Scratch and Flat Address Space](#page-119-0)        | 111 |
+| [11.1. Instructions](#page-121-0)                                | 113 |
+| [11.1.1. FLAT](#page-121-1)                                      | 113 |
+| [11.1.2. Global](#page-122-0)                                    | 114 |
+| [11.1.3. Scratch](#page-122-1)                                   | 114 |
+| [11.2. Addressing](#page-123-0)                                  | 115 |
+| [11.3. Memory Error Checking](#page-124-0)                       | 116 |
+| [11.4. Data](#page-125-0)                                        | 117 |
+| [12. Data Share Operations](#page-126-0)                         | 118 |
+| [12.1. Overview](#page-126-1)                                    | 118 |
+| [12.1.1. Dataflow in Memory Hierarchy](#page-127-0)              | 119 |
+| [12.1.2. LDS Modes and Allocation: CU vs. WGP Mode](#page-127-1) | 119 |
+| [12.1.3. LDS Access Methods](#page-127-2)                        | 119 |
+| [12.2. Pixel Parameter Interpolation](#page-128-0)               | 120 |
+| [12.2.1. LDS Parameter Loads](#page-128-1)                       | 120 |
+| [12.3. VALU Parameter Interpolation](#page-131-0)                | 123 |
+| [12.3.1. 16-bit Parameter Interpolation](#page-132-0)            | 124 |
+| [12.4. LDS Direct Load.](#page-132-1)                            | 124 |
+| [12.5. Data Share Indexed and Atomic Access](#page-133-0)        | 125 |
+| [12.5.1. LDS Atomic Ops](#page-136-0)                            | 128 |
+| [12.5.2. LDS Lane-permute Ops](#page-136-1)                      | 128 |
+| [12.5.3. DS Stack Operations for Ray Tracing](#page-137-0)       | 129 |
+| [12.6. Global Data Share](#page-138-0)                           | 130 |
+| [12.6.1. GS NGG Streamout Instructions](#page-138-1)             | 130 |
+| [12.7. Alignment and Errors](#page-139-0)                        | 131 |
+| [13. Float Memory Atomics](#page-140-0)                          | 132 |
+| [13.1. Rounding](#page-140-1)                                    | 132 |
+| [13.2. Denormals](#page-140-2)                                   | 132 |
+| [13.3. NaN Handling](#page-141-0)                                | 133 |
+| [13.4. Global Wave Sync & Atomic Ordered Count](#page-142-0)     | 134 |
+| [13.4.1. GWS and Ordered Count Programming Rule](#page-142-1)    | 134 |
+| [13.4.2. EXEC Handling](#page-142-2)                             | 134 |
+| [13.4.3. Ordered Count](#page-142-3)                                 | 134 |
+| [13.4.4. Global Wave Sync](#page-144-0)                              | 136 |
+| [14. Export: Position, Color/MRT](#page-147-0)                       | 139 |
+| [14.1. Pixel Shader Exports](#page-148-0)                            | 140 |
+| [14.2. Primitive Shader Exports (From GS shader stage)](#page-148-1) | 140 |
+| [14.3. Dependency Checking](#page-148-2)                             | 140 |
+| [15. Microcode Formats](#page-150-0)                                 | 142 |
+| [15.1. Scalar ALU and Control Formats](#page-152-0)                  | 144 |
+| [15.1.1. SOP2](#page-152-1)                                          | 144 |
+| [15.1.2. SOPK](#page-153-0)                                          | 145 |
+| [15.1.3. SOP1](#page-154-0)                                          | 146 |
+| [15.1.4. SOPC](#page-156-0)                                          | 148 |
+| [15.1.5. SOPP](#page-158-0)                                          | 150 |
+| [15.2. Scalar Memory Format](#page-159-0)                            | 151 |
+| [15.2.1. SMEM](#page-159-1)                                          | 151 |
+| [15.3. Vector ALU Formats](#page-160-0)                              | 152 |
+| [15.3.1. VOP2](#page-160-1)                                          | 152 |
+| [15.3.2. VOP1](#page-161-0)                                          | 153 |
+| [15.3.3. VOPC](#page-163-0)                                          | 155 |
+| [15.3.4. VOP3](#page-167-0)                                          | 159 |
+| [15.3.5. VOP3SD](#page-173-0)                                        | 165 |
+| [15.3.6. VOP3P](#page-174-0)                                         | 166 |
+| [15.3.7. VOPD](#page-176-0)                                          | 168 |
+| [15.3.8. DPP16](#page-178-0)                                         | 170 |
+| [15.3.9. DPP8](#page-179-0)                                          | 171 |
+| [15.4. Vector Parameter Interpolation Format](#page-180-0)           | 172 |
+| [15.4.1. VINTERP](#page-180-1)                                       | 172 |
+| [15.5. Parameter and Direct Load from LDS](#page-181-0)              | 173 |
+| [15.5.1. LDSDIR](#page-181-1)                                        | 173 |
+| [15.6. LDS and GDS Format](#page-183-0)                              | 175 |
+| [15.6.1. DS](#page-183-1)                                            | 175 |
+| [15.7. Vector Memory Buffer Formats](#page-185-0)                    | 177 |
+| [15.7.1. MTBUF](#page-185-1)                                         | 177 |
+| [15.7.2. MUBUF](#page-186-0)                                         | 178 |
+| [15.8. Vector Memory Image Format](#page-188-0)                      | 180 |
+| [15.8.1. MIMG](#page-188-1)                                          | 180 |
+| [15.9. Flat Formats.](#page-191-0)                                   | 183 |
+| [15.9.1. FLAT](#page-191-1)                                          | 183 |
+| [15.9.2. GLOBAL](#page-192-0)                                        | 184 |
+| [15.9.3. SCRATCH](#page-193-0)                                       | 185 |
+| [15.10. Export Format](#page-194-0)                                  | 186 |
+| [15.10.1. EXP](#page-194-1)                                           | 186 |
+| [16. Instructions](#page-195-0)                                       | 187 |
+| [16.1. SOP2 Instructions](#page-196-0)                                | 188 |
+| [16.2. SOPK Instructions](#page-208-0)                                | 200 |
+| [16.3. SOP1 Instructions](#page-216-0)                                | 208 |
+| [16.4. SOPC Instructions](#page-237-0)                                | 229 |
+| [16.5. SOPP Instructions](#page-241-0)                                | 233 |
+| [16.6. SMEM Instructions](#page-254-0)                                | 246 |
+| [16.7. VOP2 Instructions](#page-258-0)                                | 250 |
+| [16.7.1. VOP2 using VOP3 or VOP3SD encoding](#page-272-0)             | 264 |
+| [16.8. VOP1 Instructions](#page-273-0)                                | 265 |
+| [16.8.1. VOP1 using VOP3 encoding](#page-302-0)                       | 294 |
+| [16.9. VOPC Instructions](#page-303-0)                                | 295 |
+| [16.9.1. VOPC using VOP3 encoding](#page-358-0)                       | 350 |
+| [16.10. VOP3P Instructions](#page-359-0)                              | 351 |
+| [16.11. VOPD Instructions](#page-368-0)                               | 360 |
+| [16.11.1. VOPD X-Instructions](#page-368-1)                           | 360 |
+| [16.11.2. VOPD Y-Instructions](#page-370-0)                           | 362 |
+| [16.12. VOP3 & VOP3SD Instructions](#page-373-0)                      | 365 |
+| [16.13. VINTERP Instructions](#page-506-0)                            | 498 |
+| [16.14. Parameter and Direct Load from LDS Instructions](#page-509-0) | 501 |
+| [16.15. LDS & GDS Instructions](#page-510-0)                          | 502 |
+| [16.15.1. LDS Instruction Limitations](#page-545-0)                   | 537 |
+| [16.16. MUBUF Instructions](#page-546-0)                              | 538 |
+| [16.17. MTBUF Instructions](#page-562-0)                              | 554 |
+| [16.18. MIMG Instructions](#page-566-0)                               | 558 |
+| [16.19. EXPORT Instructions](#page-580-0)                             | 572 |
+| [16.20. FLAT, Scratch and Global Instructions](#page-581-0)           | 573 |
+| [16.20.1. Flat Instructions](#page-581-1)                             | 573 |
+| [16.20.2. Scratch Instructions](#page-592-0)                          | 584 |
+| [16.20.3. Global Instructions](#page-597-0)                           | 589 |
 
 # <span id="page-9-0"></span>**Preface**
 
@@ -468,6 +468,8 @@ Each work-group processor (WGP) has a 128kB memory space that enables low-latenc
 <span id="page-15-0"></span>The AMD RDNA3 devices use a 4kB global data share (GDS) memory that can be used by waves of a kernel on all WGPs. This memory provides 128 bytes per cycle of memory access to all the processing elements. It provides full access to any location for any processor. The shared memory contains 2 integer atomic units to enable fast, unordered atomic operations. This memory can be used as a software cache to store important control data for compute kernels, reduction operations, or a small global shared surface. Data can be preloaded from memory prior to kernel launch and written to memory after kernel completion. The GDS block contains support logic for unordered append/consume and domain launch ordered append/consume operations to buffers in memory. These dedicated circuits enable fast compaction of data or the creation of complex data structures in memory.
 
 ![](assets/_page_15_Diagram_2.jpeg)
+
+# <span id="page-15-1"></span>**1.2.3. Device Memory**
 
 The AMD RDNA3 devices offer several methods for access to off-chip memory from the processing elements (PE) within each WGP. On the primary read path, the device consists of multiple channels of L2 cache that provides data to read-only L1 caches, and finally to L0 caches per WGP. Specific cache-less load instructions can force data to be retrieved from device memory during an execution of a load clause. Load requests that overlap within the clause are cached with respect to each other. The output cache is formed by two levels of cache: the first for write-combining cache (collect scatter and store operations and combine them to provide good access patterns to memory); the second is a read/write cache with atomic units that lets each processing element complete unordered atomic accesses that return the initial value. Each processing element provides the destination address on which the atomic operation acts, the data to be used in the atomic operation, and a return address for the read/write atomic unit to store the pre-op value in memory. Each store or atomic operation can be set up to return an acknowledgment to the requesting PE upon write confirmation of the return value (pre-atomic op value at destination) being stored to device memory.
 

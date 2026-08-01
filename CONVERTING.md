@@ -167,6 +167,8 @@ The preparation script performs these mechanical steps:
 7. Join blank-key table continuation rows to the preceding keyed row, including
    when the PDF page boundary created two adjacent Markdown table blocks, and
    combine adjacent table fragments that repeat the same column headings.
+8. Link each contents-table entry to the corresponding explicit page anchor.
+   The script reports entries whose headings or anchors require manual repair.
 
 Keep the notice before the converted title so that it cannot be mistaken for
 part of AMD's publication:

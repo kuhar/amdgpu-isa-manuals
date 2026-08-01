@@ -34,188 +34,188 @@ Copyright © 2024 Advanced Micro Devices, Inc. All rights reserved.
 
 # **Contents**
 
-| Preface                              | 1  |
+| [Preface](#page-8-0)                              | 1  |
 |--------------------------------------|----|
-| About This Document                  | 1  |
-| Audience                             | 1  |
-| Organization.                        | 1  |
-| Conventions                          | 2  |
-| Contact Information                  | 2  |
-| 1. Introduction                      | 3  |
-| 1.1. Terminology                     | 4  |
-| 2. Program Organization              | 5  |
-| 2.1. Compute Shaders                 | 5  |
-| 2.2. Data Sharing                    | 5  |
-| 2.2.1. Local Data Share (LDS)        | 6  |
-| 2.2.2. Global Wave Sync (GWS)        | 6  |
-| 2.3. Device Memory                   | 6  |
-| 3. Kernel State                      | 8  |
-| 3.1. State Overview                  | 8  |
-| 3.2. Program Counter (PC)            | 9  |
-| 3.3. EXECute Mask                    | 9  |
-| 3.4. Status registers                | 9  |
-| 3.5. Mode register                   | 10 |
-| 3.6. GPRs and LDS                    | 11 |
-| 3.6.1. Out-of-Range behavior         | 11 |
-| 3.6.2. SGPR Allocation and storage.  | 12 |
-| 3.6.3. SGPR Alignment                | 12 |
-| 3.6.4. VGPR Allocation and Alignment | 12 |
-| 3.6.5. LDS Allocation and Clamping   | 13 |
-| 3.7. M0 Memory Descriptor            | 13 |
-| 3.8. SCC: Scalar Condition code      | 13 |
-| 3.9. Vector Compares: VCC and VCCZ   | 13 |
-| 3.10. Trap and Exception registers   | 14 |
-| 3.10.1. Trap Status register         | 15 |
-| 3.11. Memory Violations              | 15 |
-| 3.12. Hardware ID Registers          | 16 |
-| 3.13. GPR Initialization             | 17 |
-| 4. Program Flow Control              | 18 |
-| 4.1. Program Control                 | 18 |
-| 4.2. Branching                       | 18 |
-| 4.3. Workgroups                      | 19 |
-| 4.4. Data Dependency Resolution      | 19 |
+| [About This Document](#page-8-1)                  | 1  |
+| [Audience](#page-8-2)                             | 1  |
+| [Organization.](#page-8-3)                        | 1  |
+| [Conventions](#page-9-0)                          | 2  |
+| [Contact Information](#page-9-1)                  | 2  |
+| [1. Introduction](#page-10-0)                      | 3  |
+| [1.1. Terminology](#page-11-0)                     | 4  |
+| [2. Program Organization](#page-12-0)              | 5  |
+| [2.1. Compute Shaders](#page-12-1)                 | 5  |
+| [2.2. Data Sharing](#page-12-2)                    | 5  |
+| [2.2.1. Local Data Share (LDS)](#page-13-0)        | 6  |
+| [2.2.2. Global Wave Sync (GWS)](#page-13-1)        | 6  |
+| [2.3. Device Memory](#page-13-2)                   | 6  |
+| [3. Kernel State](#page-15-0)                      | 8  |
+| [3.1. State Overview](#page-15-1)                  | 8  |
+| [3.2. Program Counter (PC)](#page-16-0)            | 9  |
+| [3.3. EXECute Mask](#page-16-1)                    | 9  |
+| [3.4. Status registers](#page-16-2)                | 9  |
+| [3.5. Mode register](#page-17-0)                   | 10 |
+| [3.6. GPRs and LDS](#page-18-0)                    | 11 |
+| [3.6.1. Out-of-Range behavior](#page-18-1)         | 11 |
+| [3.6.2. SGPR Allocation and storage.](#page-19-0)  | 12 |
+| [3.6.3. SGPR Alignment](#page-19-1)                | 12 |
+| [3.6.4. VGPR Allocation and Alignment](#page-19-2) | 12 |
+| [3.6.5. LDS Allocation and Clamping](#page-20-0)   | 13 |
+| [3.7. M0 Memory Descriptor](#page-20-1)            | 13 |
+| [3.8. SCC: Scalar Condition code](#page-20-2)      | 13 |
+| [3.9. Vector Compares: VCC and VCCZ](#page-20-3)   | 13 |
+| [3.10. Trap and Exception registers](#page-21-0)   | 14 |
+| [3.10.1. Trap Status register](#page-22-0)         | 15 |
+| [3.11. Memory Violations](#page-22-1)              | 15 |
+| [3.12. Hardware ID Registers](#page-23-0)          | 16 |
+| [3.13. GPR Initialization](#page-24-0)             | 17 |
+| [4. Program Flow Control](#page-25-0)              | 18 |
+| [4.1. Program Control](#page-25-1)                 | 18 |
+| [4.2. Branching](#page-25-2)                       | 18 |
+| [4.3. Workgroups](#page-26-0)                      | 19 |
+| [4.4. Data Dependency Resolution](#page-26-1)      | 19 |
 
-| 4.5. Manually Inserted Wait States (NOPs)                     | 20 |
+| [4.5. Manually Inserted Wait States (NOPs)](#page-27-0)                     | 20 |
 |---------------------------------------------------------------|----|
-| 4.6. Arbitrary Divergent Control Flow                         | 21 |
-| 5. Scalar ALU Operations                                      | 24 |
-| 5.1. SALU Instruction Formats                                 | 24 |
-| 5.2. Scalar ALU Operands                                      | 24 |
-| 5.3. Scalar Condition Code (SCC)                              | 26 |
-| 5.4. Integer Arithmetic Instructions                          | 26 |
-| 5.5. Conditional Instructions                                 | 27 |
-| 5.6. Comparison Instructions                                  | 27 |
-| 5.7. Bit-Wise Instructions                                    | 27 |
-| 5.8. Access Instructions                                      | 29 |
-| 6. Vector ALU Operations                                      | 31 |
-| 6.1. Microcode Encodings                                      | 31 |
-| 6.2. Operands                                                 | 32 |
-| 6.2.1. Instruction Inputs                                     | 32 |
-| 6.2.2. Instruction Outputs                                    | 33 |
-| 6.2.3. Out-of-Range GPRs                                      | 34 |
-| 6.3. Instructions                                             | 34 |
-| 6.4. Denormalized and Rounding Modes                          | 36 |
-| 6.5. ALU Clamp Bit Usage                                      | 37 |
-| 6.6. VGPR Indexing                                            | 37 |
-| 6.6.1. Indexing Instructions                                  | 37 |
-| 6.6.2. VGPR Indexing Details                                  | 38 |
-| 6.7. Packed Math                                              | 38 |
-| 7. Matrix Arithmetic Instructions                             | 40 |
-| 7.1. Matrix fused-multiply-add (MFMA)                         | 40 |
-| 7.1.1. Notation                                               | 41 |
-| 7.1.2. List of Dense MFMA instructions                        | 42 |
-| 7.1.3. Usage examples                                         | 43 |
-| 7.1.4. General input and output layout.                       | 46 |
-| 7.1.5. Broadcasting values                                    | 48 |
-| 7.2. BF8 and FP8 Formats and Conversions                      | 50 |
-| 7.3. Floating-point handling details and formats              | 52 |
-| 7.4. Sparse Matrices                                          | 52 |
-| 7.4.1. Details of Sparsity Structure                          | 53 |
-| 7.5. Dependency Resolution: Required Independent Instructions | 55 |
-| 8. Scalar Memory Operations                                   | 59 |
-| 8.1. Microcode Encoding                                       | 59 |
-| 8.2. Operations                                               | 60 |
-| 8.2.1. S_LOAD_DWORD, S_STORE_DWORD                            | 60 |
-| 8.2.2. Scalar Atomic Operations                               | 61 |
+| [4.6. Arbitrary Divergent Control Flow](#page-28-0)                         | 21 |
+| [5. Scalar ALU Operations](#page-31-0)                                      | 24 |
+| [5.1. SALU Instruction Formats](#page-31-1)                                 | 24 |
+| [5.2. Scalar ALU Operands](#page-31-2)                                      | 24 |
+| [5.3. Scalar Condition Code (SCC)](#page-33-0)                              | 26 |
+| [5.4. Integer Arithmetic Instructions](#page-33-1)                          | 26 |
+| [5.5. Conditional Instructions](#page-34-0)                                 | 27 |
+| [5.6. Comparison Instructions](#page-34-1)                                  | 27 |
+| [5.7. Bit-Wise Instructions](#page-34-2)                                    | 27 |
+| [5.8. Access Instructions](#page-36-0)                                      | 29 |
+| [6. Vector ALU Operations](#page-38-0)                                      | 31 |
+| [6.1. Microcode Encodings](#page-38-1)                                      | 31 |
+| [6.2. Operands](#page-39-0)                                                 | 32 |
+| [6.2.1. Instruction Inputs](#page-39-1)                                     | 32 |
+| [6.2.2. Instruction Outputs](#page-40-0)                                    | 33 |
+| [6.2.3. Out-of-Range GPRs](#page-41-0)                                      | 34 |
+| [6.3. Instructions](#page-41-1)                                             | 34 |
+| [6.4. Denormalized and Rounding Modes](#page-43-0)                          | 36 |
+| [6.5. ALU Clamp Bit Usage](#page-44-0)                                      | 37 |
+| [6.6. VGPR Indexing](#page-44-1)                                            | 37 |
+| [6.6.1. Indexing Instructions](#page-44-2)                                  | 37 |
+| [6.6.2. VGPR Indexing Details](#page-45-0)                                  | 38 |
+| [6.7. Packed Math](#page-45-1)                                              | 38 |
+| [7. Matrix Arithmetic Instructions](#page-47-0)                             | 40 |
+| [7.1. Matrix fused-multiply-add (MFMA)](#page-47-1)                         | 40 |
+| [7.1.1. Notation](#page-48-0)                                               | 41 |
+| [7.1.2. List of Dense MFMA instructions](#page-49-0)                        | 42 |
+| [7.1.3. Usage examples](#page-50-0)                                         | 43 |
+| [7.1.4. General input and output layout.](#page-53-0)                       | 46 |
+| [7.1.5. Broadcasting values](#page-55-0)                                    | 48 |
+| [7.2. BF8 and FP8 Formats and Conversions](#page-57-0)                      | 50 |
+| [7.3. Floating-point handling details and formats](#page-59-0)              | 52 |
+| [7.4. Sparse Matrices](#page-59-1)                                          | 52 |
+| [7.4.1. Details of Sparsity Structure](#page-60-0)                          | 53 |
+| [7.5. Dependency Resolution: Required Independent Instructions](#page-62-0) | 55 |
+| [8. Scalar Memory Operations](#page-66-0)                                   | 59 |
+| [8.1. Microcode Encoding](#page-66-1)                                       | 59 |
+| [8.2. Operations](#page-67-0)                                               | 60 |
+| [8.2.1. S_LOAD_DWORD, S_STORE_DWORD](#page-67-1)                            | 60 |
+| [8.2.2. Scalar Atomic Operations](#page-68-0)                               | 61 |
 
-| 8.2.3. S_DCACHE_INV, S_DCACHE_WB             | 61 |
+| [8.2.3. S_DCACHE_INV, S_DCACHE_WB](#page-68-1)             | 61 |
 |----------------------------------------------|----|
-| 8.2.4. S_MEMTIME                             | 61 |
-| 8.2.5. S_MEMREALTIME                         | 62 |
-| 8.3. Dependency Checking                     | 62 |
-| 8.4. Alignment and Bounds Checking.          | 62 |
-| 9. Vector Memory Operations                  | 63 |
-| 9.1. Vector Memory Buffer Instructions       | 63 |
-| 9.1.1. Simplified Buffer Addressing          | 64 |
-| 9.1.2. Buffer Instructions                   | 64 |
-| 9.1.3. VGPR Usage                            | 65 |
-| 9.1.4. Buffer Data                           | 66 |
-| 9.1.5. Buffer Addressing                     | 67 |
-| 9.1.6. 16-bit Memory Operations              | 71 |
-| 9.1.7. Alignment                             | 71 |
-| 9.1.8. Buffer Resource                       | 71 |
-| 9.1.9. Memory Buffer Load to LDS             | 72 |
-| 9.1.10. Memory Scope and Temporal Control    | 73 |
-| 9.1.11. Data Formats                         | 75 |
-| 9.2. Float Memory Atomics                    | 76 |
-| 9.2.1. Rounding of Float Atomics             | 77 |
-| 9.2.2. Denormal (Subnormal) Handling.        | 77 |
-| 9.2.3. NaN Handling                          | 77 |
-| 10. Flat Memory Instructions                 | 79 |
-| 10.1. Flat Memory Instruction                | 79 |
-| 10.2. Instructions                           | 81 |
-| 10.2.1. Ordering                             | 81 |
-| 10.2.2. Important Timing Consideration       | 81 |
-| 10.3. Addressing                             | 81 |
-| 10.3.1. Atomics                              | 82 |
-| 10.4. Global                                 | 82 |
-| 10.5. Scratch                                | 82 |
-| 10.6. Data                                   | 83 |
-| 10.7. Scratch Space (Private)                | 83 |
-| 11. Data Share Operations                    | 84 |
-| 11.1. Overview                               | 84 |
-| 11.2. Dataflow in Memory Hierarchy           | 85 |
-| 11.3. LDS Access                             | 85 |
-| 11.3.1. Data Share Indexed and Atomic Access | 85 |
-| 11.4. GWS Programming Restriction            | 87 |
-| 12. Instructions                             | 88 |
-| 12.1. SOP2 Instructions                      | 88 |
+| [8.2.4. S_MEMTIME](#page-68-2)                             | 61 |
+| [8.2.5. S_MEMREALTIME](#page-69-0)                         | 62 |
+| [8.3. Dependency Checking](#page-69-1)                     | 62 |
+| [8.4. Alignment and Bounds Checking.](#page-69-2)          | 62 |
+| [9. Vector Memory Operations](#page-70-0)                  | 63 |
+| [9.1. Vector Memory Buffer Instructions](#page-70-1)       | 63 |
+| [9.1.1. Simplified Buffer Addressing](#page-71-0)          | 64 |
+| [9.1.2. Buffer Instructions](#page-71-1)                   | 64 |
+| [9.1.3. VGPR Usage](#page-72-0)                            | 65 |
+| [9.1.4. Buffer Data](#page-73-0)                           | 66 |
+| [9.1.5. Buffer Addressing](#page-74-0)                     | 67 |
+| [9.1.6. 16-bit Memory Operations](#page-78-0)              | 71 |
+| [9.1.7. Alignment](#page-78-1)                             | 71 |
+| [9.1.8. Buffer Resource](#page-78-2)                       | 71 |
+| [9.1.9. Memory Buffer Load to LDS](#page-79-0)             | 72 |
+| [9.1.10. Memory Scope and Temporal Control](#page-80-0)    | 73 |
+| [9.1.11. Data Formats](#page-82-0)                         | 75 |
+| [9.2. Float Memory Atomics](#page-83-0)                    | 76 |
+| [9.2.1. Rounding of Float Atomics](#page-84-0)             | 77 |
+| [9.2.2. Denormal (Subnormal) Handling.](#page-84-1)        | 77 |
+| [9.2.3. NaN Handling](#page-84-2)                          | 77 |
+| [10. Flat Memory Instructions](#page-86-0)                 | 79 |
+| [10.1. Flat Memory Instruction](#page-86-1)                | 79 |
+| [10.2. Instructions](#page-88-0)                           | 81 |
+| [10.2.1. Ordering](#page-88-1)                             | 81 |
+| [10.2.2. Important Timing Consideration](#page-88-2)       | 81 |
+| [10.3. Addressing](#page-88-3)                             | 81 |
+| [10.3.1. Atomics](#page-89-0)                              | 82 |
+| [10.4. Global](#page-89-1)                                 | 82 |
+| [10.5. Scratch](#page-89-2)                                | 82 |
+| [10.6. Data](#page-90-0)                                   | 83 |
+| [10.7. Scratch Space (Private)](#page-90-1)                | 83 |
+| [11. Data Share Operations](#page-91-0)                    | 84 |
+| [11.1. Overview](#page-91-1)                               | 84 |
+| [11.2. Dataflow in Memory Hierarchy](#page-92-0)           | 85 |
+| [11.3. LDS Access](#page-92-1)                             | 85 |
+| [11.3.1. Data Share Indexed and Atomic Access](#page-92-2) | 85 |
+| [11.4. GWS Programming Restriction](#page-94-0)            | 87 |
+| [12. Instructions](#page-95-0)                             | 88 |
+| [12.1. SOP2 Instructions](#page-95-1)                      | 88 |
 
-| 12.2. SOPK Instructions                      | 101 |
+| [12.2. SOPK Instructions](#page-108-0)                      | 101 |
 |----------------------------------------------|-----|
-| 12.3. SOP1 Instructions                      | 107 |
-| 12.4. SOPC Instructions                      | 125 |
-| 12.5. SOPP Instructions                      | 130 |
-| 12.5.1. Send Message                         | 138 |
-| 12.6. SMEM Instructions                      | 138 |
-| 12.7. VOP2 Instructions                      | 161 |
-| 12.7.1. VOP2 using VOP3 encoding             | 178 |
-| 12.8. VOP1 Instructions                      | 178 |
-| 12.8.1. VOP1 using VOP3 encoding             | 206 |
-| 12.9. VOPC Instructions                      | 206 |
-| 12.9.1. VOPC using VOP3A encoding            | 254 |
-| 12.10. VOP3P Instructions                    | 254 |
-| 12.11. VOP3A & VOP3B Instructions            | 285 |
-| 12.12. LDS & GWS Instructions                | 410 |
-| 12.13. MUBUF Instructions                    | 450 |
-| 12.14. MTBUF Instructions                    | 469 |
-| 12.15. FLAT, Scratch and Global Instructions | 474 |
-| 12.15.1. Flat Instructions                   | 474 |
-| 12.15.2. Scratch Instructions                | 489 |
-| 12.15.3. Global Instructions                 | 495 |
-| 12.16. Instruction Limitations               | 510 |
-| 12.16.1. DPP                                 | 510 |
-| 12.16.2. SDWA                                | 510 |
-| 13. Microcode Formats                        | 512 |
-| 13.1. Scalar ALU and Control Formats         | 513 |
-| 13.1.1. SOP2                                 | 513 |
-| 13.1.2. SOPK                                 | 515 |
-| 13.1.3. SOP1                                 | 516 |
-| 13.1.4. SOPC                                 | 518 |
-| 13.1.5. SOPP                                 | 520 |
-| 13.2. Scalar Memory Format                   | 520 |
-| 13.2.1. SMEM                                 | 520 |
-| 13.3. Vector ALU Formats                     | 522 |
-| 13.3.1. VOP2                                 | 522 |
-| 13.3.2. VOP1                                 | 524 |
-| 13.3.3. VOPC                                 | 526 |
-| 13.3.4. VOP3A                                | 531 |
-| 13.3.5. VOP3B                                | 537 |
-| 13.3.6. VOP3P                                | 539 |
-| 13.3.7. SDWA                                 | 542 |
+| [12.3. SOP1 Instructions](#page-114-0)                      | 107 |
+| [12.4. SOPC Instructions](#page-132-0)                      | 125 |
+| [12.5. SOPP Instructions](#page-137-0)                      | 130 |
+| [12.5.1. Send Message](#page-145-0)                         | 138 |
+| [12.6. SMEM Instructions](#page-145-1)                      | 138 |
+| [12.7. VOP2 Instructions](#page-168-0)                      | 161 |
+| [12.7.1. VOP2 using VOP3 encoding](#page-185-0)             | 178 |
+| [12.8. VOP1 Instructions](#page-185-1)                      | 178 |
+| [12.8.1. VOP1 using VOP3 encoding](#page-213-0)             | 206 |
+| [12.9. VOPC Instructions](#page-213-1)                      | 206 |
+| [12.9.1. VOPC using VOP3A encoding](#page-261-0)            | 254 |
+| [12.10. VOP3P Instructions](#page-261-1)                    | 254 |
+| [12.11. VOP3A & VOP3B Instructions](#page-292-0)            | 285 |
+| [12.12. LDS & GWS Instructions](#page-417-0)                | 410 |
+| [12.13. MUBUF Instructions](#page-457-0)                    | 450 |
+| [12.14. MTBUF Instructions](#page-476-0)                    | 469 |
+| [12.15. FLAT, Scratch and Global Instructions](#page-481-0) | 474 |
+| [12.15.1. Flat Instructions](#page-481-1)                   | 474 |
+| [12.15.2. Scratch Instructions](#page-496-0)                | 489 |
+| [12.15.3. Global Instructions](#page-502-0)                 | 495 |
+| [12.16. Instruction Limitations](#page-517-0)               | 510 |
+| [12.16.1. DPP](#page-517-1)                                 | 510 |
+| [12.16.2. SDWA](#page-517-2)                                | 510 |
+| [13. Microcode Formats](#page-519-0)                        | 512 |
+| [13.1. Scalar ALU and Control Formats](#page-520-0)         | 513 |
+| [13.1.1. SOP2](#page-520-1)                                 | 513 |
+| [13.1.2. SOPK](#page-522-0)                                 | 515 |
+| [13.1.3. SOP1](#page-523-0)                                 | 516 |
+| [13.1.4. SOPC](#page-525-0)                                 | 518 |
+| [13.1.5. SOPP](#page-527-0)                                 | 520 |
+| [13.2. Scalar Memory Format](#page-527-1)                   | 520 |
+| [13.2.1. SMEM](#page-527-2)                                 | 520 |
+| [13.3. Vector ALU Formats](#page-529-0)                     | 522 |
+| [13.3.1. VOP2](#page-529-1)                                 | 522 |
+| [13.3.2. VOP1](#page-531-0)                                 | 524 |
+| [13.3.3. VOPC](#page-533-0)                                 | 526 |
+| [13.3.4. VOP3A](#page-538-0)                                | 531 |
+| [13.3.5. VOP3B](#page-544-0)                                | 537 |
+| [13.3.6. VOP3P](#page-546-0)                                | 539 |
+| [13.3.7. SDWA](#page-549-0)                                 | 542 |
 
-| 13.3.8. SDWAB                      | 543 |
+| [13.3.8. SDWAB](#page-550-0)                      | 543 |
 |------------------------------------|-----|
-| 13.3.9. DPP                        | 544 |
-| 13.4. LDS and GWS format           | 545 |
-| 13.4.1. DS                         | 545 |
-| 13.5. Vector Memory Buffer Formats | 547 |
-| 13.5.1. MTBUF                      | 547 |
-| 13.5.2. MUBUF                      | 549 |
-| 13.6. Flat Formats.                | 550 |
-| 13.6.1. FLAT                       | 550 |
-| 13.6.2. GLOBAL                     | 552 |
-| 13.6.3. SCRATCH                    | 552 |
+| [13.3.9. DPP](#page-551-0)                        | 544 |
+| [13.4. LDS and GWS format](#page-552-0)           | 545 |
+| [13.4.1. DS](#page-552-1)                         | 545 |
+| [13.5. Vector Memory Buffer Formats](#page-554-0) | 547 |
+| [13.5.1. MTBUF](#page-554-1)                      | 547 |
+| [13.5.2. MUBUF](#page-556-0)                      | 549 |
+| [13.6. Flat Formats.](#page-557-0)                | 550 |
+| [13.6.1. FLAT](#page-557-1)                       | 550 |
+| [13.6.2. GLOBAL](#page-559-0)                     | 552 |
+| [13.6.3. SCRATCH](#page-559-1)                    | 552 |
 
 # <span id="page-8-0"></span>**Preface**
 
