@@ -687,7 +687,7 @@ Hardware enforces SGPR alignment by ignoring LSB's as necessary and treating the
 
 Scalar sources and dests use a 7-bit encoding:
 
-Scalar 0-105=SGPR; 106,107=VCC, 108-123=TTMP0-15, and 124-127={NULL, M0, EXEC\_LO, EXEC\_HI}.
+`Scalar 0-105=SGPR; 106,107=VCC, 108-123=TTMP0-15, and 124-127={NULL, M0, EXEC_LO, EXEC_HI}.`
 
 It is illegal to use GPR indexing or a multi-DWORD operand to cross SGPR regions. The regions are:
 
@@ -732,7 +732,10 @@ A wave may voluntarily deallocate all of its VGPRs via S\_SENDMSG. Once this is 
 
 Given an instruction operand that uses one or more DWORDs of VGPR data: "V"
 
-Vs = the first VGPR DWORD (start) Ve = the last VGPR DWORD (end)
+```text
+Vs = the first VGPR DWORD (start)
+Ve = the last VGPR DWORD (end)
+```
 
 For a 32-bit operand, Vs==Ve; for a 64-bit operand Ve=Vs+1, etc.
 
@@ -820,7 +823,13 @@ Out Of Range
 
 B8: byte aligned B16 or D16: 2 byte aligned B32: 4 byte aligned B64: 8 byte aligned B128 and B96: 16 byte aligned If the alignment mode is set to "unaligned", the LDS disables its auto-alignment and doesn't report error for misaligned reads & writes.
 
- if (sh\_alignment\_mode == unaligned) align = 0xffff else if (B32) align = 0xfffC else if (B64) align = 0xfff8 else if (B96 or B128) align = 0xfff0 LDSaddr = (addr + offset) & align
+```text
+if (sh_alignment_mode == unaligned)     align = 0xffff
+else if (B32)                           align = 0xfffC
+else if (B64)                           align = 0xfff8
+else if (B96 or B128)                   align = 0xfff0
+LDSaddr = (addr + offset) & align
+```
 
 # <span id="page-28-0"></span>**3.4. Wave State Registers**
 
@@ -942,7 +951,11 @@ Whenever any instruction writes a value to VCC, the hardware automatically updat
 
 The EXEC mask determines which threads execute an instruction. The VCC indicates which executing threads passed the conditional test, or which threads generated a carry-out from an integer add or subtract.
 
-S\_MOV\_B64 EXEC, 0x00000001 // set just one thread active; others are inactive V\_CMP\_EQ\_B32 VCC, V0, V0 // compare (V0 == V0) and write result to VCC (all bits in VCC are updated)
+```text
+S_MOV_B64     EXEC, 0x00000001  // set just one thread active; others are inactive
+V_CMP_EQ_B32  VCC, V0, V0       // compare (V0 == V0) and write result to VCC (all bits in VCC are
+updated)
+```
 
 VCC physically resides in the SGPR register file in a specific pair of SGPRs, so when an instruction sources VCC, that counts against the limit on the total number of SGPRs that can be sourced for a given instruction.
 
@@ -1007,7 +1020,7 @@ When the shader is not privileged (STATUS.PRIV==0), writes to these are ignored.
 
 When a trap is taken (either user initiated, exception or host initiated), the shader hardware generates an S\_TRAP instruction. This loads trap information into a pair of SGPRS:
 
-{TTMP1, TTMP0} = {7'h0, HT[0],trapID[7:0], PC[47:0]}.
+`{TTMP1, TTMP0} = {7'h0, HT[0],trapID[7:0], PC[47:0]}.`
 
 HT is set to one for host initiated traps, and zero for user traps (s\_trap) or exceptions. TRAP\_ID is zero for exceptions, or the user/host trapID for those traps.
 
@@ -1072,7 +1085,10 @@ Shader programs have access to a free-running clock counter in order to measure 
 
 For measuring time between different waves or SIMDs, or to reference a clock that does not stop counting when the chip is idle, use "REALTIME". Real-time is a clock counter that comes from the clock-generator and runs at a constant speed, regardless of the shader or memory clock speeds. This counter can be read by:
 
- S\_SENDMSG\_RTN\_B64 S[2:3] REALTIME S\_WAITCNT LGKMcnt == 0
+```text
+S_SENDMSG_RTN_B64 S[2:3] REALTIME
+S_WAITCNT LGKMcnt == 0
+```
 
 # <span id="page-36-0"></span>**3.5. Initial Wave State**
 
@@ -1493,7 +1509,11 @@ If the first instruction in a VALU clause has EXEC==0, then the clause is ignore
 
 #### **If an S\_DELAY\_ALU is needed before starting a clause, the order must be:**
 
- S\_DELAY\_ALU // must not come immediately after S\_CLAUSE - that inst declares clause type S\_CLAUSE <first instruction in clause>
+```text
+S_DELAY_ALU // must not come immediately after S_CLAUSE - that inst declares clause type
+S_CLAUSE
+<first instruction in clause>
+```
 
 If the first instruction after S\_CLAUSE is skipped (e.g. due to EXEC==0, or VMEM-load skipped due to EXEC==0 and VMcnt==0) then then a clause is not started. Subsequent instructions within what would have been the clause that are not skipped and are still executed but individually, not as part of a clause.
 
@@ -1614,7 +1634,12 @@ It is possible for data to be written to VGPRs out-of-order, but the counter-dec
 
 #### **Simple S\_WAITCNT Example**
 
- global\_load\_b32 V0, V[4:5], 0x0 // load memory[ {V5, V4} ] into V0 global\_load\_b32 V1, V[4:5], 0x8 // load memory[ {V5, V4} +8 ] into V1 s\_waitcnt VMcnt <= 1 // wait for first global\_load to have completed v\_mov\_b32 V9, V0 // move V0 into V9
+```text
+global_load_b32 V0, V[4:5], 0x0   // load memory[ {V5, V4} ] into V0
+global_load_b32 V1, V[4:5], 0x8   // load memory[ {V5, V4} +8 ] into V1
+s_waitcnt VMcnt <= 1              // wait for first global_load to have completed
+v_mov_b32  V9, V0                 // move V0 into V9
+```
 
 # <span id="page-52-0"></span>**5.7. ALU Instruction Software Scheduling**
 
@@ -2305,7 +2330,7 @@ The 32-bit VGPR is "V0". The two halves are called "V0.L" and "V0.H".
 
 SRC/DST[6:0] = 32-bit VGPR address;
 
-SRC/DST[7] = (1=hi, 0=lo half)
+`SRC/DST[7] = (1=hi, 0=lo half)`
 
 In this encoding, only 256 16-bit VGPRs can be addressed.
 
@@ -2646,7 +2671,7 @@ These instructions load 1-16 DWORDs from memory. The data in SGPRs is specified 
 
 Non-buffer S\_LOAD instructions use the following formula to calculate the memory address:
 
-ADDR = SGPR[base] + inst\_offset + { M0 or SGPR[offset] or zero }
+`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero}`
 
 All components of the address (base, offset, inst\_offset, M0) are in bytes, but the two LSBs are ignored and treated as if they were zero.
 
@@ -2664,7 +2689,19 @@ The SMEM supplies only a SBASE address (byte) and an offset (byte or DWORD). Any
 
 The two LSBs of V#.base and of the final address are ignored to force DWORD alignment.
 
-"m\_\*" components come from the buffer constant (V#): offset = OFFSET + SOFFSET (M0, SGPR or zero) m\_base = { SGPR[SBASE \* 2 +1][15:0], SGPR[SBASE\*2] } m\_stride = SGPR[SBASE \* 2 +1][31:16] m\_num\_records = SGPR[SBASE \* 2 + 2] m\_size = (m\_stride == 0 ? 1 : m\_stride) \* m\_num\_records addr = (m\_base & ~3) + (offset & ~0x3) SGPR[SDST] = load\_dword\_from\_dcache(addr, m\_size) If more than 1 DWORD is being loaded, it is returned to SDST+1, SDST+2, etc, and the offset is incremented by 4 bytes per DWORD.
+```text
+"m_*" components come from the buffer constant (V#):
+  offset     = OFFSET + SOFFSET (M0, SGPR or zero)
+  m_base     = { SGPR[SBASE * 2 +1][15:0], SGPR[SBASE*2] }
+  m_stride   = SGPR[SBASE * 2 +1][31:16]
+  m_num_records = SGPR[SBASE * 2 + 2]
+  m_size     = (m_stride == 0 ? 1 : m_stride) * m_num_records
+  addr       = (m_base & ~3) + (offset & ~0x3)
+  SGPR[SDST] = load_dword_from_dcache(addr, m_size)
+
+  If more than 1 DWORD is being loaded, it is returned to SDST+1, SDST+2, etc,
+  and the offset is incremented by 4 bytes per DWORD.
+```
 
 # <span id="page-85-2"></span>**8.1.3. S\_DCACHE\_INV and S\_GL1\_INV**
 
@@ -3075,13 +3112,19 @@ Table 46. Buffer Out Of Bounds Selection
 
 The address calculation for swizzle\_en==0 is: (unswizzled structured buffer)
 
- ADDR = Base + baseOff + Ioff + Stride \* Vidx + (OffEn ? Voff : 0) V# SGPR INST V# VGPR INST VGPR
+```text
+ADDR = Base  + baseOff + Ioff +  Stride * Vidx  + (OffEn ? Voff : 0)
+       V#      SGPR      INST      V#     VGPR     INST    VGPR
+```
 
 NumRecords for structured buffer is in units of stride.
 
 ## **9.4.1.2. Raw Buffer**
 
- ADDR = Base + baseOff + Ioff + (OffEn ? Voff : 0) V# SGPR INST INST VGPR
+```text
+ADDR = Base  + baseOff + Ioff +  (OffEn ? Voff : 0)
+       V#      SGPR      INST      INST   VGPR
+```
 
 NumRecords for raw buffer is in units of bytes. This is an exact range check, meaning it includes the payload and handles multi-DWORD and unaligned correctly. The stride field is ignored.
 
@@ -3089,7 +3132,10 @@ NumRecords for raw buffer is in units of bytes. This is an exact range check, me
 
 The address calculation for swizzle\_en = 0 is…(unswizzled scratch buffer)
 
- ADDR = Base + baseOffset + Ioff + Stride \* TID + (OffEn ? Voff : 0) V# SGPR INST V# 0..63 INST VGPR
+```text
+ADDR = Base  + baseOffset + Ioff +  Stride * TID +  (OffEn ? Voff : 0)
+       V#      SGPR          INST      V#     0..63    INST    VGPR
+```
 
 Swizzle of scratch buffer is also supported (and is typical). The MSBs of the TID (TID / 64) is folded into baseOffset. No range checking (using OOB mode 2).
 
@@ -3097,7 +3143,10 @@ Swizzle of scratch buffer is also supported (and is typical). The MSBs of the TI
 
 Scalar memory does the following, that works with RAW buffers and unswizzled structured buffers:
 
-Addr = Base + offset V# SGPR or Inst
+```text
+Addr =   Base  +   offset
+           V#       SGPR or Inst
+```
 
 Address Out-of-Range if: offset >= ( (stride==0 ? 1 : stride) \* num\_records).
 
@@ -3600,7 +3649,12 @@ The two instructions are identical, except that the "64" version supports a 64-b
 
 # <span id="page-115-2"></span>**10.9.1. Instruction definition and fields**
 
-image\_bvh\_intersect\_ray vgpr\_d[4], vgpr\_a[11], sgpr\_r[4] image\_bvh\_intersect\_ray vgpr\_d[4], vgpr\_a[8], sgpr\_r[4] A16=1 image\_bvh64\_intersect\_ray vgpr\_d[4], vgpr\_a[12], sgpr\_r[4] image\_bvh64\_intersect\_ray vgpr\_d[4], vgpr\_a[9], sgpr\_r[4] A16=1
+```text
+image_bvh_intersect_ray vgpr_d[4], vgpr_a[11], sgpr_r[4]
+image_bvh_intersect_ray vgpr_d[4], vgpr_a[8], sgpr_r[4] A16=1
+image_bvh64_intersect_ray vgpr_d[4], vgpr_a[12], sgpr_r[4]
+image_bvh64_intersect_ray vgpr_d[4], vgpr_a[9], sgpr_r[4]   A16=1
+```
 
 Table 53. Ray Tracing VGPR Contents
 
@@ -3846,23 +3900,28 @@ There are 4 distinct shader instructions:
 
 ## **Global Addressing**
 
-**GV** mem\_addr = VGPRU64 + INST\_OFFSETI13
-
-**GVS** mem\_addr = SGPRU64 + VGPRU32 + INST\_OFFSETI13 **GT** mem\_addr = SGPRU64 + INST\_OFFSETI13 + ThreadID\*4
+```text
+GV   mem_addr = VGPRU64 + INST_OFFSETI13
+GVS  mem_addr = SGPRU64 + VGPRU32 + INST_OFFSETI13
+GT   mem_addr = SGPRU64 + INST_OFFSETI13 + ThreadID*4
+```
 
 #### **LDS Addressing (DS ops)**
 
-**LDS** LDS\_ADDR = VGPR\_addrU32 + INST\_OFFSETU16
+`LDS_ADDR = VGPR_addrU32 + INST_OFFSETU16`
 
 LDS address is relative to the LDS space allocated to this wave.
 
 **Scratch Addressing**
 
-**SV** mem\_addr = SCRATCH\_BASEU64 + SWIZZLE(VGPR\_offsetU32 + INST\_OFFSETI13, ThreadID) **SS** mem\_addr = SCRATCH\_BASEU64 + SWIZZLE(SGPR\_offsetU32 + INST\_OFFSETI13, ThreadID)
+```text
+SV   mem_addr = SCRATCH_BASEU64 + SWIZZLE(VGPR_offsetU32 + INST_OFFSETI13, ThreadID)
+SS   mem_addr = SCRATCH_BASEU64 + SWIZZLE(SGPR_offsetU32 + INST_OFFSETI13, ThreadID)
+SVS  mem_addr = SCRATCH_BASEU64 + SWIZZLE(SGPR_offsetU32 + VGPR_offsetU32 + INST_OFFSETI13, ThreadID)
+ST   mem_addr = SCRATCH_BASEU64 + SWIZZLE(INST_OFFSETI13, ThreadID)
+```
 
-**SVS** mem\_addr = SCRATCH\_BASEU64 + SWIZZLE(SGPR\_offsetU32 + VGPR\_offsetU32 + INST\_OFFSETI13, ThreadID)
-
-**ST** mem\_addr = SCRATCH\_BASEU64 + SWIZZLE(INST\_OFFSETI13, ThreadID) SGPR\_offset and VGPR\_offset are 32 bits unsigned byte offsets.
+SGPR_offset and VGPR_offset are 32-bit unsigned byte offsets.
 
 The combined offsets inside SWIZZLE() must result in a non-negative number.
 
@@ -3880,7 +3939,9 @@ Scratch Addressing Equation
 
 Swizzle for **Scratch** is hard-coded to: elem\_size=4bytes, const\_index\_stride=32 (wave32) or 64 (wave64).
 
-Addr = SCRATCH\_BASE + (offset / 4) \* 4 \* const\_index\_stride + (offset % 4) + TID\*4 where "offset" = either "INST\_OFFSET + SGPR\_offset" or "INST\_OFFSET + VGPR\_offset".
+`Addr = SCRATCH_BASE + (offset / 4) * 4 * const_index_stride + (offset % 4) + TID*4`
+
+where `offset = INST_OFFSET + SGPR_offset` or `offset = INST_OFFSET + VGPR_offset`.
 
 #### **Restrictions:**
 
@@ -4006,7 +4067,10 @@ Pixel shaders can be launched before their parameter data has been written into 
 
 The most common form of interpolation involves weighting vertex parameters by the barycentric coordinates "I" and "J". A common calculation is:
 
- Result = P0 + I \* P10 + J \* P20 where "P10" is (P1 - P0), and "P20" is (P2 - P0)
+```text
+Result = P0 + I * P10 + J * P20
+    where "P10" is (P1 - P0), and "P20" is (P2 - P0)
+```
 
 Parameter interpolation involves two types of instructions:
 
@@ -4082,11 +4146,18 @@ Another potential data hazard involves LDS\_PARAM\_LOAD overwriting a VGPR that 
 
 Parameter interpolation is performed using an FMA operation that includes a built-in DPP operation to unpack the per-quad P0/P10/P20 values into per-lane values. Because this instruction reads data from neighboring lanes, the implicit DPP acts as if "fetch invalid = 1", so that the instruction can read data from neighboring lanes that have EXEC==0, rather than getting the value 0 from those. Standard interpolation is calculating:
 
-Per-Pixel-Parameter = P0 + I \* P10 + J \* P20 // I, J are per-pixel; P0/P10/P20 are per-primitive
+```text
+Per-Pixel-Parameter = P0 + I * P10 + J * P20   // I, J are per-pixel; P0/P10/P20 are per-primitive
+```
 
 This parameter interpolation is realized using a pair of instructions:
 
- // V1 = I, V2 = J, V3 = result of LDS\_PARAM\_LOAD V\_INTERP\_P10\_F32 V4, V3[1], V1, V3[0] // tmp = P0 + I\*P10 // uses DPP8=1,1,1,1,5,5,5,5; Src2(P0) uses DPP8=0,0,0,0,4,4,4,4 V\_INTERP\_P20\_F32 V5, V3[2], V2, V4 // dst = J\*P20 + tmp uses DPP8=2,2,2,2,6,6,6,6
+```text
+// V1 = I, V2 = J, V3 = result of LDS_PARAM_LOAD
+V_INTERP_P10_F32  V4, V3[1], V1, V3[0] // tmp = P0 + I*P10
+                                       // uses DPP8=1,1,1,1,5,5,5,5; Src2(P0) uses DPP8=0,0,0,0,4,4,4,4
+V_INTERP_P20_F32  V5, V3[2], V2, V4    // dst = J*P20 + tmp  uses DPP8=2,2,2,2,6,6,6,6
+```
 
 Table 58. Parameter Interpolation Instruction Fields
 
@@ -4142,9 +4213,21 @@ Direct loads are only available in LDS, not in GDS. Direct access is allowed onl
 
 LDS\_DIRECT\_LOAD uses the same instruction format and fields as LDS\_PARAM\_LOAD. See [Pixel Parameter](#page-128-0) [Interpolation](#page-128-0).
 
-LDS\_addr = M0[15:0] (byte address and must be DWORD aligned) DataType = M0[18:16] 0 unsigned byte 1 unsigned short 2 DWORD 3 unused 4 signed byte 5 signed short 6,7 Reserved
+```text
+LDS_addr = M0[15:0] (byte address and must be DWORD aligned)
+DataType = M0[18:16]
+    0 unsigned byte
+    1 unsigned short
+    2 DWORD
+    3 unused
+    4 signed byte
+    5 signed short
+    6,7 Reserved
+```
 
-Example: LDS\_DIRECT\_LOAD V4 // load the value from LDS-address in M0[15:0] to V4
+```text
+Example:  LDS_DIRECT_LOAD  V4     // load the value from LDS-address in M0[15:0] to V4
+```
 
 Signed byte and short data is sign-extend to 32 bits before writing the result to a VGPR; unsigned byte and short data is zero-extended to 32 bits before writing to a VGPR.
 
@@ -4197,15 +4280,24 @@ Table 60. LDS Indexed Load/Store
 
 #### **Single Address Instructions**
 
-LDS\_Addr = LDS\_BASE + VGPR[ADDR] + {InstOffset1,InstOffset0}
+`LDS_Addr = LDS_BASE + VGPR[ADDR] + {InstOffset1,InstOffset0}`
 
 ## **Double Address Instructions**
 
-LDS\_Addr0 = LDS\_BASE + VGPR[ADDR] + InstOffset0\*ADJ + LDS\_Addr1 = LDS\_BASE + VGPR[ADDR] + InstOffset1\*ADJ + Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit. The double address instructions are: LOAD\_2ADDR\*, STORE\_2ADDR\*, and STOREXCHG\_2ADDR\_\*. The address comes from VGPR, and both VGPR[ADDR] and InstOffset are byte addresses. At the time of wave creation, LDS\_BASE is assigned to the physical LDS region owned by this wave or work-group.
+```text
+LDS_Addr0 = LDS_BASE + VGPR[ADDR] + InstOffset0*ADJ +
+LDS_Addr1 = LDS_BASE + VGPR[ADDR] + InstOffset1*ADJ +
+   Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
+```
+
+The double address instructions are: LOAD\_2ADDR\*, STORE\_2ADDR\*, and STOREXCHG\_2ADDR\_\*. The address comes from VGPR, and both VGPR[ADDR] and InstOffset are byte addresses. At the time of wave creation, LDS\_BASE is assigned to the physical LDS region owned by this wave or work-group.
 
 #### **DS\_{LOAD,STORE}\_ADDTID Addressing**
 
-LDS\_Addr = LDS\_BASE + {InstOffset1, InstOffset0} + TID(0..63)\*4 + M0 Note: no part of the address comes from a VGPR. M0 must be DWORD-aligned.
+```text
+LDS_Addr = LDS_BASE + {InstOffset1, InstOffset0} + TID(0..63)*4 + M0
+    Note: no part of the address comes from a VGPR.  M0 must be DWORD-aligned.
+```
 
 The "ADDTID" (add thread-id) is a separate form where the base address for the instruction is common to all threads, but then each thread has a fixed offset added in based on its thread-ID within the wave. This can allow a convenient way to quickly transfer data between VGPRs and LDS without having to use a VGPR to supply an address.
 
@@ -4259,8 +4351,8 @@ Note that in wave64 mode the permute operates only across 32 lanes at a time on 
 
 These instructions use the LDS hardware but do not use any memory storage, and may be used by waves that have not allocated any LDS space. The instructions supply a data value from VGPRs and an index value per lane.
 
-- ds\_permute\_b32 : Dst[index[0..31]] = src[0..31] Where [0..31] is the lane number
-- ds\_bpermute\_b32 : Dst[0..31] = src[index[0..31]]
+- ds\_permute\_b32: `Dst[index[0..31]] = src[0..31]`, where `[0..31]` is the lane number
+- ds\_bpermute\_b32: `Dst[0..31] = src[index[0..31]]`
 
 The EXEC mask is honored for both reading the source and writing the destination. Index values out of range wrap around (only index bits [6:2] are used, the other bits of the index are ignored). Reading from disabled lanes returns zero.
 
@@ -4411,15 +4503,27 @@ MODE (allow\_input\_denorm)=0, otherwise values are passed through without modif
 
 #### **FP Max Selection Rules:**
 
- if (src0 == SNaN) result = QNaN (src0) // bits of SRC0 are preserved but is a QNaN else if (src1 == SNaN) result = QNaN (src1) else result = larger of (src0, src1) "Larger" order from smallest to largest: QNaN, -inf, -float, -denorm, -0, +0, +denorm, +float, +inf
+```text
+if      (src0 == SNaN) result = QNaN (src0)          // bits of SRC0 are preserved but is a QNaN
+else if (src1 == SNaN) result = QNaN (src1)
+else                   result = larger of (src0, src1)
+"Larger" order from smallest to largest: QNaN, -inf, -float, -denorm, -0, +0, +denorm, +float, +inf
+```
 
 #### **FP Min Selection Rules:**
 
- if (src0 == SNaN) result = QNaN (src0) else if (src1 == SNaN) result = QNaN (src1) else result = smaller of (src0, src1) "Smaller" order from smallest to largest: -inf, -float, -denorm, -0, +0, +denorm, +float, +inf, QNaN
+```text
+if      (src0 == SNaN) result = QNaN (src0)
+else if (src1 == SNaN) result = QNaN (src1)
+else                   result = smaller of (src0, src1)
+"Smaller" order from smallest to largest: -inf, -float, -denorm, -0, +0, +denorm, +float, +inf, QNaN
+```
 
 **FP Compare Swap: only swap if the compare condition (==) is true, treating +0 and -0 as equal**
 
+```text
 doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) // allow +0 == -0
+```
 
 #### **Float Add rules**:
 
@@ -6823,7 +6927,7 @@ Instructions in this format may use a 32-bit literal constant that occurs immedi
 
 Move scalar input into a scalar register.
 
-D0.b = S0.b
+`D0.b = S0.b`
 
 #### **S\_MOV\_B64 1**
 
@@ -6949,7 +7053,18 @@ Compare with V\_CLZ\_I32\_U32, which performs the equivalent operation in the ve
 
 Count the number of leading "0" bits before the first "1" in a scalar input and store the result into a scalar register. Store -1 if there are no "1" bits.
 
-// Set if no ones are found for i in 0 : 63 do // Search from MSB if S0.u64[63 - i] == 1'1U then tmp = i; break endif endfor; D0.i = tmp
+```text
+tmp = -1;
+// Set if no ones are found
+for i in 0 : 63 do
+      // Search from MSB
+      if S0.u64[63 - i] == 1'1U then
+          tmp = i;
+          break
+      endif
+endfor;
+D0.i = tmp
+```
 
 #### **S\_CLS\_I32 12**
 
@@ -7200,7 +7315,15 @@ Given an active pixel mask in a scalar input, calculate whole quad mode mask for
 
 In whole quad mode, if any pixel in a quad is active then all pixels of the quad are marked active.
 
-tmp = 0ULL; declare i : 6'U; for i in 6'0U : 6'63U do tmp[i] = S0.u64[i | 6'3U : i & 6'60U] != 0ULL endfor; D0.u64 = tmp;
+```text
+tmp = 0ULL;
+declare i : 6'U;
+for i in 6'0U : 6'63U do
+      tmp[i] = S0.u64[i | 6'3U : i & 6'60U] != 0ULL
+endfor;
+D0.u64 = tmp;
+SCC = D0.u64 != 0ULL
+```
 
 #### **S\_NOT\_B32 30**
 
@@ -7276,7 +7399,12 @@ Calculate bitwise XOR on the scalar input and the EXEC mask, store the calculate
 
 The original EXEC mask is saved to the destination SGPRs before the bitwise operation is performed.
 
-saveexec = EXEC.u; EXEC.u = (S0.u ^ EXEC.u); D0.u = saveexec.u;
+```text
+saveexec = EXEC.u;
+EXEC.u = (S0.u ^ EXEC.u);
+D0.u = saveexec.u;
+SCC = EXEC.u != 0U
+```
 
 #### **S\_XOR\_SAVEEXEC\_B64 37**
 
@@ -7578,7 +7706,12 @@ D0.b64 = SGPR[addr].b64
 
 Move data from a scalar input into a relatively-indexed scalar register.
 
-addr += M0.u[31 : 0]; SGPR[addr].b = S0.b
+```text
+addr = DST.u;
+// Raw value from instruction
+addr += M0.u[31 : 0];
+SGPR[addr].b = S0.b
+```
 
 #### **Notes**
 
@@ -7637,7 +7770,7 @@ Jump to an address specified in a scalar register.
 
 The argument is a byte address of the instruction to jump to.
 
-PC = S0.i64
+`PC = S0.i64`
 
 #### **S\_SWAPPC\_B64 73**
 
@@ -8739,7 +8872,40 @@ See also V\_MUL\_U32\_U24.
 
 Select the minimum of two floating point inputs and store the result into a vector register.
 
-LT\_NEG\_ZERO = lambda(a, b) ( ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b)))); // Version of comparison where -0.0 < +0.0, differs from IEEE if WAVE\_MODE.IEEE then if isSignalNAN(64'F(S0.f)) then D0.f = 32'F(cvtToQuietNAN(64'F(S0.f))) elsif isSignalNAN(64'F(S1.f)) then D0.f = 32'F(cvtToQuietNAN(64'F(S1.f))) elsif isQuietNAN(64'F(S1.f)) then D0.f = S0.f elsif isQuietNAN(64'F(S0.f)) then D0.f = S1.f elsif LT\_NEG\_ZERO(S0.f, S1.f) then // NOTE: -0<+0 is TRUE in this comparison D0.f = S0.f else D0.f = S1.f endif else if isNAN(64'F(S1.f)) then D0.f = S0.f elsif isNAN(64'F(S0.f)) then D0.f = S1.f elsif LT\_NEG\_ZERO(S0.f, S1.f) then // NOTE: -0<+0 is TRUE in this comparison D0.f = S0.f else D0.f = S1.f endif endif; // Inequalities in the above pseudocode behave differently from IEEE
+```text
+LT_NEG_ZERO = lambda(a, b) (
+      ((a < b) || ((64'F(abs(a)) == 0.0) && (64'F(abs(b)) == 0.0) && sign(a) && !sign(b))));
+// Version of comparison where -0.0 < +0.0, differs from IEEE
+if WAVE_MODE.IEEE then
+      if isSignalNAN(64'F(S0.f)) then
+          D0.f = 32'F(cvtToQuietNAN(64'F(S0.f)))
+      elsif isSignalNAN(64'F(S1.f)) then
+          D0.f = 32'F(cvtToQuietNAN(64'F(S1.f)))
+      elsif isQuietNAN(64'F(S1.f)) then
+          D0.f = S0.f
+      elsif isQuietNAN(64'F(S0.f)) then
+          D0.f = S1.f
+      elsif LT_NEG_ZERO(S0.f, S1.f) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f = S0.f
+      else
+          D0.f = S1.f
+      endif
+else
+      if isNAN(64'F(S1.f)) then
+          D0.f = S0.f
+      elsif isNAN(64'F(S0.f)) then
+          D0.f = S1.f
+      elsif LT_NEG_ZERO(S0.f, S1.f) then
+          // NOTE: -0<+0 is TRUE in this comparison
+          D0.f = S0.f
+      else
+          D0.f = S1.f
+      endif
+endif;
+// Inequalities in the above pseudocode behave differently from IEEE
+// when both inputs are +-0.
+```
 
 #### **Notes**
 
@@ -9175,7 +9341,7 @@ Do nothing.
 
 Move data from a vector input into a vector register.
 
-D0.b = S0.b
+`D0.b = S0.b`
 
 #### **Notes**
 
@@ -9492,7 +9658,12 @@ endif
 
 Round the single-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
- D0.f -= 1.0F endif
+```text
+D0.f = floor(S0.f + 0.5F);
+if (isEven(64'F(floor(S0.f))) && (fract(S0.f) == 0.5F)) then
+      D0.f -= 1.0F
+endif
+```
 
 #### **V\_FLOOR\_F32 36**
 
@@ -9693,7 +9864,7 @@ V_COS_F32(0x7f800000) => 0xffc00000       // cos(+INF) = NAN
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u = ~S0.u
+`D0.u = ~S0.u`
 
 #### **V\_BFREV\_B32 56**
 
@@ -9739,7 +9910,17 @@ V_CLZ_I32_U32(0x00000001) => 31
 
 Count the number of trailing "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits in the input.
 
-// Set if no ones are found for i in 0 : 31 do // Search from LSB if S0.u[i] == 1'1U then D0.i = i; break endif endfor
+```text
+D0.i = -1;
+// Set if no ones are found
+for i in 0 : 31 do
+      // Search from LSB
+      if S0.u[i] == 1'1U then
+          D0.i = i;
+          break
+      endif
+endfor
+```
 
 #### **Notes**
 
@@ -9777,7 +9958,15 @@ Compare with S\_CLS\_I32, which performs the equivalent operation in the scalar 
 
 #### Functional examples:
 
-V\_CLS\_I32(0x00000000) => 0xffffffff V\_CLS\_I32(0x40000000) => 1 V\_CLS\_I32(0x80000000) => 1 V\_CLS\_I32(0x0fffffff) => 4 V\_CLS\_I32(0xffff0000) => 16 V\_CLS\_I32(0xfffffffe) => 31
+```text
+V_CLS_I32(0x00000000) => 0xffffffff
+V_CLS_I32(0x40000000) => 1
+V_CLS_I32(0x80000000) => 1
+V_CLS_I32(0x0fffffff) => 4
+V_CLS_I32(0xffff0000) => 16
+V_CLS_I32(0xfffffffe) => 31
+V_CLS_I32(0xffffffff) => 0xffffffff
+```
 
 #### **V\_FREXP\_EXP\_I32\_F64 60**
 
@@ -11705,9 +11894,6 @@ elsif isQuietNAN(64'F(S0.f)) then
 elsif exponent(S0.f) == 255 then
   // +-INF
   result = S1.u[sign(S0.f) ? 2 : 9]
-```
-
-```
 elsif exponent(S0.f) > 0 then
   // +-normal value
   result = S1.u[sign(S0.f) ? 3 : 8]
@@ -11761,9 +11947,6 @@ elsif abs(S0.f64) > 0.0 then
 else
   // +-0.0
   result = S1.u[sign(S0.f64) ? 5 : 6]
-```
-
-```
 endif;
 D0.u64[laneId] = result;
 // D0 = VCC in VOPC encoding.
@@ -12939,9 +13122,6 @@ elsif exponent(S0.f) == 255 then
 elsif exponent(S0.f) > 0 then
   // +-normal value
   result = S1.u[sign(S0.f) ? 3 : 8]
-```
-
-```
 elsif 64'F(abs(S0.f)) > 0.0 then
   // +-denormal value
   result = S1.u[sign(S0.f) ? 4 : 7]
@@ -13053,7 +13233,10 @@ D0[31 : 16].i16 = S0[31 : 16].i16 - S1[31 : 16].i16;
 D0[15 : 0].i16 = S0[15 : 0].i16 - S1[15 : 0].i16
 ```
 
-D0[31 : 16].u16 = (S1[31 : 16].u16 << S0.u[19 : 16].u); D0[15 : 0].u16 = (S1[15 : 0].u16 << S0.u[3 : 0].u)
+```text
+D0[31 : 16].u16 = (S1[31 : 16].u16 << S0.u[19 : 16].u);
+D0[15 : 0].u16 = (S1[15 : 0].u16 << S0.u[3 : 0].u)
+```
 
 #### **V\_PK\_LSHRREV\_B16 5**
 
@@ -13278,7 +13461,12 @@ D0.u = tmp
 
 Dot product of packed brain-float values.
 
-tmp = 32'F(S0[15 : 0].bf16) \* 32'F(S1[15 : 0].bf16); tmp += 32'F(S0[31 : 16].bf16) \* 32'F(S1[31 : 16].bf16); tmp += S2.f;
+```text
+tmp = 32'F(S0[15 : 0].bf16) * 32'F(S1[15 : 0].bf16);
+tmp += 32'F(S0[31 : 16].bf16) * 32'F(S1[31 : 16].bf16);
+tmp += S2.f;
+D0.f = tmp
+```
 
 #### **V\_FMA\_MIX\_F32 32**
 
@@ -13324,7 +13512,20 @@ D0[15 : 0].f16 = f32_to_f16(fma(in[0], in[1], in[2]))
 
 Size and location of S0, S1 and S2 controlled by OPSEL: 0=src[31:0], 1=src[31:0], 2=src[15:0], 3=src[31:16]. Also, for FMA\_MIX, the NEG\_HI field acts instead as an absolute-value modifier.
 
-declare in : 32'F[3]; declare S : 32'B[3]; for i in 0 : 2 do if !OPSEL\_HI.u3[i] then in[i] = S[i].f elsif OPSEL.u3[i] then in[i] = f16\_to\_f32(S[i][31 : 16].f16) else in[i] = f16\_to\_f32(S[i][15 : 0].f16) endif endfor; D0[31 : 16].f16 = f32\_to\_f16(fma(in[0], in[1], in[2]))
+```text
+declare in : 32'F[3];
+declare S : 32'B[3];
+for i in 0 : 2 do
+    if !OPSEL_HI.u3[i] then
+        in[i] = S[i].f
+    elsif OPSEL.u3[i] then
+        in[i] = f16_to_f32(S[i][31 : 16].f16)
+    else
+        in[i] = f16_to_f32(S[i][15 : 0].f16)
+    endif
+endfor;
+D0[31 : 16].f16 = f32_to_f16(fma(in[0], in[1], in[2]))
+```
 
 #### **V\_WMMA\_F32\_16X16X16\_F16 64**
 
@@ -13540,7 +13741,7 @@ Do nothing.
 
 Move data from a vector input into a vector register.
 
-D0.b = S0.b
+`D0.b = S0.b`
 
 #### **Notes**
 
@@ -13600,7 +13801,7 @@ Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exce
 
 Convert from a signed 32-bit integer input to a double-precision float and store the result into a vector register.
 
-D0.f64 = i32\_to\_f64(S0.i)
+`D0.f64 = i32_to_f64(S0.i)`
 
 #### **Notes**
 
@@ -13732,7 +13933,7 @@ Convert an unsigned byte in byte 1 of the input to a single-precision float and 
 
 register.
 
-D0.f = u32\_to\_f32(S0.u[23 : 16].u)
+`D0.f = u32_to_f32(S0.u[23 : 16].u)`
 
 #### **V\_CVT\_F32\_UBYTE3 404**
 
@@ -13764,7 +13965,7 @@ Convert from an unsigned 32-bit integer input to a double-precision float and st
 
 result in floating point format into a vector register.
 
-D0.f64 = trunc(S0.f64)
+`D0.f64 = trunc(S0.f64)`
 
 #### **V\_CEIL\_F64 408**
 
@@ -13837,7 +14038,12 @@ Compute the integer part of a single-precision float input with round-toward-zer
 
 Round the single-precision float input up to next integer and store the result in floating point format into a vector register.
 
- D0.f += 1.0F endif
+```text
+D0.f = trunc(S0.f);
+if ((S0.f > 0.0F) && (S0.f != D0.f)) then
+      D0.f += 1.0F
+endif
+```
 
 #### **V\_RNDNE\_F32 419**
 
@@ -14039,13 +14245,19 @@ Denormals are supported. Full range input is supported.
 
 Functional examples:
 
-V\_COS\_F32(0xff800000) => 0xffc00000 // cos(-INF) = NAN V\_COS\_F32(0xff7fffff) => 0x3f800000 // -MaxFloat, finite V\_COS\_F32(0x80000000) => 0x3f800000 // cos(-0.0) = 1 V\_COS\_F32(0x3e800000) => 0x00000000 // cos(0.25) = 0
+```text
+V_COS_F32(0xff800000) => 0xffc00000       // cos(-INF) = NAN
+V_COS_F32(0xff7fffff) => 0x3f800000       // -MaxFloat, finite
+V_COS_F32(0x80000000) => 0x3f800000       // cos(-0.0) = 1
+V_COS_F32(0x3e800000) => 0x00000000       // cos(0.25) = 0
+V_COS_F32(0x7f800000) => 0xffc00000        // cos(+INF) = NAN
+```
 
 #### **V\_NOT\_B32 439**
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
-D0.u = ~S0.u
+`D0.u = ~S0.u`
 
 #### **Notes**
 
@@ -14123,7 +14335,17 @@ V_CTZ_I32_B32(0x80000000) => 31
 
 Count the number of leading bits that are the same as the sign bit of a vector input and store the result into a vector register. Store -1 if all input bits are the same.
 
-D0.i = -1; // Set if all bits are the same for i in 1 : 31 do // Search from MSB if S0.i[31 - i] != S0.i[31] then D0.i = i; break endif
+```text
+D0.i = -1;
+// Set if all bits are the same
+for i in 1 : 31 do
+      // Search from MSB
+      if S0.i[31 - i] != S0.i[31] then
+          D0.i = i;
+          break
+      endif
+endfor
+```
 
 #### **Notes**
 
@@ -14205,7 +14427,13 @@ This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent)
 
 Extract the binary significand, or mantissa, of a single-precision float input and store the result as a singleprecision float into a vector register.
 
-else D0.f = mantissa(S0.f) endif
+```text
+if ((64'F(S0.f) == +INF) || (64'F(S0.f) == -INF) || isNAN(64'F(S0.f))) then
+    D0.f = S0.f
+else
+    D0.f = mantissa(S0.f)
+endif
+```
 
 #### **Notes**
 
@@ -14895,7 +15123,11 @@ Input and output modifiers not supported.
 
 Add two unsigned inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
 
-VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U; D0.u = tmp.u
+```text
+tmp = 64'U(S0.u) + 64'U(S1.u) + VCC.u64[laneId].u64;
+VCC.u64[laneId] = tmp >= 0x100000000ULL ? 1'1U : 1'0U;
+D0.u = tmp.u
+```
 
 #### **Notes**
 
@@ -14937,7 +15169,7 @@ Supports saturation (unsigned 32-bit integer domain).
 
 Add two unsigned inputs and store the result into a vector register. No carry-in or carry-out support.
 
-D0.u = S0.u + S1.u
+`D0.u = S0.u + S1.u`
 
 #### **Notes**
 
@@ -14971,7 +15203,11 @@ Multiply two floating point inputs and accumulate the result into the destinatio
 
 Convert two single-precision float inputs into a packed FP16 result with round toward zero semantics (ignore the current rounding mode), and store the result into a vector register.
 
-D0[15 : 0].f16 = f32\_to\_f16(S0.f); D0[31 : 16].f16 = f32\_to\_f16(S1.f); // Round-toward-zero regardless of current round mode setting in hardware.
+```text
+D0[15 : 0].f16 = f32_to_f16(S0.f);
+D0[31 : 16].f16 = f32_to_f16(S1.f);
+// Round-toward-zero regardless of current round mode setting in hardware.
+```
 
 #### **Notes**
 
@@ -15183,7 +15419,28 @@ endif
 
 Cubemap S coordinate.
 
-// D0.f = cubemap S coordinate. // XYZ coordinate is given in (S0.f, S1.f, S2.f). // S0.f = x // S1.f = y // S2.f = z if ((abs(S2.f) >= abs(S0.f)) && (abs(S2.f) >= abs(S1.f))) then if S2.f < 0.0F then D0.f = -S0.f else D0.f = S0.f endif elsif abs(S1.f) >= abs(S0.f) then D0.f = S0.f else if S0.f < 0.0F then D0.f = S2.f else D0.f = -S2.f endif endif
+```text
+// D0.f = cubemap S coordinate.
+// XYZ coordinate is given in (S0.f, S1.f, S2.f).
+// S0.f = x
+// S1.f = y
+// S2.f = z
+if ((abs(S2.f) >= abs(S0.f)) && (abs(S2.f) >= abs(S1.f))) then
+    if S2.f < 0.0F then
+        D0.f = -S0.f
+    else
+        D0.f = S0.f
+    endif
+elsif abs(S1.f) >= abs(S0.f) then
+    D0.f = S0.f
+else
+    if S0.f < 0.0F then
+        D0.f = S2.f
+    else
+        D0.f = -S2.f
+    endif
+endif
+```
 
 #### **V\_CUBETC\_F32 526**
 
@@ -15289,7 +15546,7 @@ S0 carries the MSBs and S1 carries the LSBs of the value being aligned.
 
 Align a value to the specified byte position.
 
-D0.u = 32'U(({ S0.u, S1.u } >> (S2.u[1 : 0].u \* 8U)) & 0xffffffffLL)
+`D0.u = 32'U(({ S0.u, S1.u } >> (S2.u[1 : 0].u * 8U)) & 0xffffffffLL)`
 
 #### **Notes**
 
@@ -15364,7 +15621,15 @@ endif
 
 Return median signed integer value of three inputs.
 
-if v\_max3\_i32(S0.i, S1.i, S2.i) == S0.i then D0.i = v\_max\_i32(S1.i, S2.i) elsif v\_max3\_i32(S0.i, S1.i, S2.i) == S1.i then D0.i = v\_max\_i32(S0.i, S2.i) else D0.i = v\_max\_i32(S0.i, S1.i) endif
+```text
+if v_max3_i32(S0.i, S1.i, S2.i) == S0.i then
+    D0.i = v_max_i32(S1.i, S2.i)
+elsif v_max3_i32(S0.i, S1.i, S2.i) == S1.i then
+    D0.i = v_max_i32(S0.i, S2.i)
+else
+    D0.i = v_max_i32(S0.i, S1.i)
+endif
+```
 
 #### **V\_MED3\_U32 545**
 
@@ -15544,7 +15809,16 @@ Input denormals are not flushed, but output flushing is allowed.
 
 Masked sum of absolute differences with accumulation, overflow into upper bits is allowed.
 
- x > y ? x - y : y - x); // UNSIGNED comparison D0.u = S2.u; D0.u += S1.u[31 : 24] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[31 : 24], S1.u[31 : 24])); D0.u += S1.u[23 : 16] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[23 : 16], S1.u[23 : 16])); D0.u += S1.u[15 : 8] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[15 : 8], S1.u[15 : 8])); D0.u += S1.u[7 : 0] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[7 : 0], S1.u[7 : 0]))
+```text
+ABSDIFF = lambda(x, y) (
+    x > y ? x - y : y - x);
+// UNSIGNED comparison
+D0.u = S2.u;
+D0.u += S1.u[31 : 24] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[31 : 24], S1.u[31 : 24]));
+D0.u += S1.u[23 : 16] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[23 : 16], S1.u[23 : 16]));
+D0.u += S1.u[15 : 8] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[15 : 8], S1.u[15 : 8]));
+D0.u += S1.u[7 : 0] == 8'0U ? 0U : 32'U(ABSDIFF(S0.u[7 : 0], S1.u[7 : 0]))
+```
 
 #### **V\_QSAD\_PK\_U16\_U8 570**
 
@@ -15744,7 +16018,7 @@ endif
 
 Multiply and add three signed short values.
 
-D0.i16 = S0.i16 \* S1.i16 + S2.i16
+`D0.i16 = S0.i16 * S1.i16 + S2.i16`
 
 #### **Notes**
 
@@ -16041,7 +16315,12 @@ This instruction can emulate an API-level "clamp"; unlike MED3 this correctly ha
 
 Dot product of packed FP16 values.
 
-tmp += S2.f16; D0.f16 = tmp
+```text
+tmp = S0[15 : 0].f16 * S1[15 : 0].f16;
+tmp += S0[31 : 16].f16 * S1[31 : 16].f16;
+tmp += S2.f16;
+D0.f16 = tmp
+```
 
 #### **Notes**
 
@@ -16340,7 +16619,7 @@ Bitfield modify.
 
 S0 is the bitfield width and S1 is the bitfield offset.
 
-D0.u = 32'U(((1 << S0[4 : 0].u) - 1) << S1[4 : 0].u)
+`D0.u = 32'U(((1 << S0[4 : 0].u) - 1) << S1[4 : 0].u)`
 
 #### **V\_BCNT\_U32\_B32 798**
 
@@ -16596,7 +16875,23 @@ Look Up 2/PI (S0.f64) with segment select S1.u[4:0].
 
 This operation returns an aligned, double precision segment of 2/PI needed to do range reduction on S0.f64 (double-precision value). Multiple segments can be specified through S1.u[4:0]. Rounding is round-to-zero. Large inputs (exp > 1968) are scaled to avoid loss of precision through denormalization.
 
-if exponent(S0.f64) > 1077 then shift += exponent(S0.f64) - 1077 endif; // (2.0/PI) == 0.{b\_1200, b\_1199, b\_1198, ..., b\_1, b\_0} // b\_1200 is the MSB of the fractional part of 2.0/PI // Left shift operation indicates which bits are brought // into the whole part of the number. // Only whole part of result is kept. result = 64'F((1201'B(2.0 / PI)[1200 : 0] << shift.u) & 1201'0x1fffffffffffff); scale = -53 - shift; if exponent(S0.f64) >= 1968 then scale += 128 endif; D0.f64 = ldexp(result, scale)
+```text
+shift = 32'I(S1[4 : 0].u) * 53;
+if exponent(S0.f64) > 1077 then
+     shift += exponent(S0.f64) - 1077
+endif;
+// (2.0/PI) == 0.{b_1200, b_1199, b_1198, ..., b_1, b_0}
+// b_1200 is the MSB of the fractional part of 2.0/PI
+// Left shift operation indicates which bits are brought
+// into the whole part of the number.
+// Only whole part of result is kept.
+result = 64'F((1201'B(2.0 / PI)[1200 : 0] << shift.u) & 1201'0x1fffffffffffff);
+scale = -53 - shift;
+if exponent(S0.f64) >= 1968 then
+     scale += 128
+endif;
+D0.f64 = ldexp(result, scale)
+```
 
 #### **V\_LSHLREV\_B16 824**
 
@@ -17296,7 +17591,11 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 1 iff A not less than B.
 
-D0.u64[laneId] = !(S0.f64 < S1.f64); // With NAN inputs this is not the same operation as >= // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = !(S0.f64 < S1.f64);
+// With NAN inputs this is not the same operation as >=
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -17609,7 +17908,10 @@ Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
 Return 1 iff A greater than B.
 
-D0.u64[laneId] = S0.u > S1.u; // D0 = VCC in VOPC encoding.
+```text
+D0.u64[laneId] = S0.u > S1.u;
+// D0 = VCC in VOPC encoding.
+```
 
 #### **Notes**
 
@@ -17995,7 +18297,7 @@ Return 1 iff A less than or equal to B.
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-EXEC.u64[laneId] = S0.f16 > S1.f16
+`EXEC.u64[laneId] = S0.f16 > S1.f16`
 
 #### **Notes**
 
@@ -18031,7 +18333,7 @@ Return 1 iff A orderable with B.
 
 Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and also on qNAN's if clamp is set.
 
-EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))
+`EXEC.u64[laneId] = (isNAN(64'F(S0.f16)) || isNAN(64'F(S1.f16)))`
 
 #### **Notes**
 
@@ -18278,7 +18580,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Return 1.
 
-EXEC.u64[laneId] = 1'1U
+`EXEC.u64[laneId] = 1'1U`
 
 #### **Notes**
 
@@ -18316,7 +18618,7 @@ Write only EXEC. SDST must be set to EXEC\_LO. Signal 'invalid' on sNAN's, and a
 
 Return 1 iff A less than or equal to B.
 
-EXEC.u64[laneId] = S0.f64 <= S1.f64
+`EXEC.u64[laneId] = S0.f64 <= S1.f64`
 
 #### **Notes**
 
@@ -18862,7 +19164,27 @@ The function reports true if the floating point value is any of the numeric type
 
 S1.u[0] -- value is a signaling NAN. S1.u[1] -- value is a quiet NAN. S1.u[2] -- value is negative infinity. S1.u[3] -- value is a negative normal value. S1.u[4] -- value is a negative denormal value. S1.u[5] -- value is negative zero. S1.u[6] -- value is positive zero. S1.u[7] -- value is a positive denormal value. S1.u[8] -- value is a positive normal value. S1.u[9] -- value is positive infinity.
 
-declare result : 1'U; if isSignalNAN(64'F(S0.f16)) then result = S1.u[0] elsif isQuietNAN(64'F(S0.f16)) then result = S1.u[1] elsif exponent(S0.f16) == 31 then // +-INF result = S1.u[sign(S0.f16) ? 2 : 9] elsif exponent(S0.f16) > 0 then // +-normal value result = S1.u[sign(S0.f16) ? 3 : 8] elsif 64'F(abs(S0.f16)) > 0.0 then // +-denormal value result = S1.u[sign(S0.f16) ? 4 : 7] else // +-0.0 result = S1.u[sign(S0.f16) ? 5 : 6] endif;
+```text
+declare result : 1'U;
+if isSignalNAN(64'F(S0.f16)) then
+      result = S1.u[0]
+elsif isQuietNAN(64'F(S0.f16)) then
+      result = S1.u[1]
+elsif exponent(S0.f16) == 31 then
+      // +-INF
+      result = S1.u[sign(S0.f16) ? 2 : 9]
+elsif exponent(S0.f16) > 0 then
+      // +-normal value
+      result = S1.u[sign(S0.f16) ? 3 : 8]
+elsif 64'F(abs(S0.f16)) > 0.0 then
+      // +-denormal value
+      result = S1.u[sign(S0.f16) ? 4 : 7]
+else
+      // +-0.0
+      result = S1.u[sign(S0.f16) ? 5 : 6]
+endif;
+EXEC.u64[laneId] = result
+```
 
 #### **Notes**
 
@@ -19264,7 +19586,12 @@ Floating-point compare handles NAN/INF/denorm.
 
 Maximum of two floating-point values.
 
-MEM[ADDR].f = src > tmp ? src : tmp; RETURN\_DATA = tmp
+```text
+tmp = MEM[ADDR].f;
+src = DATA.f;
+MEM[ADDR].f = src > tmp ? src : tmp;
+RETURN_DATA = tmp
+```
 
 #### **Notes**
 
@@ -19547,7 +19874,11 @@ Floating-point compare handles NAN/INF/denorm.
 
 Wrap calculation. Intended for use in ring buffer management.
 
-MEM[ADDR].u = tmp >= DATA.u ? tmp - DATA.u : tmp + DATA2.u; RETURN\_DATA = tmp
+```text
+tmp = MEM[ADDR].u;
+MEM[ADDR].u = tmp >= DATA.u ? tmp - DATA.u : tmp + DATA2.u;
+RETURN_DATA = tmp
+```
 
 #### **DS\_SWIZZLE\_B32 53**
 
@@ -19594,11 +19925,18 @@ if (offset >= 0xe000) {
          j |= i & 0x20;
          thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
     }
-```
-
-} elsif (offset >= 0xc000) { // rotate rotate = offset[9:5]; mask = offset[4:0]; if (offset[10]) { rotate = -rotate; } for (i = 0; i < 64; i++) { j = (i & mask) | ((i + rotate) & ~mask); j |= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0;
-
-```text
+} elsif (offset >= 0xc000) {
+    // rotate
+    rotate = offset[9:5];
+    mask = offset[4:0];
+    if (offset[10]) {
+        rotate = -rotate;
+    }
+    for (i = 0; i < 64; i++) {
+        j = (i & mask) | ((i + rotate) & ~mask);
+        j |= i & 0x20;
+        thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+    }
 } elsif (offset[15]) {
     // full data sharing within 4 consecutive threads
     for (i = 0; i < 64; i+=4) {
@@ -19607,9 +19945,6 @@ if (offset >= 0xe000) {
          thread_out[i+2] = thread_valid[i+offset[5:4]]?thread_in[i+offset[5:4]]:0;
          thread_out[i+3] = thread_valid[i+offset[7:6]]?thread_in[i+offset[7:6]]:0;
     }
-```
-
-```text
 } else { // offset[15] == 0
     // limited data sharing within 32 consecutive threads
     xor_mask = offset[14:10];
@@ -19983,7 +20318,12 @@ RETURN_DATA.u64 = tmp
 
 Decrement 64-bit memory value with wraparound to register value when decremented below zero.
 
-src = DATA.u64; MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = ((tmp == 0ULL) || (tmp > src)) ? src : tmp - 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **DS\_MIN\_RTN\_I64 101**
 
@@ -20273,7 +20613,24 @@ offset[5:2] Register 8 GDS\_STRMOUT\_PRIMS\_NEEDED\_0 9 GDS\_STRMOUT\_PRIMS\_WRI
 
 Conditional write exchange.
 
-declare OFFSET0 : 8'U; declare OFFSET1 : 8'U; declare RETURN\_DATA : 32'U[2]; ADDR = S0.u; DATA = S1.u64; offset = { OFFSET1, OFFSET0 }; ADDR0 = ((ADDR + offset.u) & 0xfff8U); ADDR1 = ADDR0 + 4U; RETURN\_DATA[0] = LDS[ADDR0].u; if DATA[31] then LDS[ADDR0] = { 1'0, DATA[30 : 0] } endif; RETURN\_DATA[1] = LDS[ADDR1].u; if DATA[63] then LDS[ADDR1] = { 1'0, DATA[62 : 32] }
+```text
+declare OFFSET0 : 8'U;
+declare OFFSET1 : 8'U;
+declare RETURN_DATA : 32'U[2];
+ADDR = S0.u;
+DATA = S1.u64;
+offset = { OFFSET1, OFFSET0 };
+ADDR0 = ((ADDR + offset.u) & 0xfff8U);
+ADDR1 = ADDR0 + 4U;
+RETURN_DATA[0] = LDS[ADDR0].u;
+if DATA[31] then
+    LDS[ADDR0] = { 1'0, DATA[30 : 0] }
+endif;
+RETURN_DATA[1] = LDS[ADDR1].u;
+if DATA[63] then
+    LDS[ADDR1] = { 1'0, DATA[62 : 32] }
+endif
+```
 
 #### **DS\_STORE\_B8\_D16\_HI 160**
 
@@ -20506,7 +20863,12 @@ EXEC = 0xF, OFFSET = 0
 VGPR[VDST] = { A, A, D, B }
 ```
 
-EXEC = 0xA, OFFSET = 0 VGPR[VDST] = { -, 0, -, B }
+```text
+VGPR[SRC0] = { A, B, C, D }
+  VGPR[ADDR] = { 0, 0, 12, 4 }
+EXEC = 0xA, OFFSET = 0
+VGPR[VDST] = { -, 0, -, B }
+```
 
 #### **DS\_STORE\_B96 222**
 
@@ -20600,7 +20962,13 @@ VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z])
 
 Untyped buffer load 4 components with format conversion.
 
-VDATA[31 : 0].b = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format VDATA[63 : 32].b = ConvertFromFormat(MEM[TADDR.Y]); VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
+```text
+VDATA[31 : 0].b = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+VDATA[63 : 32].b = ConvertFromFormat(MEM[TADDR.Y]);
+VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
+VDATA[127 : 96].b = ConvertFromFormat(MEM[TADDR.W])
+```
 
 #### **BUFFER\_STORE\_FORMAT\_X 4**
 
@@ -20974,7 +21342,12 @@ RETURN_DATA.u = old_value
 
 Minimum of two signed integer values.
 
-tmp = MEM[ADDR].i; src = DATA.i; MEM[ADDR].i = src < tmp ? src : tmp;
+```text
+tmp = MEM[ADDR].i;
+src = DATA.i;
+MEM[ADDR].i = src < tmp ? src : tmp;
+RETURN_DATA.i = tmp
+```
 
 #### **BUFFER\_ATOMIC\_MIN\_U32 57**
 
@@ -21065,7 +21438,11 @@ RETURN_DATA.u = tmp
 
 Swap 64-bit values in data register and memory.
 
-MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **BUFFER\_ATOMIC\_CMPSWAP\_B64 66**
 
@@ -21290,7 +21667,13 @@ VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z])
 
 Typed buffer load 4 components with format conversion.
 
-VDATA[31 : 0].b = ConvertFromFormat(MEM[TADDR.X]); // Mem access size depends on format VDATA[63 : 32].b = ConvertFromFormat(MEM[TADDR.Y]); VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
+```text
+VDATA[31 : 0].b = ConvertFromFormat(MEM[TADDR.X]);
+// Mem access size depends on format
+VDATA[63 : 32].b = ConvertFromFormat(MEM[TADDR.Y]);
+VDATA[95 : 64].b = ConvertFromFormat(MEM[TADDR.Z]);
+VDATA[127 : 96].b = ConvertFromFormat(MEM[TADDR.W])
+```
 
 #### **TBUFFER\_STORE\_FORMAT\_X 4**
 
@@ -21527,7 +21910,12 @@ RETURN_DATA.u = tmp
 
 Maximum of two signed integer values.
 
-tmp = MEM[ADDR].i; src = DATA.i; MEM[ADDR].i = src > tmp ? src : tmp;
+```text
+tmp = MEM[ADDR].i;
+src = DATA.i;
+MEM[ADDR].i = src > tmp ? src : tmp;
+RETURN_DATA.i = tmp
+```
 
 #### **IMAGE\_ATOMIC\_UMAX 17**
 
@@ -22137,7 +22525,12 @@ RETURN_DATA.u = tmp
 
 Maximum of two signed integer values.
 
-tmp = MEM[ADDR].i; src = DATA.i; MEM[ADDR].i = src > tmp ? src : tmp;
+```text
+tmp = MEM[ADDR].i;
+src = DATA.i;
+MEM[ADDR].i = src > tmp ? src : tmp;
+RETURN_DATA.i = tmp
+```
 
 #### **FLAT\_ATOMIC\_MAX\_U32 59**
 
@@ -22324,7 +22717,12 @@ RETURN_DATA.b64 = tmp
 
 Increment 64-bit memory value with wraparound to zero when incremented to register value.
 
-src = DATA.u64; MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL; RETURN\_DATA.u64 = tmp
+```text
+tmp = MEM[ADDR].u64;
+src = DATA.u64;
+MEM[ADDR].u64 = tmp >= src ? 0ULL : tmp + 1ULL;
+RETURN_DATA.u64 = tmp
+```
 
 #### **FLAT\_ATOMIC\_DEC\_U64 77**
 
@@ -22782,7 +23180,13 @@ RETURN_DATA.b = tmp
 
 Compare and swap with memory value.
 
-cmp = DATA[63 : 32].b; MEM[ADDR].b = tmp == cmp ? src : tmp; RETURN\_DATA.b = tmp
+```text
+tmp = MEM[ADDR].b;
+src = DATA[31 : 0].b;
+cmp = DATA[63 : 32].b;
+MEM[ADDR].b = tmp == cmp ? src : tmp;
+RETURN_DATA.b = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_ADD\_U32 53**
 
@@ -22824,7 +23228,12 @@ RETURN_DATA.u = old_value
 
 Minimum of two signed integer values.
 
-tmp = MEM[ADDR].i; src = DATA.i; MEM[ADDR].i = src < tmp ? src : tmp;
+```text
+tmp = MEM[ADDR].i;
+src = DATA.i;
+MEM[ADDR].i = src < tmp ? src : tmp;
+RETURN_DATA.i = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_MIN\_U32 57**
 
@@ -22915,7 +23324,11 @@ RETURN_DATA.u = tmp
 
 Swap 64-bit values in data register and memory.
 
-MEM[ADDR].b64 = DATA.b64; RETURN\_DATA.b64 = tmp
+```text
+tmp = MEM[ADDR].b64;
+MEM[ADDR].b64 = DATA.b64;
+RETURN_DATA.b64 = tmp
+```
 
 #### **GLOBAL\_ATOMIC\_CMPSWAP\_B64 66**
 
