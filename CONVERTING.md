@@ -189,37 +189,48 @@ For prose-style manuals, restore the source pseudocode layout after importing:
 
 This pass uses Poppler's `pdftotext -layout` output as the source of line
 breaks and indentation for instruction expressions. For document-level code
-in explicitly labelled manuals, it also uses `pdftohtml -xml` font metadata:
-CDNA5 marks pseudocode with Roboto Mono while ordinary prose uses Source Serif.
-Keyword and operator checks (`if`, `for`, assignments, comparisons, comments,
-and similar syntax) provide a secondary guard. This avoids treating ordinary
-indented prose as code.
+throughout the manuals, it also uses `pdftohtml -xml` font metadata. The
+checked ISA PDFs mark pseudocode with Roboto Mono, while ordinary prose usually
+uses a proportional face. Some older publications also use the monospace face
+for explanatory text, so a candidate must contain an assignment, comparison,
+comment, or control-flow keyword by its second non-empty line. This avoids
+treating long indented prose fragments as code.
 
 The pass automatically handles explicitly labelled `Expression` sections, as
 in CDNA5; unlabelled pseudocode between instruction entries, as in CDNA3/4 and
-RDNA3/3.5/4; and monospace pseudocode elsewhere in CDNA5. A simple expression
-of at most 100 characters is wrapped in inline code; multiline, control-flow,
-comment-bearing, and longer expressions use fenced `text` blocks. Markdown
-escapes inside matched code are removed because code spans and blocks display
-those characters literally.
+RDNA3/3.5/4; and monospace pseudocode elsewhere in every manual. A simple
+expression of at most 100 characters is wrapped in inline code; multiline,
+control-flow, comment-bearing, and longer expressions use fenced `text`
+blocks. Markdown escapes inside matched code are removed because code spans
+and blocks display those characters literally.
 
 Matching uses the instruction mnemonic and opcode when they are available,
 with document order and normalized source text as fallbacks. In explicitly
 labelled manuals, prose accidentally joined to an expression at a page
 boundary is moved below the code block, and exact source-suffix matches restore
 dropped code prefixes. In unlabelled manuals, only exact normalized source
-matches inside the corresponding instruction entry are changed.
+matches inside the corresponding instruction entry are changed. If an older
+conversion retained only one side of a page-spanning instruction body, the
+complete block is restored only when the existing code is an exact proper
+prefix or suffix of the PDF block for the same mnemonic and opcode.
 Document-level matches are also exact, and Markdown tables, headings, existing
 code spans, and existing fences are protected. Monospace blocks split by a
-printed page boundary remain separate fenced blocks unless their logical
-continuity is independently verified. Sections that cannot be matched are
-reported and left unchanged for manual comparison. The command is idempotent;
-use `--verbose` to list unmatched sections.
+printed page boundary remain separate fenced blocks unless the next fragment
+begins with an unambiguous continuation token such as `elsif`, `endif`, or
+`} else`; those fragments are joined automatically. Sections that cannot be
+matched are reported and left unchanged for source comparison. The command is
+idempotent; use `--verbose` to list unmatched sections.
+
+Reviewed exact fixups cover recurring formulas printed in a proportional font,
+including register maps, address calculations, matrix-index notation,
+floating-point selection rules, and permute notation. Keep these patterns in
+the formatter so a fresh conversion reproduces the Markdown cleanup.
 
 CDNA1/2, RDNA1/2, and the Vega manuals use a different publication layout:
 operations are already isolated in a dedicated Markdown table column. Do not
 run block formatting inside those cells because fenced blocks would break the
-table structure.
+table structure. The formatter still handles document-level pseudocode outside
+those tables and protects every table row.
 
 For a white paper, select the alternate filenames and notice explicitly. The
 repeatable `--skip-image` option records images rejected during the visual
@@ -387,6 +398,28 @@ Markdown tables are also counted separately and preserved.
 | RDNA3   | 1,300                 | 388              | 658               | 254                       | 0                       | 70                |
 | RDNA3.5 | 1,394                 | 481              | 783               | 130                       | 0                       | 71                |
 | RDNA4   | 1,450                 | 480              | 837               | 133                       | 0                       | 97                |
+
+## Document-level pseudocode formatting records
+
+The source-font pass was applied repository-wide on 2026-08-01. These are net
+new Markdown constructs relative to the instruction-expression formatting
+commits that preceded the pass. A smaller fence count than the formatter's
+initial report means adjacent page fragments were verified as one logical block
+and consolidated.
+
+| Family  | New inline spans | New fenced blocks |
+|---------|-----------------:|------------------:|
+| CDNA1   | 5                | 11                |
+| CDNA2   | 6                | 12                |
+| CDNA3   | 19               | 50                |
+| CDNA4   | 16               | 52                |
+| RDNA1   | 9                | 8                 |
+| RDNA2   | 7                | 9                 |
+| RDNA3   | 29               | 59                |
+| RDNA3.5 | 13               | 50                |
+| RDNA4   | 19               | 89                |
+| Vega    | 6                | 9                 |
+| Vega 7  | 6                | 9                 |
 
 ## White paper conversion records
 

@@ -41,6 +41,11 @@ CODE_SIGNAL = re.compile(
     r"\b(?:if|elsif|else|endif|for|endfor|while|endwhile|declare|return|break)\b",
     re.IGNORECASE,
 )
+LAYOUT_START_SIGNAL = re.compile(
+    r"(?<![<>!])=(?!=)|==|!=|<=|>=|//|"
+    r"^\s*(?:if|elsif|else|endif|for|endfor|while|endwhile|declare|return|break)\b",
+    re.IGNORECASE,
+)
 
 DOCUMENT_FORMULA_FIXUPS = (
     (
@@ -217,6 +222,147 @@ DOCUMENT_FORMULA_FIXUPS = (
         "BCASTX4:    xor_mask = 0x00, or_mask = thread, and_mask = 0x1c\n"
         "BCASTX2:    xor_mask = 0x00, or_mask = thread, and_mask = 0x1e\n"
         "```\n\nPseudocode follows:",
+    ),
+)
+
+UNIVERSAL_DOCUMENT_FORMULA_FIXUPS = tuple(
+    DOCUMENT_FORMULA_FIXUPS[index] for index in (0, 1, 14, 15, 17)
+) + (
+    (
+        "ADDR = SGPR[base] + inst\\_offset + "
+        "{ M0 or SGPR[offset] or zero } \\* 64",
+        "`ADDR = SGPR[base] + inst_offset + "
+        "{M0 or SGPR[offset] or zero} * 64`",
+    ),
+    (
+        "ADDR = SGPR[base] + inst\\_offset + { M0 or SGPR[offset] or zero }",
+        "`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero}`",
+    ),
+    (
+        "Addr = Addr - private\\_base + private\\_base\\_addr + "
+        "scratch\\_baseOffset\\_for\\_this\\_wave",
+        "`Addr = Addr - private_base + private_base_addr + "
+        "scratch_baseOffset_for_this_wave`",
+    ),
+    (
+        "Addr = SCRATCH\\_BASE + (offset / 4) \\* 4 \\* "
+        "const\\_index\\_stride + (offset % 4) + TID\\*4 where "
+        '"offset" = either "INST\\_OFFSET + SGPR\\_offset" or '
+        '"INST\\_OFFSET + VGPR\\_offset".',
+        "`Addr = SCRATCH_BASE + (offset / 4) * 4 * "
+        "const_index_stride + (offset % 4) + TID*4`\n\n"
+        "where `offset = INST_OFFSET + SGPR_offset` or "
+        "`offset = INST_OFFSET + VGPR_offset`.",
+    ),
+    (
+        "**GV** mem\\_addr = VGPRU64 + INST\\_OFFSETI13\n\n**GVS** "
+        "mem\\_addr = SGPRU64 + VGPRU32 + INST\\_OFFSETI13 **GT** "
+        "mem\\_addr = SGPRU64 + INST\\_OFFSETI13 + ThreadID\\*4",
+        "```text\n"
+        "GV   mem_addr = VGPRU64 + INST_OFFSETI13\n"
+        "GVS  mem_addr = SGPRU64 + VGPRU32 + INST_OFFSETI13\n"
+        "GT   mem_addr = SGPRU64 + INST_OFFSETI13 + ThreadID*4\n"
+        "```",
+    ),
+    (
+        "**GV** mem\\_addr = VGPRU64 + IOFFSETI24\n\n**GVS** mem\\_addr = "
+        "SGPRU64 + VGPRU32 + IOFFSETI24 **GT** mem\\_addr = SGPRU64 + "
+        "IOFFSETI24 + ThreadID\\*4",
+        "```text\n"
+        "GV   mem_addr = VGPRU64 + IOFFSETI24\n"
+        "GVS  mem_addr = SGPRU64 + VGPRU32 + IOFFSETI24\n"
+        "GT   mem_addr = SGPRU64 + IOFFSETI24 + ThreadID*4\n"
+        "```",
+    ),
+    (
+        "**LDS** LDS\\_ADDR = VGPR\\_addrU32 + INST\\_OFFSETU16",
+        "`LDS_ADDR = VGPR_addrU32 + INST_OFFSETU16`",
+    ),
+    (
+        "**LDS** LDS\\_ADDR = VGPR\\_addrU32 + IOFFSETU16",
+        "`LDS_ADDR = VGPR_addrU32 + IOFFSETU16`",
+    ),
+    (
+        "**SV** mem\\_addr = SCRATCH\\_BASEU64 + "
+        "SWIZZLE(VGPR\\_offsetU32 + INST\\_OFFSETI13, ThreadID) **SS** "
+        "mem\\_addr = SCRATCH\\_BASEU64 + SWIZZLE(SGPR\\_offsetU32 + "
+        "INST\\_OFFSETI13, ThreadID)\n\n**SVS** mem\\_addr = "
+        "SCRATCH\\_BASEU64 + SWIZZLE(SGPR\\_offsetU32 + "
+        "VGPR\\_offsetU32 + INST\\_OFFSETI13, ThreadID)\n\n**ST** "
+        "mem\\_addr = SCRATCH\\_BASEU64 + SWIZZLE(INST\\_OFFSETI13, "
+        "ThreadID) SGPR\\_offset and VGPR\\_offset are 32 bits unsigned "
+        "byte offsets.",
+        "```text\n"
+        "SV   mem_addr = SCRATCH_BASEU64 + "
+        "SWIZZLE(VGPR_offsetU32 + INST_OFFSETI13, ThreadID)\n"
+        "SS   mem_addr = SCRATCH_BASEU64 + "
+        "SWIZZLE(SGPR_offsetU32 + INST_OFFSETI13, ThreadID)\n"
+        "SVS  mem_addr = SCRATCH_BASEU64 + SWIZZLE(SGPR_offsetU32 + "
+        "VGPR_offsetU32 + INST_OFFSETI13, ThreadID)\n"
+        "ST   mem_addr = SCRATCH_BASEU64 + "
+        "SWIZZLE(INST_OFFSETI13, ThreadID)\n"
+        "```\n\n"
+        "SGPR_offset and VGPR_offset are 32-bit unsigned byte offsets.",
+    ),
+    (
+        "Memory[row][col] → VGPR[lane][vgpr][startPosn\\*dataSize + "
+        "dataSize-1 : startPosn\\*dataSize ]",
+        "`Memory[row][col] → VGPR[lane][vgpr][startPosn*dataSize + "
+        "dataSize-1 : startPosn*dataSize]`",
+    ),
+    (
+        "E.g. dataSize=8 and startPosn=2 means data is in bits: [23:16].",
+        "E.g. `dataSize=8` and `startPosn=2` means data is in bits `[23:16]`.",
+    ),
+    (
+        "Normal (GV) addr[63:0] = VGPRU64 + IOFFSETI24",
+        "Normal (GV): `addr[63:0] = VGPRU64 + IOFFSETI24`",
+    ),
+    ("row=0..31 col=0..15", "`row=0..31 col=0..15`"),
+    (
+        "if (src0 == SNaN) result = QNaN (src0) else if "
+        "(src1 == SNaN) result = QNaN (src1) else result = larger of "
+        '(src0, src1) "Larger" order from smallest to largest: QNaN, '
+        "-inf, -float, -denorm, -0, +0, +denorm, +float, +inf",
+        "```text\n"
+        "if (src0 == SNaN) result = QNaN (src0)\n"
+        "else if (src1 == SNaN) result = QNaN (src1)\n"
+        "else result = larger of (src0, src1)\n"
+        '"Larger" order from smallest to largest: QNaN, -inf, -float, '
+        "-denorm, -0, +0, +denorm, +float, +inf\n"
+        "```",
+    ),
+    (
+        "if (src0 == SNaN) result = QNaN (src0) else if "
+        "(src1 == SNaN) result = QNaN (src1) else result = smaller of "
+        '(src0, src1) "Smaller" order from smallest to largest: -inf, '
+        "-float, -denorm, -0, +0, +denorm, +float, +inf, QNaN",
+        "```text\n"
+        "if (src0 == SNaN) result = QNaN (src0)\n"
+        "else if (src1 == SNaN) result = QNaN (src1)\n"
+        "else result = smaller of (src0, src1)\n"
+        '"Smaller" order from smallest to largest: -inf, -float, '
+        "-denorm, -0, +0, +denorm, +float, +inf, QNaN\n"
+        "```",
+    ),
+    (
+        "*FP Compare Swap: only swap if the compare condition (==) is true, "
+        "treating +0 and -0 as equal* doSwap = (src0 != NaN) && "
+        "(src1 != NaN) && (src0 == src1) // allow +0 == -0",
+        "*FP Compare Swap: only swap if the compare condition (==) is true, "
+        "treating +0 and -0 as equal*\n\n"
+        "```text\n"
+        "doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) "
+        "// allow +0 == -0\n"
+        "```",
+    ),
+    (
+        "doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) "
+        "// allow +0 == -0",
+        "```text\n"
+        "doSwap = (src0 != NaN) && (src1 != NaN) && (src0 == src1) "
+        "// allow +0 == -0\n"
+        "```",
     ),
 )
 
@@ -453,6 +599,31 @@ def looks_like_code(text: str, normalized: str) -> bool:
     return bool(CODE_SIGNAL.search(text))
 
 
+def looks_like_layout_code(text: str, normalized: str) -> bool:
+    """Reject monospace page fragments with a long prose lead-in."""
+    if not looks_like_code(text, normalized):
+        return False
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    first_signal = next(
+        (
+            index
+            for index, line in enumerate(lines)
+            if LAYOUT_START_SIGNAL.search(line)
+        ),
+        len(lines),
+    )
+    return first_signal <= 1
+
+
+def looks_like_instruction_code(text: str, normalized: str) -> bool:
+    """Accept short operations when a mnemonic and opcode constrain matching."""
+    if len(normalized) < 5:
+        return False
+    if text.lstrip().startswith(("•", "Table ", "where:", "Reserved")):
+        return False
+    return bool(CODE_SIGNAL.search(text))
+
+
 def source_instruction_blocks(pdf: Path) -> list[SourceCodeBlock]:
     """Extract code-like indented blocks from unheaded instruction entries."""
     lines = pdf_text(pdf).splitlines()
@@ -520,7 +691,7 @@ def source_instruction_blocks(pdf: Path) -> list[SourceCodeBlock]:
             if (
                 normalized
                 and key not in seen
-                and looks_like_code(text, normalized)
+                and looks_like_instruction_code(text, normalized)
             ):
                 blocks.append(SourceCodeBlock(instruction, text, normalized))
                 seen.add(key)
@@ -623,7 +794,7 @@ def source_layout_blocks(pdf: Path) -> list[SourceLayoutBlock]:
             if (
                 normalized
                 and normalized not in seen
-                and looks_like_code(text, normalized)
+                and looks_like_layout_code(text, normalized)
             ):
                 blocks.append(SourceLayoutBlock(text, normalized))
                 seen.add(normalized)
@@ -706,6 +877,15 @@ def formatted_parts(body: str) -> tuple[str, str] | None:
     if not inline_match:
         return None
     return inline_match.group(1), "\n".join(body_lines[1:]).strip()
+
+
+def formatted_code(body: str) -> str | None:
+    """Return code from one protected inline span or fenced block."""
+    parts = formatted_parts(body)
+    if parts is None:
+        return None
+    code, trailer = parts
+    return code if not trailer else None
 
 
 def inline_expression(expression: str, maximum_length: int) -> bool:
@@ -971,6 +1151,8 @@ def format_unheaded_markdown(
         "inline": 0,
         "block": 0,
         "already": 0,
+        "restored_prefixes": 0,
+        "restored_suffixes": 0,
         "table_skipped": 0,
         "unmatched_instructions": 0,
     }
@@ -984,16 +1166,84 @@ def format_unheaded_markdown(
         existing_ranges = formatted_ranges(body)
         protected_tables = table_ranges(body)
         occupied: list[tuple[int, int]] = []
+        claimed_raw: list[tuple[int, int]] = []
         body_replacements: list[tuple[int, int, str]] = []
         unique_candidates = {
             source.normalized: source for source in candidates
         }.values()
+
+        existing_code = []
+        for start, end in existing_ranges:
+            code = formatted_code(body[start:end])
+            if code is not None:
+                existing_code.append((start, end, normalize(code)))
+        joined_existing_code = "".join(
+            normalized for _, _, normalized in existing_code
+        )
 
         for source in sorted(
             unique_candidates,
             key=lambda candidate: len(candidate.normalized),
             reverse=True,
         ):
+            # Earlier conversions sometimes retained only one side of an
+            # instruction body split by a page boundary. Restore the complete
+            # source block only when an existing code span is an exact proper
+            # prefix or suffix of the PDF block for the same mnemonic and
+            # opcode. Joining all existing code first avoids duplicating a
+            # block that Markdown merely split into separate fences.
+            suffix_matches = [
+                (start, end, normalized)
+                for start, end, normalized in existing_code
+                if normalized
+                and len(source.normalized) > len(normalized)
+                and source.normalized.endswith(normalized)
+                and source.normalized not in joined_existing_code
+                and not any(
+                    start < claimed_end and end > claimed_start
+                    for claimed_start, claimed_end in claimed_raw
+                )
+            ]
+            if suffix_matches:
+                raw_start, raw_end, _ = max(
+                    suffix_matches, key=lambda match: len(match[2])
+                )
+                rendered, style = render_expression(
+                    source.text, maximum_inline_length
+                )
+                body_replacements.append((raw_start, raw_end, rendered))
+                claimed_raw.append((raw_start, raw_end))
+                counts["matched"] += 1
+                counts[style] += 1
+                counts["restored_prefixes"] += 1
+                continue
+
+            prefix_matches = [
+                (start, end, normalized)
+                for start, end, normalized in existing_code
+                if normalized
+                and len(source.normalized) > len(normalized)
+                and source.normalized.startswith(normalized)
+                and source.normalized not in joined_existing_code
+                and not any(
+                    start < claimed_end and end > claimed_start
+                    for claimed_start, claimed_end in claimed_raw
+                )
+            ]
+            if prefix_matches:
+                raw_start, raw_end, _ = max(
+                    prefix_matches, key=lambda match: len(match[2])
+                )
+                rendered, style = render_expression(
+                    source.text, maximum_inline_length
+                )
+                body_replacements.append((raw_start, raw_end, rendered))
+                claimed_raw.append((raw_start, raw_end))
+                counts["matched"] += 1
+                counts[style] += 1
+                counts["restored_suffixes"] += 1
+                continue
+
             for normalized_start in find_all(
                 body_normalized, source.normalized
             ):
@@ -1009,6 +1259,11 @@ def format_unheaded_markdown(
                     else 0
                 )
                 raw_end = body_ends[normalized_end - 1]
+                if any(
+                    raw_start < claimed_end and raw_end > claimed_start
+                    for claimed_start, claimed_end in claimed_raw
+                ):
+                    continue
                 occupied.append((normalized_start, normalized_end))
                 if any(
                     raw_start < end and raw_end > start
@@ -1029,7 +1284,7 @@ def format_unheaded_markdown(
                 counts[style] += 1
                 body_replacements.append((raw_start, raw_end, rendered))
 
-        if not occupied:
+        if not occupied and not body_replacements:
             counts["unmatched_instructions"] += 1
             if verbose:
                 name, opcode = instruction.instruction
@@ -1140,10 +1395,13 @@ def format_layout_markdown(
     return markdown.rstrip("\n") + trailing_newline, counts
 
 
-def apply_document_formula_fixups(markdown: str) -> tuple[str, int]:
+def apply_document_formula_fixups(
+    markdown: str,
+    fixups: tuple[tuple[str, str], ...] = DOCUMENT_FORMULA_FIXUPS,
+) -> tuple[str, int]:
     """Apply conservative, reviewed formula splits outside source code fonts."""
     count = 0
-    for original, replacement in DOCUMENT_FORMULA_FIXUPS:
+    for original, replacement in fixups:
         if replacement in markdown:
             continue
         matches = markdown.count(original)
@@ -1151,6 +1409,55 @@ def apply_document_formula_fixups(markdown: str) -> tuple[str, int]:
             markdown = markdown.replace(original, replacement)
             count += matches
     return markdown, count
+
+
+def merge_continuation_fences(markdown: str) -> tuple[str, int]:
+    """Join adjacent code fences when the second starts mid-control-flow."""
+    lines = markdown.splitlines()
+    opener = re.compile(r"^(`{3,})(?:text)?[ \t]*$")
+    continuation = re.compile(
+        r"^(?:elsif\b|else\b|endif\b|}\s*(?:elsif|else)\b)", re.I
+    )
+    fence: str | None = None
+    index = 0
+    count = 0
+    while index < len(lines):
+        line = lines[index]
+        if fence is None:
+            match = opener.fullmatch(line)
+            if match:
+                fence = match.group(1)
+            index += 1
+            continue
+        if line != fence:
+            index += 1
+            continue
+
+        next_open = index + 1
+        while next_open < len(lines) and not lines[next_open].strip():
+            next_open += 1
+        match = opener.fullmatch(lines[next_open]) if next_open < len(lines) else None
+        if not match:
+            fence = None
+            index += 1
+            continue
+
+        first_code = next_open + 1
+        while first_code < len(lines) and not lines[first_code].strip():
+            first_code += 1
+        if (
+            first_code < len(lines)
+            and continuation.match(lines[first_code].strip())
+        ):
+            del lines[index : next_open + 1]
+            count += 1
+            continue
+
+        fence = None
+        index += 1
+
+    trailing_newline = "\n" if markdown.endswith("\n") else ""
+    return "\n".join(lines) + trailing_newline, count
 
 
 def parse_args() -> argparse.Namespace:
@@ -1213,18 +1520,33 @@ def main() -> int:
         formatted, counts = format_markdown(
             markdown, sources, args.inline_max, args.verbose
         )
-        layout_sources = source_layout_blocks(args.source_pdf)
-        formatted, layout_counts = format_layout_markdown(
-            formatted, layout_sources, args.inline_max
-        )
-        formatted, layout_counts["formula_fixups"] = (
-            apply_document_formula_fixups(formatted)
-        )
     else:
         source_blocks = source_instruction_blocks(args.source_pdf)
         formatted, counts = format_unheaded_markdown(
             markdown, source_blocks, args.inline_max, args.verbose
         )
+
+    # Instruction-section matching handles the bulk of the operations, while
+    # the source font catches formulas and pseudocode elsewhere in the manual.
+    # Tables and headings remain protected by format_layout_markdown().
+    layout_sources = source_layout_blocks(args.source_pdf)
+    formatted, layout_counts = format_layout_markdown(
+        formatted, layout_sources, args.inline_max
+    )
+    fixups = (
+        DOCUMENT_FORMULA_FIXUPS
+        if mode == "headed"
+        else UNIVERSAL_DOCUMENT_FORMULA_FIXUPS
+    )
+    formatted, layout_counts["formula_fixups"] = (
+        apply_document_formula_fixups(formatted, fixups)
+    )
+    if mode == "unheaded":
+        formatted, layout_counts["continuation_merges"] = (
+            merge_continuation_fences(formatted)
+        )
+    else:
+        layout_counts["continuation_merges"] = 0
     changed = formatted != markdown
 
     if mode == "headed":
@@ -1243,7 +1565,8 @@ def main() -> int:
             f"{layout_counts['already']} already formatted and "
             f"{layout_counts['table_skipped']} table or heading matches "
             f"preserved; applied {layout_counts['formula_fixups']} reviewed "
-            f"formula fixups"
+            f"formula fixups; merged "
+            f"{layout_counts['continuation_merges']} continuation fences"
         )
     else:
         print(
@@ -1251,9 +1574,20 @@ def main() -> int:
             f"{counts['source_blocks']} code-like PDF blocks; matched "
             f"{counts['matched']}; formatted {counts['inline']} inline and "
             f"{counts['block']} as blocks; {counts['already']} already "
-            f"formatted; {counts['table_skipped']} table matches preserved; "
+            f"formatted; {counts['restored_prefixes']} missing code prefixes "
+            f"and {counts['restored_suffixes']} missing code suffixes restored; "
+            f"{counts['table_skipped']} table matches preserved; "
             f"{counts['unmatched_instructions']} instruction entries with "
-            f"source code but no exact Markdown match"
+            f"source code but no exact Markdown match; document layout "
+            f"matched {layout_counts['matched']} of "
+            f"{layout_counts['source_blocks']} code-like PDF blocks, "
+            f"formatted {layout_counts['inline']} inline and "
+            f"{layout_counts['block']} as blocks, with "
+            f"{layout_counts['already']} already formatted and "
+            f"{layout_counts['table_skipped']} table or heading matches "
+            f"preserved; applied {layout_counts['formula_fixups']} reviewed "
+            f"formula fixups; merged "
+            f"{layout_counts['continuation_merges']} continuation fences"
         )
 
     if args.check:
