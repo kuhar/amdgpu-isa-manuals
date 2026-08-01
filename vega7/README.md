@@ -473,7 +473,12 @@ There is one 32-bit M# (M0) register per wavefront, which can be used for:
 - Send-message value. EMIT/CUT use M0 and EXEC as the send-message data.
 # <span id="page-25-1"></span>**3.8. SCC: Scalar Condition code**
 Most scalar ALU instructions set the Scalar Condition Code (SCC) bit, indicating the result of the operation.
-Compare operations: 1 = true Arithmetic operations: 1 = carry out Bit/logical operations: 1 = result was not zero Move: does not alter SCC
+```text
+Compare operations:     1 = true
+Arithmetic operations:  1 = carry out
+Bit/logical operations: 1 = result was not zero
+Move:                   does not alter SCC
+```
 The SCC can be used as the carry-in for extended-precision integer arithmetic, as well as the selector for conditional moves and branches.
 # <span id="page-25-2"></span>**3.9. Vector Compares: VCC and VCCZ**
 Vector ALU comparisons set the Vector Condition Code (VCC) register (1=pass, 0=fail). Also, vector compares have the option of setting EXEC to the VCC value.
@@ -488,7 +493,9 @@ VCC physically resides in the SGPR register file, so when an instruction sources
 Each type of exception can be enabled or disabled independently by setting, or clearing, bits in the TRAPSTS register's EXCP\_EN field. This section describes the registers which control and report kernel exceptions.
 All Trap temporary SGPRs (TTMP\*) are privileged for writes - they can be written only when in the trap handler (status.priv = 1). When not privileged, writes to these are ignored. TMA and TBA are read-only; they can be accessed through S\_GETREG\_B32.
 When a trap is taken (either user initiated, exception or host initiated), the shader hardware generates an S\_TRAP instruction. This loads trap information into a pair of SGPRS:
-{TTMP1, TTMP0} = {3'h0, pc\_rewind[3:0], HT[0],trapID[7:0], PC[47:0]}.
+
+`{TTMP1, TTMP0} = {3'h0, pc_rewind[3:0], HT[0],trapID[7:0], PC[47:0]}.`
+
 HT is set to one for host initiated traps, and zero for user traps (s\_trap) or exceptions. TRAP\_ID is zero for exceptions, or the user/host trapID for those traps. When the trap handler is entered, the PC of the faulting instruction will be: (PC - PC\_rewind\*4).
 **STATUS . TRAP\_EN** - This bit indicates to the shader whether or not a trap handler is present. When one is not present, traps are not taken, no matter whether they're floating point, user-, or host-initiated traps. When the trap handler is present, the wavefront uses an extra 16 SGPRs for trap processing. If trap\_en == 0, all traps and exceptions are ignored, and s\_trap is converted by hardware to NOP.
 **MODE . EXCP\_EN[8:0]** - Floating point exception enables. Defines which exceptions and events cause a trap.
@@ -802,7 +809,9 @@ These instructions access hardware internal registers.
 | S_SETREG_B32       | SOPK*    | n         | Write the LSBs of D into a hardware register. (Note that D is a source SGPR.) Must add an S_NOP between two consecutive S_SETREG to the same register. |
 | S_SETREG_IMM32_B32 | SOPK*    | n         | S_SETREG where 32-bit data comes from a literal constant (so this is a 64-bit instruction format).                                                     |
 The hardware register is specified in the DEST field of the instruction, using the values in the table above. Some bits of the DEST specify which register to read/write, but additional bits specify which bits in the specific register to read/write:
-SIMM16 = {size[4:0], offset[4:0], hwRegId[5:0]}; offset is 0..31, size is 1..32.
+
+`SIMM16 = {size[4:0], offset[4:0], hwRegId[5:0]}; offset is 0..31, size is 1..32.`
+
 *Table 15. Hardware Register Values*
 | Code | Register | Description |
 |------|----------|-------------|
@@ -1060,9 +1069,9 @@ The fields are described in the table below:
 These instructions load 1-16 Dwords or store 1-4 Dwords between SGPRs and memory. The data in SGPRs is specified in SDATA, and the address is composed of the SBASE, OFFSET, and SOFFSET fields.
 #### **Scalar Memory Addressing**
 S\_LOAD / S\_STORE / S\_DACHE\_DISCARD:
-ADDR = SGPR[base] + inst\_offset + { M0 or SGPR[offset] or zero }
+`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero}`
 S\_SCRATCH\_LOAD / S\_SCRATCH\_STORE:
-ADDR = SGPR[base] + inst\_offset + { M0 or SGPR[offset] or zero } \* 64
+`ADDR = SGPR[base] + inst_offset + {M0 or SGPR[offset] or zero} * 64`
 Use of offset fields:
 | IMM | SOFFSET_EN (SOE) | Address                                          |
 |-----|------------------|--------------------------------------------------|
@@ -1073,7 +1082,7 @@ Use of offset fields:
 All components of the address (base, offset, inst\_offset, M0) are in bytes, but the two LSBs are ignored and treated as if they were zero. S\_DCACHE\_DISCARD ignores the six LSBs to make the address 64-byte-aligned.
 It is illegal and undefined if the inst\_offset is negative and the resulting (inst\_offset + (M0 or SGPR[offset])) is negative.
 Scalar access to private space must either use a buffer constant or manually convert the address:
-Addr = Addr - private\_base + private\_base\_addr + scratch\_baseOffset\_for\_this\_wave
+`Addr = Addr - private_base + private_base_addr + scratch_baseOffset_for_this_wave`
 "Hidden private base" is not available to the shader through hardware: It must be preloaded into an SGPR or made available through a constant buffer. This is equivalent to what the driver must do to calculate the base address from scratch for buffer constants.
 A scalar instruction must not overwrite its own source registers because the possibility of the instruction being replayed due to an ATC XNACK. Similarly, instructions in scalar memory clauses must not overwrite the sources of any of the instructions in the clause. A clause is defined as a string of memory instructions of the same type. A clause is broken by any nonmemory instruction.
 Atomics are a different case because they are naturally aligned and they must be in a singleinstruction clause. By definition, an atomic that returns the pre-op value overwrites its data source, which is acceptable.
@@ -1082,7 +1091,21 @@ Buffer constant fields used: base\_address, stride, num\_records, NV. Other fiel
 Scalar memory read/write does not support "swizzled" buffers. **Stride** is used only for memory address bounds checking, not for computing the address to access.
 The SMEM supplies only a SBASE address (byte) and an offset (byte or Dword). Any "index \* stride" must be calculated manually in shader code and added to the offset prior to the SMEM.
 The two LSBs of V#.base and of the final address are ignored to force Dword alignment.
-"m\_\*" components come from the buffer constant (V#): offset = IMM ? OFFSET : SGPR[OFFSET] m\_base = { SGPR[SBASE \* 2 +1][15:0], SGPR[SBASE] } m\_stride = SGPR[SBASE \* 2 +1][31:16] m\_num\_records = SGPR[SBASE \* 2 + 2] m\_size = (m\_stride == 0) ? 1 : m\_num\_records m\_addr = (SGPR[SBASE \* 2] + offset) & ~0x3 SGPR[SDST] = read\_Dword\_from\_dcache(m\_base, offset, m\_size) If more than 1 dword is being read, it is returned to SDST+1, SDST+2, etc, and the offset is incremented by 4 bytes per DWORD.
+
+```text
+"m_*" components come from the buffer constant (V#):
+  offset     = IMM ? OFFSET : SGPR[OFFSET]
+  m_base     = { SGPR[SBASE * 2 +1][15:0], SGPR[SBASE] }
+  m_stride   = SGPR[SBASE * 2 +1][31:16]
+  m_num_records = SGPR[SBASE * 2 + 2]
+  m_size     = (m_stride == 0) ? 1 : m_num_records
+  m_addr     = (SGPR[SBASE * 2] + offset) & ~0x3
+  SGPR[SDST] = read_Dword_from_dcache(m_base, offset, m_size)
+
+  If more than 1 dword is being read, it is returned to SDST+1, SDST+2, etc,
+  and the offset is incremented by 4 bytes per DWORD.
+```
+
 ### <span id="page-55-0"></span>**7.2.2. Scalar Atomic Operations**
 The scalar memory unit supports the same set of memory atomics as the vector memory unit. Addressing is the same as for scalar memory loads and stores. Like the vector memory
 atomics, scalar atomic operations can return the "pre-operation value" to the SDATA SGPRs. This is enabled by setting the microcode GLC bit to 1.
@@ -1231,7 +1254,25 @@ Used when: AddTID==0 && Stride!=0 && IdxEn==1 Out of Range if: Index(vgpr) >= Nu
 - 4. Load/store-Dword-x{2,3,4} and range-check per component.
 ### **Swizzled Buffer Addressing**
 Swizzled addressing rearranges the data in the buffer and can help provide improved cache locality for arrays of structures. Swizzled addressing also requires Dword-aligned accesses. A single fetch instruction cannot attempt to fetch a unit larger than const-element-size. The buffer's STRIDE must be a multiple of element\_size.
-Index = (inst\_idxen ? vgpr\_index : 0) + (const\_add\_tid\_enable ? thread\_id[5:0] : 0) Offset = (inst\_offen ? vgpr\_offset : 0) + inst\_offset index\_msb = index / const\_index\_stride index\_lsb = index % const\_index\_stride offset\_msb = offset / const\_element\_size offset\_lsb = offset % const\_element\_size buffer\_offset = (index\_msb \* const\_stride + offset\_msb \* const\_element\_size) \* const\_index\_stride + index\_lsb \* const\_element\_size + offset\_lsb Final Address = const\_base + sgpr\_offset + buffer\_offset
+
+```text
+Index = (inst_idxen ? vgpr_index : 0) +
+        (const_add_tid_enable ? thread_id[5:0] : 0)
+
+Offset = (inst_offen ? vgpr_offset : 0) + inst_offset
+
+index_msb = index / const_index_stride
+index_lsb = index % const_index_stride
+offset_msb = offset / const_element_size
+offset_lsb = offset % const_element_size
+
+buffer_offset = (index_msb * const_stride + offset_msb *
+                  const_element_size) * const_index_stride + index_lsb *
+                  const_element_size + offset_lsb
+
+Final Address = const_base + sgpr_offset + buffer_offset
+```
+
 Remember that the "sgpr\_offset" is not a part of the "offset" term in the above equations.
 *Figure 5. Example of Buffer Swizzling*
 ### **Proposed Use Cases for Swizzled Addressing**
@@ -1572,7 +1613,13 @@ FLAT instructions support both 64- and 32-bit addressing. The address size is se
 The addresses for the aperture check differ in 32- and 64-bit mode; however, this is not covered here.
 64-bit addresses are stored with the LSBs in the VGPR at ADDR, and the MSBs in the VGPR at ADDR+1.
 For scratch space, the texture unit takes the address from the VGPR and does the following.
-Address = VGPR[addr] + TID\_in\_wave \* Size - private aperture base (in SH\_MEM\_BASES) + offset (from flat\_scratch)
+
+```text
+Address = VGPR[addr] + TID_in_wave * Size
+          - private aperture base (in SH_MEM_BASES)
+          + offset (from flat_scratch)
+```
+
 # <span id="page-86-1"></span>**9.4. Global**
 Global instructions are similar to Flat instructions, but the programmer must ensure that no threads access LDS space; thus, no LDS bandwidth is used by global instructions.
 Global instructions offer two types of addressing:
@@ -1631,7 +1678,18 @@ The following subsections describe these methods.
 Direct reads are only available in LDS, not in GDS.
 LDS Direct reads occur in vector ALU (VALU) instructions and allow the LDS to supply a single DWORD value which is broadcast to all threads in the wavefront and is used as the SRC0 input to the ALU operations. A VALU instruction indicates that input is to be supplied by LDS by using the LDS\_DIRECT for the SRC0 field.
 The LDS address and data-type of the data to be read from LDS comes from the M0 register:
-LDS\_addr = M0[15:0] (byte address and must be Dword aligned) DataType = M0[18:16] 0 unsigned byte 1 unsigned short 2 Dword 3 unused 4 signed byte 5 signed short
+
+```text
+LDS_addr = M0[15:0] (byte address and must be Dword aligned)
+DataType = M0[18:16]
+    0 unsigned byte
+    1 unsigned short
+    2 Dword
+    3 unused
+    4 signed byte
+    5 signed short
+```
+
 ### <span id="page-91-1"></span>**10.3.2. LDS Parameter Reads**
 Parameter reads are only available in LDS, not in GDS.
 Pixel shaders use LDS to read vertex parameter values; the pixel shader then interpolates them to find the per-pixel parameter values. LDS parameter reads occur when the following opcodes are used.
@@ -1682,18 +1740,36 @@ All LDS operations require that M0 be initialized prior to use. M0 contains a si
 | DS_WRXCHG2ST64_RTN_{B32,B64}                  | Exchange GPR with LDS memory; offset *= 64.                                                                                               |
 | DS_PERMUTE_B32                                | Forward permute. Does not write LDS memory. LDS[dst] = src0; returnVal = LDS[thread_id], where thread_id is 0..63.                        |
 | DS_BPERMUTE_B32                               | Backward permute. Does not write LDS memory. LDS[thread_id] = src0, where thread_id is 0..63; returnVal = LDS[dst].                       |
-LDS\_Addr = LDS\_BASE + VGPR[ADDR] + {InstrOffset1,InstrOffset0}
+
+`LDS_Addr = LDS_BASE + VGPR[ADDR] + {InstrOffset1,InstrOffset0}`
+
 #### **Double Address Instructions**
-LDS\_Addr0 = LDS\_BASE + VGPR[ADDR] + InstrOffset0\*ADJ + LDS\_Addr1 = LDS\_BASE + VGPR[ADDR] + InstrOffset1\*ADJ Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
+
+```text
+LDS_Addr0 = LDS_BASE + VGPR[ADDR] + InstrOffset0*ADJ +
+LDS_Addr1 = LDS_BASE + VGPR[ADDR] + InstrOffset1*ADJ
+   Where ADJ = 4 for 8, 16 and 32-bit data types; and ADJ = 8 for 64-bit.
+```
+
 Note that LDS\_ADDR1 is used only for READ2\*, WRITE2\*, and WREXCHG2\*.
 M0[15:0] provides the size in bytes for this access. The size sent to LDS is MIN(M0, LDS\_SIZE), where LDS\_SIZE is the amount of LDS space allocated by the shader processor interpolator, SPI, at the time the wavefront was created.
 The address comes from VGPR, and both ADDR and InstrOffset are byte addresses.
 At the time of wavefront creation, LDS\_BASE is assigned to the physical LDS region owned by this wavefront or work-group.
 Specify only one address by setting both offsets to the same value. This causes only one read or write to occur and uses only the first DATA0.
 **SRC2 Ops** The ds\_<op>\_src2\_<type> opcodes are different. These operands perform an atomic operation on 2 operands from the LDS memory: one is viewed as the data and the other is the second source operand and the final destination. The addressing for these can operate in two different modes depending on the MSB of offset1[7]: If it is 0, the offset for the data term is derived by the offset fields as a SIGNED dword offset:
-LDS\_Addr0 = LDS\_BASE + VGPR(ADDR) + SIGNEXTEND(InstrOffset1[6:0],InstrOffset0))<<2 // data term LDS\_Addr1 = LDS\_BASE + VGPR(ADDR) // second source and final destination address
+
+```text
+LDS_Addr0 = LDS_BASE + VGPR(ADDR) + SIGNEXTEND(InstrOffset1[6:0],InstrOffset0))<<2    // data term
+LDS_Addr1 = LDS_BASE + VGPR(ADDR)                 // second source and final destination address
+```
+
 If the bit is 1, the offset for the data term becomes per thread and is a SIGNED dword offset derived from the msbs read from the VGPR for the index. The addressing becomes:
-LDS\_Addr0 = LDS\_BASE + VGPR(ADDR)[16:0] + SIGNEXTEND(VGPR(ADDR)[31:17])<<2 // data term LDS\_Addr1 = LDS\_BASE + VGPR(ADDR)[16:0] // second source and final destination address
+
+```text
+LDS_Addr0 = LDS_BASE + VGPR(ADDR)[16:0] + SIGNEXTEND(VGPR(ADDR)[31:17])<<2      // data term
+LDS_Addr1 = LDS_BASE + VGPR(ADDR)[16:0]     // second source and final destination address
+```
+
 **LDS Atomic Ops** DS\_<atomicOp> OP, GDS=0, OFFSET0, OFFSET1, VDST, ADDR, Data0, Data1
 LDS\_Addr0 = LDS\_BASE + VGPR[ADDR] + {InstrOffset1,InstrOffset0}
 ADDR is a Dword address. VGPRs 0,1 and dst are double-GPRs for doubles data.
@@ -2810,7 +2886,51 @@ Offset[9:5]: Swizzle 0x01, mask=0, rotate left:
 If offset < 0xc000, one of the basic swizzle modes is used based on offset[15]. If offset[15] == 1, groups of 4 consecutive threads are swizzled together. If offset[15] == 0, all 32
 threads are swizzled together. The first basic swizzle mode (when offset[15] == 1) allows full data sharing between a group of 4 consecutive threads. Any thread within the group of 4 can get data from any other thread within the group of 4, specified by the corresponding offset bits --- [1:0] for the first thread, [3:2] for the second thread, [5:4] for the third thread, [7:6] for the fourth thread. Note that the offset bits apply to all groups of 4 within a wavefront; thus if offset[1:0] == 1, then thread0 will grab thread1, thread4 will grab
 thread5, etc. The second basic swizzle mode (when offset[15] == 0) allows limited data sharing between 32 consecutive threads. In this case, the offset is used to specify a 5-bit xor-mask, 5-bit ormask, and 5-bit and-mask used to generate a thread mapping. Note that the offset bits apply to each group of 32 within a wavefront. The details of the thread mapping are listed below. Some example usages: SWAPX16 : xor\_mask = 0x10, or\_mask = 0x00, and\_mask = 0x1f SWAPX8 : xor\_mask = 0x08, or\_mask = 0x00, and\_mask = 0x1f SWAPX4 : xor\_mask = 0x04, or\_mask = 0x00, and\_mask = 0x1f SWAPX2 : xor\_mask = 0x02, or\_mask = 0x00, and\_mask = 0x1f SWAPX1 : xor\_mask = 0x01, or\_mask = 0x00, and\_mask = 0x1f REVERSEX32 : xor\_mask = 0x1f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX16 : xor\_mask = 0x0f, or\_mask = 0x00, and\_mask = 0x1f REVERSEX8 : xor\_mask = 0x07, or\_mask = 0x00, and\_mask = 0x1f REVERSEX4 : xor\_mask = 0x03, or\_mask = 0x00, and\_mask = 0x1f REVERSEX2 : xor\_mask = 0x01 or\_mask = 0x00, and\_mask = 0x1f BCASTX32: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x00 BCASTX16: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x10 BCASTX8: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x18 BCASTX4: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1c BCASTX2: xor\_mask = 0x00, or\_mask = thread, and\_mask = 0x1e Pseudocode follows: offset = offset1:offset0;
-if (offset >= 0xe000) { // FFT decomposition mask = offset[4:0]; for (i = 0; i < 64; i++) { j = reverse\_bits(i & 0x1f); j = (j >> count\_ones(mask)); j \|= (i & mask); j \|= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } } else if (offset >= 0xc000) { // rotate rotate = offset[9:5]; mask = offset[4:0]; if (offset[10]) { rotate = -rotate; } for (i = 0; i < 64; i++) { j = (i & mask) \| ((i + rotate) & ~mask); j \|= i & 0x20; thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } } else if (offset[15]) { // full data sharing within 4 consecutive threads for (i = 0; i < 64; i+=4) { thread\_out[i+0] = thread\_valid[i+offset[1:0]]?thread\_in[i+offset[1:0]]:0; thread\_out[i+1] = thread\_valid[i+offset[3:2]]?thread\_in[i+offset[3:2]]:0; thread\_out[i+2] = thread\_valid[i+offset[5:4]]?thread\_in[i+offset[5:4]]:0; thread\_out[i+3] = thread\_valid[i+offset[7:6]]?thread\_in[i+offset[7:6]]:0; } } else { // offset[15] == 0 // limited data sharing within 32 consecutive threads xor\_mask = offset[14:10]; or\_mask = offset[9:5]; and\_mask = offset[4:0]; for (i = 0; i < 64; i++) { j = (((i & 0x1f) & and\_mask) \| or\_mask) ^ xor\_mask; j \|= (i & 0x20); // which group of 32 thread\_out[i] = thread\_valid[j] ? thread\_in[j] : 0; } }
+
+```text
+if (offset >= 0xe000) {
+     // FFT decomposition
+     mask = offset[4:0];
+     for (i = 0; i < 64; i++) {
+         j = reverse_bits(i & 0x1f);
+         j = (j >> count_ones(mask));
+         j \|= (i & mask);
+         j \|= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+} else if (offset >= 0xc000) {
+     // rotate
+     rotate = offset[9:5];
+     mask = offset[4:0];
+     if (offset[10]) {
+         rotate = -rotate;
+     }
+     for (i = 0; i < 64; i++) {
+         j = (i & mask) \| ((i + rotate) & ~mask);
+         j \|= i & 0x20;
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+} else if (offset[15]) {
+     // full data sharing within 4 consecutive threads
+     for (i = 0; i < 64; i+=4) {
+         thread_out[i+0] = thread_valid[i+offset[1:0]]?thread_in[i+offset[1:0]]:0;
+         thread_out[i+1] = thread_valid[i+offset[3:2]]?thread_in[i+offset[3:2]]:0;
+         thread_out[i+2] = thread_valid[i+offset[5:4]]?thread_in[i+offset[5:4]]:0;
+         thread_out[i+3] = thread_valid[i+offset[7:6]]?thread_in[i+offset[7:6]]:0;
+     }
+} else { // offset[15] == 0
+     // limited data sharing within 32 consecutive threads
+     xor_mask = offset[14:10];
+     or_mask = offset[9:5];
+     and_mask = offset[4:0];
+     for (i = 0; i < 64; i++) {
+         j = (((i & 0x1f) & and_mask) \| or_mask) ^ xor_mask;
+         j \|= (i & 0x20); // which group of 32
+         thread_out[i] = thread_valid[j] ? thread_in[j] : 0;
+     }
+}
+```
+
 ### <span id="page-206-0"></span>**12.13.2. LDS Instruction Limitations**
 Some of the DS instructions are available only to GDS, not LDS. These are:
 - DS\_GWS\_SEMA\_RELEASE\_ALL
