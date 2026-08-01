@@ -188,10 +188,17 @@ For prose-style manuals, restore the source pseudocode layout after importing:
 ```
 
 This pass uses Poppler's `pdftotext -layout` output as the source of line
-breaks and indentation. It automatically handles both explicitly labelled
-`Expression` sections, as in CDNA5, and unlabelled pseudocode between
-instruction entries, as in CDNA3/4 and RDNA3/3.5/4. A simple expression of at
-most 100 characters is wrapped in inline code; multiline, control-flow,
+breaks and indentation for instruction expressions. For document-level code
+in explicitly labelled manuals, it also uses `pdftohtml -xml` font metadata:
+CDNA5 marks pseudocode with Roboto Mono while ordinary prose uses Source Serif.
+Keyword and operator checks (`if`, `for`, assignments, comparisons, comments,
+and similar syntax) provide a secondary guard. This avoids treating ordinary
+indented prose as code.
+
+The pass automatically handles explicitly labelled `Expression` sections, as
+in CDNA5; unlabelled pseudocode between instruction entries, as in CDNA3/4 and
+RDNA3/3.5/4; and monospace pseudocode elsewhere in CDNA5. A simple expression
+of at most 100 characters is wrapped in inline code; multiline, control-flow,
 comment-bearing, and longer expressions use fenced `text` blocks. Markdown
 escapes inside matched code are removed because code spans and blocks display
 those characters literally.
@@ -201,10 +208,13 @@ with document order and normalized source text as fallbacks. In explicitly
 labelled manuals, prose accidentally joined to an expression at a page
 boundary is moved below the code block, and exact source-suffix matches restore
 dropped code prefixes. In unlabelled manuals, only exact normalized source
-matches inside the corresponding instruction entry are changed. Existing code
-spans and fences are retained. Sections that cannot be matched are reported
-and left unchanged for manual comparison. The command is idempotent; use
-`--verbose` to list unmatched sections.
+matches inside the corresponding instruction entry are changed.
+Document-level matches are also exact, and Markdown tables, headings, existing
+code spans, and existing fences are protected. Monospace blocks split by a
+printed page boundary remain separate fenced blocks unless their logical
+continuity is independently verified. Sections that cannot be matched are
+reported and left unchanged for manual comparison. The command is idempotent;
+use `--verbose` to list unmatched sections.
 
 CDNA1/2, RDNA1/2, and the Vega manuals use a different publication layout:
 operations are already isolated in a dedicated Markdown table column. Do not
@@ -348,7 +358,11 @@ bodies, and table rows are especially prone to being separated there.
 - Expression formatting: all 1,445 explicitly headed sections formatted; 527
   simple expressions rendered as inline code, 918 rendered as source-indented
   code blocks, and 22 missing code prefixes restored from exact source-suffix
-  matches
+  matches. A source-font pass additionally restored 138 inline and 232 fenced
+  pseudocode fragments outside those sections, including addressing formulas,
+  examples, and unlabelled instruction expressions. Twenty-seven reviewed
+  Markdown-side fixups format short formulas whose PDF source uses the prose
+  font but whose assignment or control syntax is unambiguous.
 - Known limitation: broader multi-page table and instruction-heading losses
   require systematic source-aware repair rather than isolated hand edits; 171
   PDF expressions do not have a corresponding explicit Markdown section

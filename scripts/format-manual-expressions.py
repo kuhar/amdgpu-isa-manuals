@@ -9,6 +9,7 @@ import subprocess
 import sys
 import textwrap
 import unicodedata
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -25,6 +26,12 @@ MARKDOWN_INSTRUCTION = re.compile(
     r"(\d+(?:,\s*\d+)*)\*\*\s*$"
 )
 MARKDOWN_ESCAPES = frozenset(r"_*[]{}")
+LAYOUT_EQUIVALENTS = {
+    "\u2018": "'",
+    "\u2019": "'",
+    "\u201c": '"',
+    "\u201d": '"',
+}
 CONTROL_FLOW = re.compile(
     r"(?:^|\W)(?:if|then|else|endif|for|while|do|endfor|endwhile)(?:\W|$)",
     re.IGNORECASE,
@@ -33,6 +40,184 @@ CODE_SIGNAL = re.compile(
     r"(?<![<>!])=(?!=)|==|!=|<=|>=|;|//|"
     r"\b(?:if|elsif|else|endif|for|endfor|while|endwhile|declare|return|break)\b",
     re.IGNORECASE,
+)
+
+DOCUMENT_FORMULA_FIXUPS = (
+    (
+        "Scalar 0-105=SGPR; 106,107=VCC, 108-123=TTMP0-15, and "
+        "124-127={NULL, M0, EXEC\\_LO, EXEC\\_HI}.",
+        "`Scalar 0-105=SGPR; 106,107=VCC, 108-123=TTMP0-15, and "
+        "124-127={NULL, M0, EXEC_LO, EXEC_HI}.`",
+    ),
+    (
+        "Vs = the first VGPR DWORD (start) Ve = the last VGPR DWORD (end)",
+        "```text\nVs = the first VGPR DWORD (start)\n"
+        "Ve = the last VGPR DWORD (end)\n```",
+    ),
+    (
+        "OPSEL[2] = A matrix (1 = reuse, 0 = normal)",
+        "`OPSEL[2] = A matrix (1 = reuse, 0 = normal)`",
+    ),
+    (
+        "OPSEL\\_HI[2] = B matrix (1 = reuse, 0 = normal)",
+        "`OPSEL_HI[2] = B matrix (1 = reuse, 0 = normal)`",
+    ),
+    (
+        "**offset** = sgpr\\_offset + inst\\_offset + vgpr\\_offset",
+        "`offset = sgpr_offset + inst_offset + vgpr_offset`",
+    ),
+    (
+        "**total\\_offset** = index\\*stride + offset, in bytes",
+        "`total_offset = index*stride + offset`, in bytes",
+    ),
+    (
+        "Address Out-of-Range if: offset >= num\\_records",
+        "Address Out-of-Range if: `offset >= num_records`",
+    ),
+    (
+        "**GV** mem\\_addr = VGPRU64 + IOFFSETI24 **GVS** mem\\_addr = "
+        "SGPRU64 + ( VGPRI32 \\* ScaleFactor ) + IOFFSETI24 **GT** "
+        "mem\\_addr = SGPRU64 + IOFFSETI24 + ThreadID\\*4",
+        "```text\n"
+        "GV   mem_addr = VGPRU64 + IOFFSETI24\n"
+        "GVS  mem_addr = SGPRU64 + (VGPRI32 * ScaleFactor) + IOFFSETI24\n"
+        "GT   mem_addr = SGPRU64 + IOFFSETI24 + ThreadID*4\n"
+        "```",
+    ),
+    (
+        "**LDS** LDS\\_ADDR = VGPR\\_addrU32 + IOFFSETU16 LDS address is "
+        "relative to the LDS space allocated to this wave.",
+        "`LDS_ADDR = VGPR_addrU32 + IOFFSETU16`\n\n"
+        "LDS address is relative to the LDS space allocated to this wave.",
+    ),
+    (
+        "Normal (GV) addr[63:0] = VGPRU64 + IOFFSETI24",
+        "Normal (GV): `addr[63:0] = VGPRU64 + IOFFSETI24`",
+    ),
+    (
+        "GVS Mode addr[63:0] = SGPRU64 + (VGPRI32 \\* ScaleFactor) + "
+        "IOFFSETI24",
+        "GVS mode: `addr[63:0] = SGPRU64 + (VGPRI32 * ScaleFactor) + "
+        "IOFFSETI24`",
+    ),
+    (
+        "- GV: global\\_mem\\_addr = INST\\_OFFSET + VADDR[63:0]",
+        "- GV: `global_mem_addr = INST_OFFSET + VADDR[63:0]`",
+    ),
+    (
+        "- GVS: global\\_mem\\_addr = INST\\_OFFSET + SADDR[63:0] + "
+        "VADDR[31:0]",
+        "- GVS: `global_mem_addr = INST_OFFSET + SADDR[63:0] + "
+        "VADDR[31:0]`",
+    ),
+    (
+        "- bar.arrive(BarrierID)\n"
+        "- phase = bar.arrive(BarrierID)\n"
+        "- bar.wait(BarrierID, phase)",
+        "- `bar.arrive(BarrierID)`\n"
+        "- `phase = bar.arrive(BarrierID)`\n"
+        "- `bar.wait(BarrierID, phase)`",
+    ),
+    (
+        "- ds\\_permute\\_b32 : Dst[index[0..31]] = src[0..31] Where "
+        "[0..31] is the lane number\n"
+        "- ds\\_bpermute\\_b32 : Dst[0..31] = src[index[0..31]]",
+        "- ds\\_permute\\_b32: `Dst[index[0..31]] = src[0..31]`, where "
+        "`[0..31]` is the lane number\n"
+        "- ds\\_bpermute\\_b32: `Dst[0..31] = src[index[0..31]]`",
+    ),
+    (
+        "Compare operations: 1 = true Arithmetic operations: 1 = carry out "
+        "Bit/logical operations: 1 = result was not zero Move: does not alter "
+        "SCC",
+        "```text\n"
+        "Compare operations:     1 = true\n"
+        "Arithmetic operations:  1 = carry out\n"
+        "Bit/logical operations: 1 = result was not zero\n"
+        "Move:                   does not alter SCC\n"
+        "```",
+    ),
+    (
+        "0 : Use the NV ISA bit as indication that scratch is NV or not 1 : "
+        "Force threads falling into scratch to NV=1, even if ISA.NV = 0 if "
+        "the address falls into scratch space (not global). This allows "
+        "global.NV=0 and scratch.NV=1 for flat ops; other threads use the ISA "
+        "bit value.",
+        "- `0`: Use the NV ISA bit as indication that scratch is NV or not.\n"
+        "- `1`: Force threads falling into scratch to `NV=1`, even if "
+        "`ISA.NV=0` if the address falls into scratch space (not global). "
+        "This allows `global.NV=0` and `scratch.NV=1` for flat ops; other "
+        "threads use the ISA bit value.",
+    ),
+    (
+        "SRC/DST[7] = (1=hi, 0=lo half)",
+        "`SRC/DST[7] = (1=hi, 0=lo half)`",
+    ),
+    (
+        "Concatenate the 6 VGPRs of Lane 0 {V5, V4, V3, V2, V1, V0} = "
+        "{ K=31, K=30, K=29, … K=1, K=0 }.",
+        "Concatenate the 6 VGPRs of Lane 0 "
+        "`{V5, V4, V3, V2, V1, V0} = { K=31, K=30, K=29, … K=1, K=0 }`.",
+    ),
+    (
+        'where "offset" is: IOFFSET + {M0 or sgpr-offset} Any DWORDs that '
+        "are out of range in memory from a buffer\\_load return zero. If a "
+        "multi-DWORD request (e.g. S\\_BUFFER\\_LOAD\\_B256) is partially "
+        "out of range, the DWORDs that are in range return data as normal, "
+        "and the out-of-range DWORDs return zero.",
+        'where "offset" is: `IOFFSET + {M0 or sgpr-offset}`. Any DWORDs that '
+        "are out of range in memory from a buffer\\_load return zero. If a "
+        "multi-DWORD request (e.g. S\\_BUFFER\\_LOAD\\_B256) is partially "
+        "out of range, the DWORDs that are in range return data as normal, "
+        "and the out-of-range DWORDs return zero.",
+    ),
+    ("SRC0\\_MSB = SIMM16[1:0]", "`SRC0_MSB = SIMM16[1:0]`"),
+    ("SRC1\\_MSB = SIMM16[3:2]", "`SRC1_MSB = SIMM16[3:2]`"),
+    ("SRC2\\_MSB = SIMM16[5:4]", "`SRC2_MSB = SIMM16[5:4]`"),
+    ("DST\\_MSB = SIMM16[7:6]", "`DST_MSB = SIMM16[7:6]`"),
+    (
+        "D0.f32 = S0.f32 \\* 2.0F \\*\\* S1.i32",
+        "`D0.f32 = S0.f32 * 2.0F ** S1.i32`",
+    ),
+    (
+        "SWAPX16 : xor\\_mask = 0x10, or\\_mask = 0x00, and\\_mask = 0x1f "
+        "SWAPX8 : xor\\_mask = 0x08, or\\_mask = 0x00, and\\_mask = 0x1f "
+        "SWAPX4 : xor\\_mask = 0x04, or\\_mask = 0x00, and\\_mask = 0x1f "
+        "SWAPX2 : xor\\_mask = 0x02, or\\_mask = 0x00, and\\_mask = 0x1f "
+        "SWAPX1 : xor\\_mask = 0x01, or\\_mask = 0x00, and\\_mask = 0x1f",
+        "```text\n"
+        "SWAPX16: xor_mask = 0x10, or_mask = 0x00, and_mask = 0x1f\n"
+        "SWAPX8:  xor_mask = 0x08, or_mask = 0x00, and_mask = 0x1f\n"
+        "SWAPX4:  xor_mask = 0x04, or_mask = 0x00, and_mask = 0x1f\n"
+        "SWAPX2:  xor_mask = 0x02, or_mask = 0x00, and_mask = 0x1f\n"
+        "SWAPX1:  xor_mask = 0x01, or_mask = 0x00, and_mask = 0x1f\n"
+        "```",
+    ),
+    (
+        "REVERSEX32 : xor\\_mask = 0x1f, or\\_mask = 0x00, and\\_mask = "
+        "0x1f REVERSEX16 : xor\\_mask = 0x0f, or\\_mask = 0x00, and\\_mask "
+        "= 0x1f REVERSEX8 : xor\\_mask = 0x07, or\\_mask = 0x00, "
+        "and\\_mask = 0x1f REVERSEX4 : xor\\_mask = 0x03, or\\_mask = "
+        "0x00, and\\_mask = 0x1f REVERSEX2 : xor\\_mask = 0x01 or\\_mask "
+        "= 0x00, and\\_mask = 0x1f BCASTX32: xor\\_mask = 0x00, or\\_mask "
+        "= thread, and\\_mask = 0x00 BCASTX16: xor\\_mask = 0x00, "
+        "or\\_mask = thread, and\\_mask = 0x10 BCASTX8: xor\\_mask = 0x00, "
+        "or\\_mask = thread, and\\_mask = 0x18 BCASTX4: xor\\_mask = 0x00, "
+        "or\\_mask = thread, and\\_mask = 0x1c BCASTX2: xor\\_mask = 0x00, "
+        "or\\_mask = thread, and\\_mask = 0x1e Pseudocode follows:",
+        "```text\n"
+        "REVERSEX32: xor_mask = 0x1f, or_mask = 0x00, and_mask = 0x1f\n"
+        "REVERSEX16: xor_mask = 0x0f, or_mask = 0x00, and_mask = 0x1f\n"
+        "REVERSEX8:  xor_mask = 0x07, or_mask = 0x00, and_mask = 0x1f\n"
+        "REVERSEX4:  xor_mask = 0x03, or_mask = 0x00, and_mask = 0x1f\n"
+        "REVERSEX2:  xor_mask = 0x01 or_mask = 0x00, and_mask = 0x1f\n"
+        "BCASTX32:   xor_mask = 0x00, or_mask = thread, and_mask = 0x00\n"
+        "BCASTX16:   xor_mask = 0x00, or_mask = thread, and_mask = 0x10\n"
+        "BCASTX8:    xor_mask = 0x00, or_mask = thread, and_mask = 0x18\n"
+        "BCASTX4:    xor_mask = 0x00, or_mask = thread, and_mask = 0x1c\n"
+        "BCASTX2:    xor_mask = 0x00, or_mask = thread, and_mask = 0x1e\n"
+        "```\n\nPseudocode follows:",
+    ),
 )
 
 
@@ -56,6 +241,12 @@ class MarkdownExpression:
 @dataclass(frozen=True)
 class SourceCodeBlock:
     instruction: tuple[str, str]
+    text: str
+    normalized: str
+
+
+@dataclass(frozen=True)
+class SourceLayoutBlock:
     text: str
     normalized: str
 
@@ -99,6 +290,35 @@ def normalize_with_ends(text: str) -> tuple[str, list[int]]:
 
 def normalize(text: str) -> str:
     return normalize_with_ends(text)[0]
+
+
+def normalize_layout_with_ends(text: str) -> tuple[str, list[int]]:
+    """Normalize document-level matches, ignoring Markdown bold markers."""
+    normalized: list[str] = []
+    ends: list[int] = []
+    index = 0
+    while index < len(text):
+        if text.startswith("**", index):
+            index += 2
+            continue
+        character = text[index]
+        if (
+            character == "\\"
+            and index + 1 < len(text)
+            and text[index + 1] in MARKDOWN_ESCAPES
+        ):
+            index += 1
+            character = text[index]
+        character = LAYOUT_EQUIVALENTS.get(character, character)
+        if not character.isspace() and unicodedata.category(character) != "Cc":
+            normalized.append(character)
+            ends.append(index + 1)
+        index += 1
+    return "".join(normalized), ends
+
+
+def normalize_layout(text: str) -> str:
+    return normalize_layout_with_ends(text)[0]
 
 
 def pdf_text(pdf: Path) -> str:
@@ -304,6 +524,109 @@ def source_instruction_blocks(pdf: Path) -> list[SourceCodeBlock]:
             ):
                 blocks.append(SourceCodeBlock(instruction, text, normalized))
                 seen.add(key)
+    return blocks
+
+
+def source_layout_blocks(pdf: Path) -> list[SourceLayoutBlock]:
+    """Extract code-like blocks identified by the PDF's monospace font."""
+    try:
+        completed = subprocess.run(
+            [
+                "pdftohtml",
+                "-xml",
+                "-hidden",
+                "-i",
+                "-stdout",
+                str(pdf),
+            ],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except FileNotFoundError as error:
+        raise SystemExit(
+            "pdftohtml is required; install the Poppler command-line tools"
+        ) from error
+    except subprocess.CalledProcessError as error:
+        detail = error.stderr.strip() or f"exit status {error.returncode}"
+        raise SystemExit(f"pdftohtml failed: {detail}") from error
+
+    try:
+        root = ET.fromstring(completed.stdout)
+    except ET.ParseError as error:
+        raise SystemExit(f"pdftohtml emitted invalid XML: {error}") from error
+
+    blocks: list[SourceLayoutBlock] = []
+    seen: set[str] = set()
+    font_families: dict[str, str] = {}
+    for page in root.findall("page"):
+        for font in page.findall("fontspec"):
+            font_families[font.attrib["id"]] = font.attrib.get("family", "")
+
+        fragments: dict[int, list[tuple[int, int, int, str]]] = {}
+        for element in page.findall("text"):
+            family = font_families.get(element.attrib.get("font", ""), "")
+            if "RobotoMono" not in family:
+                continue
+            text = "".join(element.itertext()).replace("\xa0", " ")
+            if not text.strip():
+                continue
+            top = int(element.attrib["top"])
+            fragments.setdefault(top, []).append(
+                (
+                    int(element.attrib["left"]),
+                    int(element.attrib["width"]),
+                    int(element.attrib["height"]),
+                    text,
+                )
+            )
+
+        lines: list[tuple[int, int, str]] = []
+        for top, pieces in sorted(fragments.items()):
+            pieces.sort()
+            line = pieces[0][3]
+            previous_right = pieces[0][0] + pieces[0][1]
+            heights = [pieces[0][2]]
+            for left, width, height, fragment in pieces[1:]:
+                gap = max(0, left - previous_right)
+                character_width = max(1.0, width / max(1, len(fragment)))
+                line += " " * max(1, round(gap / character_width)) + fragment
+                previous_right = left + width
+                heights.append(height)
+            lines.append((top, max(heights), line.rstrip()))
+
+        page_blocks: list[list[str]] = []
+        current: list[str] = []
+        previous_top = 0
+        previous_height = 0
+        for top, height, line in lines:
+            gap = top - previous_top if current else 0
+            if current and gap > max(previous_height, height) * 2.5:
+                page_blocks.append(current)
+                current = []
+            elif current and gap > max(previous_height, height) * 1.55:
+                current.append("")
+            current.append(line)
+            previous_top = top
+            previous_height = height
+        if current:
+            page_blocks.append(current)
+
+        for body in page_blocks:
+            text = textwrap.dedent("\n".join(body)).strip("\n").rstrip()
+            text = "".join(
+                LAYOUT_EQUIVALENTS.get(character, character)
+                for character in text
+            )
+            normalized = normalize_layout(text)
+            if (
+                normalized
+                and normalized not in seen
+                and looks_like_code(text, normalized)
+            ):
+                blocks.append(SourceLayoutBlock(text, normalized))
+                seen.add(normalized)
     return blocks
 
 
@@ -610,6 +933,14 @@ def table_ranges(markdown: str) -> list[tuple[int, int]]:
     ]
 
 
+def heading_ranges(markdown: str) -> list[tuple[int, int]]:
+    """Locate Markdown headings, which document-level matches must not alter."""
+    return [
+        match.span()
+        for match in re.finditer(r"(?m)^#{1,6}[ \t]+.*$", markdown)
+    ]
+
+
 def find_all(text: str, fragment: str) -> list[int]:
     starts: list[int] = []
     start = 0
@@ -732,6 +1063,96 @@ def format_unheaded_markdown(
     return "\n".join(lines).rstrip("\n") + trailing_newline, counts
 
 
+def format_layout_markdown(
+    markdown: str,
+    sources: list[SourceLayoutBlock],
+    maximum_inline_length: int,
+) -> tuple[str, dict[str, int]]:
+    """Format exact source-layout matches anywhere outside Markdown tables."""
+    body_normalized, body_ends = normalize_layout_with_ends(markdown)
+    existing_ranges = formatted_ranges(markdown)
+    protected_tables = table_ranges(markdown)
+    protected_headings = heading_ranges(markdown)
+    occupied: list[tuple[int, int]] = []
+    replacements: list[tuple[int, int, str]] = []
+    counts = {
+        "source_blocks": len(sources),
+        "matched": 0,
+        "inline": 0,
+        "block": 0,
+        "already": 0,
+        "table_skipped": 0,
+    }
+
+    for source in sorted(
+        sources, key=lambda candidate: len(candidate.normalized), reverse=True
+    ):
+        for normalized_start in find_all(body_normalized, source.normalized):
+            normalized_end = normalized_start + len(source.normalized)
+            if any(
+                normalized_start < end and normalized_end > start
+                for start, end in occupied
+            ):
+                continue
+            raw_start = body_ends[normalized_start] - 1
+            if (
+                raw_start > 0
+                and markdown[raw_start - 1] == "\\"
+                and markdown[raw_start] in MARKDOWN_ESCAPES
+            ):
+                raw_start -= 1
+            raw_end = body_ends[normalized_end - 1]
+            if markdown[max(0, raw_start - 2) : raw_start] == "**":
+                raw_start -= 2
+            if markdown[raw_end : raw_end + 2] == "**":
+                raw_end += 2
+            occupied.append((normalized_start, normalized_end))
+            if any(
+                raw_start < end and raw_end > start
+                for start, end in protected_tables + protected_headings
+            ):
+                counts["table_skipped"] += 1
+                continue
+            counts["matched"] += 1
+            if any(
+                start <= raw_start and raw_end <= end
+                for start, end in existing_ranges
+            ):
+                counts["already"] += 1
+                continue
+            rendered, style = render_expression(
+                source.text, maximum_inline_length
+            )
+            counts[style] += 1
+            replacements.append((raw_start, raw_end, rendered))
+
+    for start, end, rendered in sorted(replacements, reverse=True):
+        prefix = markdown[:start].rstrip()
+        suffix = markdown[end:].lstrip()
+        markdown = prefix
+        if markdown:
+            markdown += "\n\n"
+        markdown += rendered
+        if suffix:
+            markdown += "\n\n" + suffix
+
+    trailing_newline = "\n" if markdown.endswith("\n") else ""
+    return markdown.rstrip("\n") + trailing_newline, counts
+
+
+def apply_document_formula_fixups(markdown: str) -> tuple[str, int]:
+    """Apply conservative, reviewed formula splits outside source code fonts."""
+    count = 0
+    for original, replacement in DOCUMENT_FORMULA_FIXUPS:
+        if replacement in markdown:
+            continue
+        matches = markdown.count(original)
+        if matches:
+            markdown = markdown.replace(original, replacement)
+            count += matches
+    return markdown, count
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -792,6 +1213,13 @@ def main() -> int:
         formatted, counts = format_markdown(
             markdown, sources, args.inline_max, args.verbose
         )
+        layout_sources = source_layout_blocks(args.source_pdf)
+        formatted, layout_counts = format_layout_markdown(
+            formatted, layout_sources, args.inline_max
+        )
+        formatted, layout_counts["formula_fixups"] = (
+            apply_document_formula_fixups(formatted)
+        )
     else:
         source_blocks = source_instruction_blocks(args.source_pdf)
         formatted, counts = format_unheaded_markdown(
@@ -808,7 +1236,14 @@ def main() -> int:
             f"restored; {counts['trailers']} trailing text sections separated; "
             f"{counts['unmatched']} left unchanged; "
             f"{counts['source'] - counts['matched_source']} PDF expressions "
-            f"have no matched Markdown section"
+            f"have no matched Markdown section; document layout matched "
+            f"{layout_counts['matched']} of {layout_counts['source_blocks']} "
+            f"code-like PDF blocks, formatted {layout_counts['inline']} inline "
+            f"and {layout_counts['block']} as blocks, with "
+            f"{layout_counts['already']} already formatted and "
+            f"{layout_counts['table_skipped']} table or heading matches "
+            f"preserved; applied {layout_counts['formula_fixups']} reviewed "
+            f"formula fixups"
         )
     else:
         print(
