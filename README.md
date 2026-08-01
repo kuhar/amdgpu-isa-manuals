@@ -1,6 +1,6 @@
-# AMD GPU ISA manuals in Markdown
+# AMD GPU architecture publications in Markdown
 
-> **Repository notice.** This repository contains unofficial Markdown conversions of AMD instruction set architecture publications, produced with automated tooling for easier browsing and text search. It is not affiliated with or endorsed by AMD, and the conversions may contain errors and omissions. AMD retains its rights in the underlying publications; AMD's own agreement, disclaimer, and copyright and trademark notices are reproduced with each manual and should be read before relying on or redistributing the converted text. Each manual links to its AMD source PDF, which is the authoritative version.
+> **Repository notice.** This repository contains unofficial Markdown conversions of AMD instruction set architecture manuals and architecture white papers, produced with automated tooling for easier browsing and text search. It is not affiliated with or endorsed by AMD, and the conversions may contain errors and omissions. AMD retains its rights in the underlying publications; agreements, disclaimers, and copyright and trademark notices present in the sources are reproduced with the conversions and should be read before relying on or redistributing the converted text. Each conversion links to its AMD source PDF, which is the authoritative version.
 
 ## CDNA manuals
 
@@ -30,11 +30,11 @@
 Only architectures with a currently reachable official AMD white paper are
 listed here.
 
-- [CDNA 1](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna-white-paper.pdf)
-- [CDNA 2](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna2-white-paper.pdf)
-- [CDNA 3](https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-3-white-paper.pdf)
-- [CDNA 4](https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf)
-- [CDNA 5](https://www.amd.com/content/dam/amd/en/documents/products/technologies/cdna/amd-cdna5-whitepaper.pdf)
+- CDNA 1: [Markdown](cdna1/whitepaper.md) · [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna-white-paper.pdf)
+- CDNA 2: [Markdown](cdna2/whitepaper.md) · [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/instinct-business-docs/white-papers/amd-cdna2-white-paper.pdf)
+- CDNA 3: [Markdown](cdna3/whitepaper.md) · [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-3-white-paper.pdf)
+- CDNA 4: [Markdown](cdna4/whitepaper.md) · [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf)
+- CDNA 5: [Markdown](cdna5/whitepaper.md) · [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/products/technologies/cdna/amd-cdna5-whitepaper.pdf)
 - [AMD GPU architecture documentation index](https://rocm.docs.amd.com/en/latest/reference/gpu-arch/index.html)
 
 ### Machine-readable ISA specifications

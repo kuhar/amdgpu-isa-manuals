@@ -1,10 +1,17 @@
-# Converting ISA manuals to Markdown
+# Converting AMD architecture publications to Markdown
 
-This repository stores each manual as:
+This repository stores each ISA manual as:
 
 - `<family>/README.md` for the rendered text;
 - `<family>/<source-name>_meta.json` for Marker metadata; and
 - `<family>/assets/*.jpeg` for the retained technical figures.
+
+When an official architecture white paper is available, it is stored beside
+the ISA manual as:
+
+- `<family>/whitepaper.md` for the rendered text;
+- `<family>/whitepaper_meta.json` for Marker metadata; and
+- `<family>/whitepaper-assets/*.jpeg` for retained technical figures.
 
 The original manuals were imported with Marker in commit `8328861`, renamed to
 `README.md` in `097dab5`, moved under `assets/` in `7ac375e`, and cleaned of
@@ -155,13 +162,15 @@ metadata_name=amd-instinct-cdna5-instruction-set-architecture_meta.json
 
 The preparation script performs these mechanical steps:
 
-1. Copy the generated Markdown to `<family>/README.md`.
+1. Copy the generated Markdown to the selected Markdown filename (by default,
+   `<family>/README.md`).
 2. Prepend the repository notice shown below, replacing `SOURCE_URL` with the
    verified direct PDF URL.
 3. Copy the metadata JSON to the requested repository filename.
-4. Recreate `<family>/assets/` with retained technical images.
-5. Rewrite Markdown image targets from `_page_...jpeg` to
-   `assets/_page_...jpeg`.
+4. Recreate the selected assets directory (by default, `<family>/assets/`)
+   with retained technical images.
+5. Rewrite Markdown image targets from `_page_...jpeg` to the selected assets
+   directory.
 6. Remove the known decorative `Picture` fragments and same-page byte-identical
    image duplicates emitted by these manuals.
 7. Join blank-key table continuation rows to the preceding keyed row, including
@@ -169,6 +178,29 @@ The preparation script performs these mechanical steps:
    combine adjacent table fragments that repeat the same column headings.
 8. Link each contents-table entry to the corresponding explicit page anchor.
    The script reports entries whose headings or anchors require manual repair.
+
+For a white paper, select the alternate filenames and notice explicitly. The
+repeatable `--skip-image` option records images rejected during the visual
+audit and prevents them from being copied or referenced:
+
+```sh
+family=cdna5
+whitepaper_slug=cdna5-whitepaper
+whitepaper_url=https://www.amd.com/content/dam/amd/en/documents/products/technologies/cdna/amd-cdna5-whitepaper.pdf
+
+./scripts/prepare-marker-output.py \
+  "$conversion_out/$whitepaper_slug" \
+  "$family" \
+  --slug "$whitepaper_slug" \
+  --document-type whitepaper \
+  --markdown-name whitepaper.md \
+  --metadata-name whitepaper_meta.json \
+  --assets-name whitepaper-assets \
+  --source-url "$whitepaper_url" \
+  --skip-image _page_2_Picture_3.jpeg \
+  --skip-image _page_4_Diagram_5.jpeg \
+  --skip-image _page_15_Diagram_5.jpeg
+```
 
 Keep the notice before the converted title so that it cannot be mistaken for
 part of AMD's publication:
@@ -184,6 +216,11 @@ figure or retain a decorative fragment.
 - Remove decorative callout icons, isolated footnote numbers, page logos, and
   other fragments that do not convey manual content. Remove their Markdown
   references at the same time.
+- For white papers, retain architecture topology, chip/package, compute-block,
+  data-path, cache/memory, partitioning, and interconnect diagrams. Product or
+  rack renders are optional when the surrounding text carries the same
+  information. Remove cover art, decorative backgrounds, repeated page strips,
+  website screenshots, and redundant product photography.
 - Find byte-identical images with SHA-256. When Marker emits adjacent `Figure`
   and `Diagram` references for the same bytes, retain one reference and one
   file. Prefer the `Figure` name for consistency with older imports.
@@ -277,3 +314,75 @@ The pinned CPU stack and the TheRock-backed CPU run produced byte-identical
 Markdown and JPEGs on the 54-page smoke sample. Metadata differed only in
 sub-pixel floating-point polygon coordinates, which is why the committed full
 metadata is generated with the pinned CPU environment above.
+
+## White paper conversion records
+
+All five white papers were converted on 2026-08-01 with the pinned Marker 2.0
+CPU workflow. Every page used the embedded `pdftext` layer. The files named
+under "excluded images" are repeatable `--skip-image` arguments; they capture
+the visual audit rather than an automatic Marker classification.
+
+### CDNA 1
+
+- Source: `amd-cdna-white-paper.pdf`
+- Source size: 3,379,915 bytes
+- Source pages: 11
+- Source SHA-256:
+  `d62f13d68fe57f6878d18ee896a18342d3343481f83372fce8f87fb3eb48e959`
+- Raw images: 7
+- Retained technical images: 6
+- Excluded images: `_page_0_Picture_4.jpeg` (cover visual)
+
+### CDNA 2
+
+- Source: `amd-cdna2-white-paper.pdf`
+- Source size: 1,788,074 bytes
+- Source pages: 17
+- Source SHA-256:
+  `62125a4a3f00e653556ca98c178712496b241e5c3d8a4edadee7578944c2cc6d`
+- Raw images: 9
+- Retained technical images: 8
+- Excluded images: `_page_12_Picture_6.jpeg` (website screenshot)
+
+### CDNA 3
+
+- Source: `amd-cdna-3-white-paper.pdf`
+- Source size: 8,096,236 bytes
+- Source pages: 28
+- Source SHA-256:
+  `a0811d04f101f9127bd183d6e228f462b6fd988b0e0e6d263a25e4bed712f593`
+- Raw images: 13
+- Retained technical images: 10
+- Excluded images: `_page_0_Picture_0.jpeg`,
+  `_page_8_Picture_0.jpeg`, and `_page_25_Picture_0.jpeg` (cover art and
+  decorative page strips)
+
+### CDNA 4
+
+- Source: `amd-cdna-4-architecture-whitepaper.pdf`
+- Source size: 2,703,210 bytes
+- Source pages: 21
+- Source SHA-256:
+  `7ebf89edb9b82198b9edea7bb37eb7fe7c998842257eb21ef7a459a87774a4b2`
+- Raw images: 16
+- Retained technical images: 5
+- Excluded images: `_page_0_Picture_0.jpeg`, `_page_5_Diagram_5.jpeg`,
+  `_page_6_Picture_0.jpeg`, `_page_8_Picture_0.jpeg`,
+  `_page_9_Diagram_4.jpeg`, `_page_12_Picture_0.jpeg`,
+  `_page_14_Picture_0.jpeg`, `_page_15_Picture_0.jpeg`,
+  `_page_16_Picture_0.jpeg`, `_page_17_Picture_0.jpeg`, and
+  `_page_20_Picture_0.jpeg` (cover art, duplicate crops, and decorative page
+  strips)
+
+### CDNA 5
+
+- Source: `amd-cdna5-whitepaper.pdf`
+- Source size: 4,152,251 bytes
+- Source pages: 24
+- Source SHA-256:
+  `2381d60185f79989d3d5e4260c86f72504fcab256b40bb85fe4a6dd782afb3ef`
+- Raw images: 13
+- Retained technical images: 10
+- Excluded images: `_page_2_Picture_3.jpeg` (product render),
+  `_page_4_Diagram_5.jpeg` (duplicate crop), and
+  `_page_15_Diagram_5.jpeg` (full-rack product image)

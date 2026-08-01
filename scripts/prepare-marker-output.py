@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import one Marker 2.0 ISA conversion into this repository."""
+"""Import one Marker 2.0 AMD publication conversion into this repository."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image
 
 
-NOTICE = (
+MANUAL_NOTICE = (
     "> **Repository notice (not part of the AMD publication).** This is an "
     "unofficial Markdown conversion of the [AMD source PDF]({source_url}), "
     "produced with automated tooling for easier browsing and text search. It "
@@ -21,6 +21,15 @@ NOTICE = (
     "omissions. AMD retains its rights in the underlying publication; AMD's "
     "own agreement, disclaimer, and copyright and trademark notices are "
     "reproduced below. Consult the linked PDF as the authoritative version."
+)
+WHITEPAPER_NOTICE = (
+    "> **Repository notice (not part of the AMD publication).** This is an "
+    "unofficial Markdown conversion of the [AMD source PDF]({source_url}), "
+    "produced with automated tooling for easier browsing and text search. It "
+    "is not affiliated with or endorsed by AMD and may contain errors and "
+    "omissions. AMD retains its rights in the underlying publication; AMD's "
+    "copyright and trademark notice from the source is reproduced below. "
+    "Consult the linked PDF as the authoritative version."
 )
 
 IMAGE_REF = re.compile(r"!\[\]\(([^)]+\.jpeg)\)")
@@ -45,12 +54,21 @@ def image_order(path: Path) -> tuple[int, str]:
     return (2, path.name)
 
 
-def retained_images(generated_dir: Path) -> tuple[dict[str, Path], set[str]]:
+def retained_images(
+    generated_dir: Path, excluded: set[str]
+) -> tuple[dict[str, Path], set[str]]:
     retained: dict[str, Path] = {}
     skipped: set[str] = set()
     seen_on_page: set[tuple[str, str]] = set()
+    available = {path.name for path in generated_dir.glob("*.jpeg")}
+    unknown = excluded - available
+    if unknown:
+        raise SystemExit("Unknown excluded images: " + ", ".join(sorted(unknown)))
 
     for path in sorted(generated_dir.glob("*.jpeg"), key=image_order):
+        if path.name in excluded:
+            skipped.add(path.name)
+            continue
         with Image.open(path) as image:
             width, _height = image.size
 
@@ -226,7 +244,7 @@ def link_table_of_contents(markdown: str) -> tuple[str, int, list[str]]:
         None,
     )
     if contents_start is None:
-        return markdown, 0, ["Contents heading"]
+        return markdown, 0, []
     contents_end = first_page_heading if first_page_heading is not None else len(lines)
 
     linked_count = 0
@@ -261,7 +279,7 @@ def prepare(args: argparse.Namespace) -> None:
     if not source_markdown.is_file() or not source_metadata.is_file():
         raise SystemExit(f"Marker output is incomplete: {generated_dir}")
 
-    retained, skipped = retained_images(generated_dir)
+    retained, skipped = retained_images(generated_dir, set(args.skip_image))
     output_lines: list[str] = []
     for line in source_markdown.read_text(encoding="utf-8").splitlines():
         for match in reversed(list(IMAGE_REF.finditer(line))):
@@ -271,10 +289,8 @@ def prepare(args: argparse.Namespace) -> None:
             elif name not in retained:
                 raise SystemExit(f"Unclassified image reference: {name}")
             else:
-                replacement = f"![](assets/{name})"
+                replacement = f"![]({args.assets_name}/{name})"
             line = line[: match.start()] + replacement + line[match.end() :]
-        if not line.strip():
-            continue
         output_lines.append(line)
 
     body = compact_table_continuations("\n".join(output_lines)).strip()
@@ -286,13 +302,16 @@ def prepare(args: argparse.Namespace) -> None:
             + ", ".join(unresolved_toc_rows),
             file=sys.stderr,
         )
-    markdown = NOTICE.format(source_url=args.source_url) + "\n\n" + body + "\n"
+    notice = (
+        MANUAL_NOTICE if args.document_type == "manual" else WHITEPAPER_NOTICE
+    )
+    markdown = notice.format(source_url=args.source_url) + "\n\n" + body + "\n"
 
     manual_dir.mkdir(parents=True, exist_ok=True)
-    (manual_dir / "README.md").write_text(markdown, encoding="utf-8")
+    (manual_dir / args.markdown_name).write_text(markdown, encoding="utf-8")
     shutil.copy2(source_metadata, manual_dir / args.metadata_name)
 
-    assets_dir = manual_dir / "assets"
+    assets_dir = manual_dir / args.assets_name
     if assets_dir.exists():
         shutil.rmtree(assets_dir)
     assets_dir.mkdir()
@@ -301,7 +320,7 @@ def prepare(args: argparse.Namespace) -> None:
 
     print(
         f"Prepared {args.slug}: {len(retained)} technical images retained, "
-        f"{len(skipped)} decorative or duplicate images removed, "
+        f"{len(skipped)} images removed, "
         f"{linked_toc_rows} TOC entries linked"
     )
 
@@ -311,7 +330,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("generated_dir", type=Path)
     parser.add_argument("manual_dir", type=Path)
     parser.add_argument("--slug", required=True)
+    parser.add_argument(
+        "--document-type", choices=("manual", "whitepaper"), default="manual"
+    )
+    parser.add_argument("--markdown-name", default="README.md")
     parser.add_argument("--metadata-name", required=True)
+    parser.add_argument("--assets-name", default="assets")
+    parser.add_argument("--skip-image", action="append", default=[])
     parser.add_argument("--source-url", required=True)
     return parser.parse_args()
 

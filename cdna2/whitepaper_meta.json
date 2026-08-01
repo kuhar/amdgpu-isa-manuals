@@ -1,0 +1,1233 @@
+{
+  "table_of_contents": [
+    {
+      "title": "INTRODUCING\nAMD CDNA\u2122 2 \nARCHITECTURE",
+      "heading_level": null,
+      "page_id": 0,
+      "polygon": [
+        [
+          301.40567779541016,
+          61.11408805847168
+        ],
+        [
+          462.8717041015625,
+          61.11408805847168
+        ],
+        [
+          462.8717041015625,
+          125.39447021484375
+        ],
+        [
+          301.40567779541016,
+          125.39447021484375
+        ]
+      ]
+    },
+    {
+      "title": "Table of Contents",
+      "heading_level": null,
+      "page_id": 1,
+      "polygon": [
+        [
+          35.597877502441406,
+          33.12821388244629
+        ],
+        [
+          134.39325714111328,
+          33.12821388244629
+        ],
+        [
+          134.39325714111328,
+          50.69287109375
+        ],
+        [
+          35.597877502441406,
+          50.69287109375
+        ]
+      ]
+    },
+    {
+      "title": "Introduction",
+      "heading_level": null,
+      "page_id": 1,
+      "polygon": [
+        [
+          46.454134941101074,
+          272.9603576660156
+        ],
+        [
+          113.57498931884766,
+          272.9603576660156
+        ],
+        [
+          113.57498931884766,
+          289.2571716308594
+        ],
+        [
+          46.454134941101074,
+          289.2571716308594
+        ]
+      ]
+    },
+    {
+      "title": "AMD CDNATM 2 Architecture Overview",
+      "heading_level": null,
+      "page_id": 1,
+      "polygon": [
+        [
+          46.77480125427246,
+          539.083740234375
+        ],
+        [
+          238.09190368652344,
+          539.083740234375
+        ],
+        [
+          238.09190368652344,
+          556.7288970947266
+        ],
+        [
+          46.77480125427246,
+          556.7288970947266
+        ]
+      ]
+    },
+    {
+      "title": "INFINITY FABRIC",
+      "heading_level": null,
+      "page_id": 2,
+      "polygon": [
+        [
+          230.31649017333984,
+          639.5360412597656
+        ],
+        [
+          363.13169860839844,
+          639.5360412597656
+        ],
+        [
+          363.13169860839844,
+          663.1459350585938
+        ],
+        [
+          230.31649017333984,
+          663.1459350585938
+        ]
+      ]
+    },
+    {
+      "title": "Scaling the Memory Hierarchy",
+      "heading_level": null,
+      "page_id": 4,
+      "polygon": [
+        [
+          46.73610591888428,
+          32.34002685546875
+        ],
+        [
+          203.4210205078125,
+          32.34002685546875
+        ],
+        [
+          203.4210205078125,
+          48.635986328125
+        ],
+        [
+          46.73610591888428,
+          48.635986328125
+        ]
+      ]
+    },
+    {
+      "title": "Communication and Scaling",
+      "heading_level": null,
+      "page_id": 4,
+      "polygon": [
+        [
+          46.622403144836426,
+          525.3160858154297
+        ],
+        [
+          191.30508041381836,
+          525.3160858154297
+        ],
+        [
+          191.30508041381836,
+          542.006103515625
+        ],
+        [
+          46.622403144836426,
+          542.006103515625
+        ]
+      ]
+    },
+    {
+      "title": "Flagship HPC Topology with MI250X",
+      "heading_level": null,
+      "page_id": 5,
+      "polygon": [
+        [
+          211.69841766357422,
+          49.75760078430176
+        ],
+        [
+          398.4247283935547,
+          49.75760078430176
+        ],
+        [
+          398.4247283935547,
+          66.49432373046875
+        ],
+        [
+          211.69841766357422,
+          66.49432373046875
+        ]
+      ]
+    },
+    {
+      "title": "AMD EPYC\u2122 Processor + AMD Instinct\u2122 MI250 Accelerator\nMainstream HPC/ML Topology with MI250X",
+      "heading_level": null,
+      "page_id": 6,
+      "polygon": [
+        [
+          184.68890380859375,
+          40.52154541015625
+        ],
+        [
+          483.5813903808594,
+          40.52154541015625
+        ],
+        [
+          483.5813903808594,
+          66.49432373046875
+        ],
+        [
+          184.68890380859375,
+          66.49432373046875
+        ]
+      ]
+    },
+    {
+      "title": "FLAGSHIP ML TOPOLOGY\nAMD EPYC\u2122 Processor + AMD Instinct\u2122 MI250 Accelerator\nFlagship ML Topology with MI250",
+      "heading_level": null,
+      "page_id": 7,
+      "polygon": [
+        [
+          168.7962188720703,
+          33.61883544921875
+        ],
+        [
+          437.52166748046875,
+          33.61883544921875
+        ],
+        [
+          437.52166748046875,
+          70.77862548828125
+        ],
+        [
+          168.7962188720703,
+          70.77862548828125
+        ]
+      ]
+    },
+    {
+      "title": "Mainstream MI210 HPC/ML Topology",
+      "heading_level": null,
+      "page_id": 8,
+      "polygon": [
+        [
+          209.67819213867188,
+          39.1431884765625
+        ],
+        [
+          400.4121551513672,
+          39.1431884765625
+        ],
+        [
+          400.4121551513672,
+          55.43914794921875
+        ],
+        [
+          209.67819213867188,
+          55.43914794921875
+        ]
+      ]
+    },
+    {
+      "title": "Flagship MI210 HPC/ML Topology",
+      "heading_level": null,
+      "page_id": 8,
+      "polygon": [
+        [
+          218.6553497314453,
+          393.6470947265625
+        ],
+        [
+          390.62269592285156,
+          393.6470947265625
+        ],
+        [
+          390.62269592285156,
+          410.9031982421875
+        ],
+        [
+          218.6553497314453,
+          410.9031982421875
+        ]
+      ]
+    },
+    {
+      "title": "AMD CDNATM 2 Architecture Shader Array",
+      "heading_level": null,
+      "page_id": 9,
+      "polygon": [
+        [
+          45.80653667449951,
+          47.28105068206787
+        ],
+        [
+          256.86779022216797,
+          47.28105068206787
+        ],
+        [
+          256.86779022216797,
+          63.943115234375
+        ],
+        [
+          45.80653667449951,
+          63.943115234375
+        ]
+      ]
+    },
+    {
+      "title": "AMD CDNATM 2 Matrix Core Technology",
+      "heading_level": null,
+      "page_id": 10,
+      "polygon": [
+        [
+          47.393760681152344,
+          463.59434509277344
+        ],
+        [
+          244.65353393554688,
+          463.59434509277344
+        ],
+        [
+          244.65353393554688,
+          480.8249816894531
+        ],
+        [
+          47.393760681152344,
+          480.8249816894531
+        ]
+      ]
+    },
+    {
+      "title": "AMD ROCmTM Open Software Platform Enables AMD CDNATM 2",
+      "heading_level": null,
+      "page_id": 11,
+      "polygon": [
+        [
+          47.854230880737305,
+          451.8163146972656
+        ],
+        [
+          361.49695587158203,
+          451.8163146972656
+        ],
+        [
+          361.49695587158203,
+          469.01397705078125
+        ],
+        [
+          47.854230880737305,
+          469.01397705078125
+        ]
+      ]
+    },
+    {
+      "title": "Original Modified to use Packed FMA32",
+      "heading_level": null,
+      "page_id": 11,
+      "polygon": [
+        [
+          163.6627197265625,
+          173.7889404296875
+        ],
+        [
+          508.78033447265625,
+          173.7889404296875
+        ],
+        [
+          508.78033447265625,
+          190.08489990234375
+        ],
+        [
+          163.6627197265625,
+          190.08489990234375
+        ]
+      ]
+    },
+    {
+      "title": "AMD CDNATM 2 Packed FP32",
+      "heading_level": null,
+      "page_id": 11,
+      "polygon": [
+        [
+          42.47431755065918,
+          48.39994812011719
+        ],
+        [
+          187.82868576049805,
+          48.39994812011719
+        ],
+        [
+          187.82868576049805,
+          64.93682861328125
+        ],
+        [
+          42.47431755065918,
+          64.93682861328125
+        ]
+      ]
+    },
+    {
+      "title": "",
+      "heading_level": null,
+      "page_id": 11,
+      "polygon": [
+        [
+          161.13118743896484,
+          174.47451782226562
+        ],
+        [
+          203.54196166992188,
+          174.47451782226562
+        ],
+        [
+          203.54196166992188,
+          188.24392318725586
+        ],
+        [
+          161.13118743896484,
+          188.24392318725586
+        ]
+      ]
+    },
+    {
+      "title": "AMD ROCmTM PLATFORM\nAMD ROCmTM Platform",
+      "heading_level": null,
+      "page_id": 12,
+      "polygon": [
+        [
+          54.86189651489258,
+          35.38690185546875
+        ],
+        [
+          365.3482360839844,
+          35.38690185546875
+        ],
+        [
+          365.3482360839844,
+          72.88372802734375
+        ],
+        [
+          54.86189651489258,
+          72.88372802734375
+        ]
+      ]
+    },
+    {
+      "title": "AMD Instinct MI200 Series Accelerator Product Offerings",
+      "heading_level": null,
+      "page_id": 13,
+      "polygon": [
+        [
+          43.95699119567871,
+          191.9619369506836
+        ],
+        [
+          332.6000518798828,
+          191.9619369506836
+        ],
+        [
+          332.6000518798828,
+          209.076904296875
+        ],
+        [
+          43.95699119567871,
+          209.076904296875
+        ]
+      ]
+    },
+    {
+      "title": "Conclusion",
+      "heading_level": null,
+      "page_id": 14,
+      "polygon": [
+        [
+          52.604135513305664,
+          42.544677734375
+        ],
+        [
+          111.42253875732422,
+          42.544677734375
+        ],
+        [
+          111.42253875732422,
+          58.84063720703125
+        ],
+        [
+          52.604135513305664,
+          58.84063720703125
+        ]
+      ]
+    },
+    {
+      "title": "AMD Resources",
+      "heading_level": null,
+      "page_id": 14,
+      "polygon": [
+        [
+          52.91220474243164,
+          313.4871826171875
+        ],
+        [
+          134.3961410522461,
+          313.4871826171875
+        ],
+        [
+          134.3961410522461,
+          329.8564453125
+        ],
+        [
+          52.91220474243164,
+          329.8564453125
+        ]
+      ]
+    },
+    {
+      "title": "Endnotes:",
+      "heading_level": null,
+      "page_id": 15,
+      "polygon": [
+        [
+          47.73915767669678,
+          197.599853515625
+        ],
+        [
+          102.2094841003418,
+          197.599853515625
+        ],
+        [
+          102.2094841003418,
+          213.89581298828125
+        ],
+        [
+          47.73915767669678,
+          213.89581298828125
+        ]
+      ]
+    },
+    {
+      "title": "Acronyms:",
+      "heading_level": null,
+      "page_id": 15,
+      "polygon": [
+        [
+          46.7713623046875,
+          39.3321533203125
+        ],
+        [
+          103.48178100585938,
+          39.3321533203125
+        ],
+        [
+          103.48178100585938,
+          55.62811279296875
+        ],
+        [
+          46.7713623046875,
+          55.62811279296875
+        ]
+      ]
+    }
+  ],
+  "page_stats": [
+    {
+      "page_id": 0,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          9
+        ],
+        [
+          "Line",
+          5
+        ],
+        [
+          "Text",
+          3
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 1,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          113
+        ],
+        [
+          "Line",
+          45
+        ],
+        [
+          "Text",
+          5
+        ],
+        [
+          "SectionHeader",
+          3
+        ],
+        [
+          "Table",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 2,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          275
+        ],
+        [
+          "Line",
+          136
+        ],
+        [
+          "PageFooter",
+          2
+        ],
+        [
+          "Table",
+          1
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Text",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 3,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          131
+        ],
+        [
+          "Line",
+          64
+        ],
+        [
+          "Text",
+          5
+        ],
+        [
+          "Picture",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 4,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          114
+        ],
+        [
+          "Line",
+          58
+        ],
+        [
+          "Text",
+          7
+        ],
+        [
+          "SectionHeader",
+          2
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 5,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          9
+        ],
+        [
+          "Line",
+          4
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Diagram",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 6,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          57
+        ],
+        [
+          "Line",
+          31
+        ],
+        [
+          "Text",
+          4
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Diagram",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 7,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          89
+        ],
+        [
+          "Line",
+          49
+        ],
+        [
+          "Text",
+          4
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Diagram",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 8,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          13
+        ],
+        [
+          "Line",
+          7
+        ],
+        [
+          "SectionHeader",
+          2
+        ],
+        [
+          "Diagram",
+          2
+        ],
+        [
+          "Caption",
+          2
+        ],
+        [
+          "Text",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 9,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          87
+        ],
+        [
+          "Line",
+          34
+        ],
+        [
+          "Text",
+          5
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Diagram",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 10,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          221
+        ],
+        [
+          "Line",
+          85
+        ],
+        [
+          "Text",
+          4
+        ],
+        [
+          "Table",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ],
+        [
+          "TableGroup",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 11,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          137
+        ],
+        [
+          "Line",
+          62
+        ],
+        [
+          "Text",
+          5
+        ],
+        [
+          "SectionHeader",
+          4
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 12,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          91
+        ],
+        [
+          "Line",
+          33
+        ],
+        [
+          "Text",
+          2
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Diagram",
+          1
+        ],
+        [
+          "Table",
+          1
+        ],
+        [
+          "Caption",
+          1
+        ],
+        [
+          "Picture",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ],
+        [
+          "TableGroup",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 13,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          218
+        ],
+        [
+          "Line",
+          44
+        ],
+        [
+          "Text",
+          2
+        ],
+        [
+          "SectionHeader",
+          1
+        ],
+        [
+          "Table",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 14,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          56
+        ],
+        [
+          "Line",
+          25
+        ],
+        [
+          "Text",
+          9
+        ],
+        [
+          "SectionHeader",
+          2
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 15,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          152
+        ],
+        [
+          "Line",
+          66
+        ],
+        [
+          "ListItem",
+          10
+        ],
+        [
+          "SectionHeader",
+          2
+        ],
+        [
+          "Text",
+          2
+        ],
+        [
+          "ListGroup",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    },
+    {
+      "page_id": 16,
+      "text_extraction_method": "pdftext",
+      "block_counts": [
+        [
+          "Span",
+          46
+        ],
+        [
+          "Line",
+          23
+        ],
+        [
+          "ListItem",
+          2
+        ],
+        [
+          "ListGroup",
+          1
+        ],
+        [
+          "Text",
+          1
+        ],
+        [
+          "PageFooter",
+          1
+        ]
+      ],
+      "block_metadata": {
+        "llm_request_count": 0,
+        "llm_error_count": 0,
+        "llm_tokens_used": 0,
+        "previous_text": "",
+        "previous_type": "",
+        "previous_order": 0
+      }
+    }
+  ],
+  "debug_data_path": "debug_data/cdna2-whitepaper"
+}
