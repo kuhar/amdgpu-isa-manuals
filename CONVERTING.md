@@ -179,6 +179,29 @@ The preparation script performs these mechanical steps:
 8. Link each contents-table entry to the corresponding explicit page anchor.
    The script reports entries whose headings or anchors require manual repair.
 
+For manuals with explicit `Expression` headings, restore the source
+pseudocode layout after importing:
+
+```sh
+./scripts/format-manual-expressions.py \
+  "$manual_pdf" \
+  "$family/README.md"
+```
+
+This pass uses Poppler's `pdftotext -layout` output as the source of line
+breaks and indentation. A simple expression of at most 100 characters is
+wrapped in inline code; multiline, control-flow, comment-bearing, and longer
+expressions use fenced `text` blocks. Markdown escapes inside matched code are
+removed because code spans and blocks display those characters literally.
+
+Matching uses the instruction mnemonic and opcode when they are available,
+with document order and normalized source text as fallbacks. Only an explicit
+`Expression` section is replaced, so prose accidentally joined to it at a page
+boundary is moved below the code block. Exact source-suffix matches also restore
+code prefixes dropped by the conversion. Sections that cannot be matched are
+reported and left unchanged for manual comparison. The command is idempotent;
+use `--verbose` to list unmatched sections.
+
 For a white paper, select the alternate filenames and notice explicitly. The
 repeatable `--skip-image` option records images rejected during the visual
 audit and prevents them from being copied or referenced:
@@ -270,6 +293,12 @@ find "$family/assets" -type f -name '*.jpeg' -print0 \
 
 rg -n -U '^#### \*\*Expression\*\*\n\n(?:####|#)' "$family/README.md"
 
+./scripts/format-manual-expressions.py \
+  "$manual_pdf" \
+  "$family/README.md" \
+  --check \
+  --verbose
+
 rg -o 'id="[^"]+"' "$family/README.md" \
   | sed -E 's/^id="(.*)"$/\1/' \
   | sort -u > /tmp/amdgpu-isa-anchors.txt
@@ -307,8 +336,13 @@ bodies, and table rows are especially prone to being separated there.
 - Audit repairs: three instruction headings, 14 expression bodies, two
   expression labels, six small table structures, and several front-matter page
   splits
+- Expression formatting: all 1,445 explicitly headed sections formatted; 527
+  simple expressions rendered as inline code, 918 rendered as source-indented
+  code blocks, and 22 missing code prefixes restored from exact source-suffix
+  matches
 - Known limitation: broader multi-page table and instruction-heading losses
-  require systematic source-aware repair rather than isolated hand edits
+  require systematic source-aware repair rather than isolated hand edits; 171
+  PDF expressions do not have a corresponding explicit Markdown section
 
 The pinned CPU stack and the TheRock-backed CPU run produced byte-identical
 Markdown and JPEGs on the 54-page smoke sample. Metadata differed only in
