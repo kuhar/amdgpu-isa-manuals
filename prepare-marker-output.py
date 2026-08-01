@@ -63,6 +63,104 @@ def retained_images(generated_dir: Path) -> tuple[dict[str, Path], set[str]]:
     return retained, skipped
 
 
+def table_cells(line: str) -> list[str]:
+    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+
+def append_fragment(existing: str, fragment: str, column_name: str) -> str:
+    if not existing:
+        return fragment
+    if (
+        "name" in column_name.lower()
+        and "_" in existing
+        and re.fullmatch(r"[A-Z][A-Z0-9_]*", existing)
+        and re.fullmatch(r"[A-Z0-9_]+", fragment)
+    ):
+        return existing + fragment
+    if existing.endswith("-") and fragment[:1].islower():
+        return existing + fragment
+    return f"{existing} {fragment}"
+
+
+def merge_rows(previous: str, continuation: str, headers: list[str]) -> str:
+    prior_cells = table_cells(previous)
+    next_cells = table_cells(continuation)
+    if len(prior_cells) != len(next_cells) or len(prior_cells) != len(headers):
+        return previous
+    merged = [
+        append_fragment(prior_cells[i], next_cells[i], headers[i])
+        if next_cells[i]
+        else prior_cells[i]
+        for i in range(len(headers))
+    ]
+    return "| " + " | ".join(merged) + " |"
+
+
+def compact_table(block: list[str]) -> list[str]:
+    if len(block) < 3:
+        return block
+    headers = table_cells(block[0])
+    if not headers or not headers[0]:
+        return block
+    first_row_is_data = not headers[0][:1].isalpha()
+    rows: list[str] = []
+    for row in block[2:]:
+        cells = table_cells(row)
+        if cells and not cells[0]:
+            if rows:
+                rows[-1] = merge_rows(rows[-1], row, headers)
+            elif first_row_is_data:
+                block[0] = merge_rows(block[0], row, headers)
+            else:
+                rows.append(row)
+        else:
+            rows.append(row)
+    return block[:2] + rows
+
+
+def compact_table_continuations(markdown: str) -> str:
+    """Join wrapped rows, including rows split across PDF page boundaries."""
+    lines = markdown.splitlines()
+    segments: list[tuple[str, list[str]]] = []
+    i = 0
+    while i < len(lines):
+        if lines[i].startswith("|") and lines[i].endswith("|"):
+            block: list[str] = []
+            while i < len(lines) and lines[i].startswith("|") and lines[i].endswith("|"):
+                block.append(lines[i])
+                i += 1
+            segments.append(("table", compact_table(block)))
+        else:
+            text: list[str] = []
+            while i < len(lines) and not (
+                lines[i].startswith("|") and lines[i].endswith("|")
+            ):
+                text.append(lines[i])
+                i += 1
+            segments.append(("text", text))
+
+    previous_table: int | None = None
+    for index, (kind, block) in enumerate(segments):
+        if kind == "text":
+            if any(line.strip() for line in block):
+                previous_table = None
+            continue
+        if previous_table is not None:
+            prior = segments[previous_table][1]
+            if (
+                len(prior) >= 3
+                and len(block) >= 3
+                and table_cells(prior[0]) == table_cells(block[0])
+                and table_cells(block[2])
+                and not table_cells(block[2])[0]
+            ):
+                prior[-1] = merge_rows(prior[-1], block[2], table_cells(prior[0]))
+                del block[2]
+        previous_table = index
+
+    return "\n".join(line for _kind, segment in segments for line in segment)
+
+
 def prepare(args: argparse.Namespace) -> None:
     generated_dir = args.generated_dir.resolve()
     manual_dir = args.manual_dir.resolve()
@@ -84,7 +182,7 @@ def prepare(args: argparse.Namespace) -> None:
             line = f"![](assets/{name})"
         output_lines.append(line)
 
-    body = "\n".join(output_lines).strip()
+    body = compact_table_continuations("\n".join(output_lines)).strip()
     body = re.sub(r"\n{3,}", "\n\n", body)
     markdown = NOTICE.format(source_url=args.source_url) + "\n\n" + body + "\n"
 

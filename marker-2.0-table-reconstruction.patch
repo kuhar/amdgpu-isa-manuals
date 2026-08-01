@@ -26,7 +26,7 @@
 @@ -278 +294 @@
 -            if (x1 - x0) > 2.5 * avg_w:
 +            if (x1 - x0) > 10.0 * avg_w:
-@@ -287,0 +304,114 @@
+@@ -287,0 +304,115 @@
 +def _canonical_header_table(lines):
 +    """Build tables whose first row explicitly names the columns.
 +
@@ -116,12 +116,13 @@
 +                            column_names[j], fragment, column_names[j]
 +                        )
 +                        pending[j] = ""
-+                cells = [
-+                    append_cell(pending[j], cells[j], column_names[j])
-+                    if pending[j]
-+                    else cells[j]
-+                    for j in range(k)
-+                ]
++                if any(pending):
++                    # Text before the first keyed row is normally a table-row
++                    # continuation from the preceding PDF page.  Keep it as a
++                    # blank-key row so a source-aware cleanup can merge it with
++                    # the preceding table instead of assigning it to the next
++                    # instruction.
++                    rows.append(pending)
 +                pending = [""] * k
 +            rows.append(cells)
 +        elif rows:
@@ -141,15 +142,15 @@
 +    return _build_html(names, rows, True), 1.0
 +
 +
-@@ -420,0 +551,4 @@
+@@ -420,0 +552,4 @@
 +    canonical = _canonical_header_table(lines)
 +    if canonical is not None:
 +        return canonical
 +
-@@ -468 +602 @@
+@@ -468 +603 @@
 -    if first_data_y is not None:
 +    if data:
-@@ -470 +604,4 @@
+@@ -470 +605,4 @@
 -        _attach_wrapped_lines(lines, first_data_y, grid_y, cut_xs)
 +        attach_start_y = first_data_y if first_data_y is not None else min(
 +            y0 for _, y0 in data

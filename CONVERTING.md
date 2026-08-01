@@ -37,8 +37,8 @@ uv pip install \
 Apply the repository's two Marker 2.0 adjustments before converting an older
 ISA manual. The first reconstructs explicitly headed tables from their printed
 column geometry, rejoins wrapped mnemonic suffixes, and retains continuation
-lines. The second preserves literal `|` operators inside Markdown tables as
-HTML entities instead of deleting them.
+lines as blank-key rows. The second preserves literal `|` operators inside
+Markdown tables as HTML entities instead of deleting them.
 
 ```sh
 marker_site=$(
@@ -164,6 +164,8 @@ The preparation script performs these mechanical steps:
    `assets/_page_...jpeg`.
 6. Remove the known decorative `Picture` fragments and same-page byte-identical
    image duplicates emitted by these manuals.
+7. Join blank-key table continuation rows to the preceding keyed row, including
+   when the PDF page boundary created two adjacent Markdown table blocks.
 
 Keep the notice before the converted title so that it cannot be mistaken for
 part of AMD's publication:

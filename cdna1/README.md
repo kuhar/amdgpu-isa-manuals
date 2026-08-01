@@ -269,9 +269,9 @@ Finally, Chapter 13 provides a detailed specification of each microcode format.
 
 The following conventions are used in this document:
 
-| *                         | Any number of alphanumeric characters in the name of a code format,                                                |
+| *                         | Any number of alphanumeric characters in the name of a code format, parameter, or instruction.                     |
 |---------------------------|--------------------------------------------------------------------------------------------------------------------|
-| < >                       | parameter, or instruction. Angle brackets denote streams.                                                          |
+| < >                       | Angle brackets denote streams.                                                                                     |
 | [1,2)                     | A range that includes the left-most value (in this case, 1), but excludes the right most value (in this case, 2). |
 | [1,2]                     | A range that includes both the left-most and right-most values.                                                    |
 | {x &#124; y}              | One of the multiple options listed. In this case, X or Y.                                                          |
