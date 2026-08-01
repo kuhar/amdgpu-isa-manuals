@@ -1,3 +1,5 @@
+> **Repository notice (not part of the AMD publication).** This is an unofficial Markdown conversion of the [AMD source PDF](https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf), produced with automated tooling for easier browsing and text search. It is not affiliated with or endorsed by AMD and may contain errors and omissions. AMD retains its rights in the underlying publication; AMD's own agreement, disclaimer, and copyright and trademark notices are reproduced below. Consult the linked PDF as the authoritative version.
+
 # CDNA4 Instruction Set Architecture **Reference Guide**
 
 5-August-2025

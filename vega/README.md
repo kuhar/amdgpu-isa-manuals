@@ -1,3 +1,5 @@
+> **Repository notice (not part of the AMD publication).** This is an unofficial Markdown conversion of the [AMD source PDF](https://docs.amd.com/api/khub/documents/7wRUzLpZ~JcaXrupC32ZVA/content), produced with automated tooling for easier browsing and text search. It is not affiliated with or endorsed by AMD and may contain errors and omissions. AMD retains its rights in the underlying publication; AMD's own agreement, disclaimer, and copyright and trademark notices are reproduced below. Consult the linked PDF as the authoritative version.
+
 # "Vega" Instruction Set Architecture *Reference Guide*
 
 27-January-2020
