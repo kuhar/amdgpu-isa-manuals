@@ -1,0 +1,158 @@
+--- a/marker/processors/table_recon.py
++++ b/marker/processors/table_recon.py
+@@ -34,0 +35,14 @@
++_HEADER_HINTS = {
++    "abbrev",
++    "bits",
++    "code",
++    "description",
++    "encoding",
++    "field",
++    "meaning",
++    "name",
++    "opcode",
++    "size",
++    "type",
++    "value",
++}
+@@ -78 +92,3 @@
+-    k = Counter(len(r) for r in data_rows).most_common(1)[0][0]
++    numeric_rows = [r for r in data_rows if r and _NUMISH.match(r[0][0])]
++    anchor_pool = numeric_rows if len(numeric_rows) >= 3 else data_rows
++    k = Counter(len(r) for r in anchor_pool).most_common(1)[0][0]
+@@ -81 +97 @@
+-    anchors = [r for r in data_rows if len(r) == k]
++    anchors = [r for r in anchor_pool if len(r) == k]
+@@ -278 +294 @@
+-            if (x1 - x0) > 2.5 * avg_w:
++            if (x1 - x0) > 10.0 * avg_w:
+@@ -287,0 +304,115 @@
++def _canonical_header_table(lines):
++    """Build tables whose first row explicitly names the columns.
++
++    Older ISA PDFs frequently put the opcode/name and description baselines a
++    point or two apart, and wrap numeric mnemonic suffixes onto their own
++    lines.  Span-count voting treats those continuation lines as independent
++    rows.  An explicit column header is a stronger source of geometry: derive
++    cuts from it, cluster nearly aligned baselines, and attach clusters without
++    a first-column value to the preceding logical row.
++    """
++    ordered = sorted(lines, key=lambda line: line[1])
++    header_idx = None
++    for i, (spans, _y0, _y1) in enumerate(ordered[:12]):
++        if not 2 <= len(spans) <= 8:
++            continue
++        words = set(
++            re.findall(r"[a-z]+", " ".join(text for text, _x0, _x1 in spans).lower())
++        )
++        if len(words & _HEADER_HINTS) >= 2 and words & {
++            "description",
++            "meaning",
++            "name",
++        }:
++            header_idx = i
++            break
++    if header_idx is None:
++        return None
++
++    _initial_header, header_y0, header_y1 = ordered[header_idx]
++    header = []
++    body_lines = []
++    for i, (spans, y0, y1) in enumerate(ordered):
++        if abs(y0 - header_y0) <= 1.0:
++            header.extend(spans)
++            header_y1 = max(header_y1, y1)
++        elif i > header_idx and y0 > header_y0:
++            body_lines.append((spans, y0, y1))
++    header.sort(key=lambda span: span[1])
++    k = len(header)
++    col_x = [span[1] for span in header]
++    if any(b - a < GAP_MIN_PT for a, b in itertools.pairwise(col_x)):
++        return None
++    cut_xs = [(col_x[j] + col_x[j + 1]) / 2 for j in range(k - 1)]
++
++    # Coalesce baselines that belong to the same printed row.  The old PDFs
++    # commonly offset the description baseline by about 1.5 points.
++    clusters = []
++    for spans, y0, y1 in body_lines:
++        if clusters and y0 - clusters[-1][0] <= 2.5:
++            clusters[-1][1].extend(spans)
++        else:
++            clusters.append([y0, list(spans)])
++    if len(clusters) < 2:
++        return None
++
++    rows = []
++    pending = [""] * k
++
++    def append_cell(existing, fragment, column_name):
++        if not existing:
++            return fragment
++        # Mnemonics in the old manuals are often split in the middle of a
++        # token (including numeric suffixes) rather than at a word boundary.
++        if (
++            "name" in column_name.lower()
++            and "_" in existing
++            and re.fullmatch(r"[A-Z][A-Z0-9_]*", existing)
++            and re.fullmatch(r"[A-Z0-9_]+", fragment)
++        ):
++            return existing + fragment
++        if existing.endswith("-") and fragment[:1].islower():
++            return existing + fragment
++        return f"{existing} {fragment}"
++
++    column_names = [text for text, _x0, _x1 in header]
++    for _y0, spans in clusters:
++        cells = [""] * k
++        for text, x0, _x1 in sorted(spans, key=lambda span: span[1]):
++            col = min(sum(1 for cut in cut_xs if x0 >= cut), k - 1)
++            cells[col] = append_cell(cells[col], text, column_names[col])
++
++        if cells[0]:
++            if not rows and any(pending):
++                for j, fragment in enumerate(pending):
++                    if re.fullmatch(r"\([^()]{1,24}\)", fragment):
++                        column_names[j] = append_cell(
++                            column_names[j], fragment, column_names[j]
++                        )
++                        pending[j] = ""
++                if any(pending):
++                    # Text before the first keyed row is normally a table-row
++                    # continuation from the preceding PDF page.  Keep it as a
++                    # blank-key row so a source-aware cleanup can merge it with
++                    # the preceding table instead of assigning it to the next
++                    # instruction.
++                    rows.append(pending)
++                pending = [""] * k
++            rows.append(cells)
++        elif rows:
++            target = rows[-1]
++            for j, cell in enumerate(cells):
++                if cell:
++                    target[j] = append_cell(target[j], cell, column_names[j])
++        else:
++            for j, cell in enumerate(cells):
++                if cell:
++                    pending[j] = append_cell(pending[j], cell, column_names[j])
++
++    if not rows:
++        return None
++    names = column_names
++    names, rows = _merge_marker_columns(names, rows)
++    return _build_html(names, rows, True), 1.0
++
++
+@@ -420,0 +552,4 @@
++    canonical = _canonical_header_table(lines)
++    if canonical is not None:
++        return canonical
++
+@@ -468 +603 @@
+-    if first_data_y is not None:
++    if data:
+@@ -470 +605,4 @@
+-        _attach_wrapped_lines(lines, first_data_y, grid_y, cut_xs)
++        attach_start_y = first_data_y if first_data_y is not None else min(
++            y0 for _, y0 in data
++        )
++        _attach_wrapped_lines(lines, attach_start_y, grid_y, cut_xs)

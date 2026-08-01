@@ -34,6 +34,25 @@ uv pip install \
   'pillow==10.4.0'
 ```
 
+Apply the repository's two Marker 2.0 adjustments before converting an older
+ISA manual. The first reconstructs explicitly headed tables from their printed
+column geometry, rejoins wrapped mnemonic suffixes, and retains continuation
+lines as blank-key rows. The second preserves literal `|` operators inside
+Markdown tables as HTML entities instead of deleting them.
+
+```sh
+marker_site=$(
+  "$marker_env/bin/python" -c \
+    'import site; print(site.getsitepackages()[0])'
+)
+
+patch -d "$marker_site" -p1 < marker-2.0-table-reconstruction.patch
+patch -d "$marker_site" -p1 < marker-2.0-markdown-tables.patch
+```
+
+Both patches apply to the pinned `marker-pdf==2.0.0` package. A failed hunk is
+a signal to re-audit the new package rather than forcing the old adjustment.
+
 Marker 2 has separate `balanced` and `fast` paths. AMD's ISA PDFs have a good
 embedded text layer, so use `fast` with OCR disabled. This uses the lightweight
 layout detector and PDF text/table extraction without starting the Surya VLM
@@ -120,15 +139,34 @@ numbers are absent.
 ## Import and cleanup
 
 Marker writes a nested directory containing one Markdown file, one metadata
-JSON file, and JPEGs. Import it using the repository layout:
+JSON file, and JPEGs. Import it with `prepare-marker-output.py`:
+
+```sh
+family=cdna5
+metadata_name=amd-instinct-cdna5-instruction-set-architecture_meta.json
+
+./prepare-marker-output.py \
+  "$conversion_out/$manual_slug" \
+  "$family" \
+  --slug "$manual_slug" \
+  --metadata-name "$metadata_name" \
+  --source-url "$manual_url"
+```
+
+The preparation script performs these mechanical steps:
 
 1. Copy the generated Markdown to `<family>/README.md`.
 2. Prepend the repository notice shown below, replacing `SOURCE_URL` with the
    verified direct PDF URL.
-3. Copy the metadata JSON without renaming it.
-4. Create `<family>/assets/` and copy only retained images there.
+3. Copy the metadata JSON to the requested repository filename.
+4. Recreate `<family>/assets/` with retained technical images.
 5. Rewrite Markdown image targets from `_page_...jpeg` to
    `assets/_page_...jpeg`.
+6. Remove the known decorative `Picture` fragments and same-page byte-identical
+   image duplicates emitted by these manuals.
+7. Join blank-key table continuation rows to the preceding keyed row, including
+   when the PDF page boundary created two adjacent Markdown table blocks, and
+   combine adjacent table fragments that repeat the same column headings.
 
 Keep the notice before the converted title so that it cannot be mistaken for
 part of AMD's publication:
@@ -137,17 +175,9 @@ part of AMD's publication:
 > **Repository notice (not part of the AMD publication).** This is an unofficial Markdown conversion of the [AMD source PDF](SOURCE_URL), produced with automated tooling for easier browsing and text search. It is not affiliated with or endorsed by AMD and may contain errors and omissions. AMD retains its rights in the underlying publication; AMD's own agreement, disclaimer, and copyright and trademark notices are reproduced below. Consult the linked PDF as the authoritative version.
 ```
 
-The reference rewrite is mechanical:
-
-```sh
-family=cdna5
-sed -i -E \
-  's@\]\((_page_[^)]*\.jpeg)\)@](assets/\1)@g' \
-  "$family/README.md"
-```
-
-Then perform a visual image audit. Marker classifications are heuristic, so do
-not delete every file named `Picture` without looking at it.
+Then perform a visual image audit. Marker classifications are heuristic, so
+confirm that the preparation script's size rule did not remove a technical
+figure or retain a decorative fragment.
 
 - Remove decorative callout icons, isolated footnote numbers, page logos, and
   other fragments that do not convey manual content. Remove their Markdown

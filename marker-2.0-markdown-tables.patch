@@ -1,0 +1,5 @@
+--- a/marker/renderers/markdown.py
++++ b/marker/renderers/markdown.py
+@@ -160 +160 @@
+-                    .replace("|", " ")
++                    .replace("|", "&#124;")
