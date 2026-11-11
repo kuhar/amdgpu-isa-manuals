@@ -6480,17 +6480,23 @@ Select the maximum of two unsigned 32-bit integer inputs and store the selected 
 
 #### **V\_LSHRREV\_B32 16**
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
+
 Given a shift count in the first vector input, calculate the logical shift right of the second vector input and store the result into a vector register.
 
 `D0.u32 = (S1.u32 >> S0[4 : 0].u32)`
 
 #### **V\_ASHRREV\_I32 17**
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
+
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
 `D0.i32 = (S1.i32 >> S0[4 : 0].u32)`
 
 #### **V\_LSHLREV\_B32 18**
+
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
 
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
@@ -6594,6 +6600,8 @@ In VOP3 the VCC destination may be an arbitrary SGPR-pair.
 Supports saturation (unsigned 32-bit integer domain).
 
 #### **V\_SUBREV\_CO\_U32 27**
+
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
 
 Subtract the first unsigned 32-bit integer input from the second input, store the result into a vector register and store the carry-out mask into a scalar register.
 
@@ -6756,6 +6764,8 @@ Supports saturation (unsigned 16-bit integer domain).
 
 #### **V\_SUBREV\_U16 40**
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
+
 Subtract the first unsigned 16-bit integer input from the second input and store the result into a vector register. No carry-in or carry-out support.
 
 `D0.u16 = S1.u16 - S0.u16`
@@ -6776,17 +6786,23 @@ Supports saturation (unsigned 16-bit integer domain).
 
 #### **V\_LSHLREV\_B16 42**
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
+
 Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register.
 
 `D0.u16 = (S1.u16 << S0[3 : 0].u32)`
 
 #### **V\_LSHRREV\_B16 43**
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
+
 Given a shift count in the first vector input, calculate the logical shift right of the second vector input and store the result into a vector register.
 
 `D0.u16 = (S1.u16 >> S0[3 : 0].u32)`
 
 #### **V\_ASHRREV\_I16 44**
+
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
 
 Given a shift count in the first vector input, calculate the arithmetic shift right (preserving sign bit) of the second vector input and store the result into a vector register.
 
@@ -6896,6 +6912,8 @@ Subtract the second unsigned 32-bit integer input from the first input and store
 Supports saturation (unsigned 32-bit integer domain).
 
 #### **V\_SUBREV\_U32 54**
+
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), a DPP lane control on this instruction selects lanes of SRC1, not SRC0. See section 13.3.9.
 
 Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register. No carry-in or carry-out support.
 
