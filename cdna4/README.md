@@ -21960,6 +21960,8 @@ The following instructions cannot use DPP:
 - V\_CMPX\_\*\_I64
 - V\_CMPX\_\*\_U64
 
+> **Erratum (not part of the AMD publication).** On MI350, the nine integer reversed instructions listed in section 13.3.9 still accept DPP, and the lane select reads the second source. Section 13.3.9 has the measurements.
+
 ### <span id="page-563-2"></span>**12.16.2. SDWA**
 
 The following instructions cannot use SDWA:
@@ -23087,6 +23089,10 @@ Table 92. SDWAB Fields
 
 **Description** Data Parallel Primitives. This is a second dword which can follow VOP1, VOP2 or VOPC instructions (in place of a literal constant) to control selection of data from other lanes.
 
+> **Erratum (not part of the AMD publication).** On MI350 (gfx950), DPP lane select for nine integer reversed instructions reads the second source (VSRC1). Table 94 selects lanes of the first source (`srca`). The other integer DPP instructions checked on the same machine follow that table. For these nine, lane `n` computes `op(S0[n], S1[sel(n)])`: `V_SUBREV_U32`, `V_SUBREV_CO_U32`, `V_SUBREV_U16`, `V_LSHLREV_B32`, `V_LSHLREV_B16`, `V_LSHRREV_B32`, `V_LSHRREV_B16`, `V_ASHRREV_I32`, and `V_ASHRREV_I16`. `V_SUBREV_F32` follows Table 94.
+>
+> These nine were checked on an MI350X with quad permute, row and wave shifts and rotates, row mirror, row half mirror, row broadcast, and `row_newbcast`, including bounds control on the shifts. In each of those encodings the lane select reads the second source. The e32 and e64 forms with no DPP control match the instruction definitions. hipcc in ROCm 7.0.2 and ROCm 10.1.0 folds a DPP move into these opcodes at `-O3`, so a subtraction or shift of a DPP-moved value uses the neighbor lane on the wrong source. ROCm 10.2 leaves that move separate, and the result matches Table 94 on MI350. Upstream LLVM stopped the fold in [6dd22919138a](https://github.com/llvm/llvm-project/commit/6dd22919138a) (8 September 2026).
+
 #### Table 93. DPP Fields
 
 | Field Name | Bits    | Format or Description                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -23125,6 +23131,8 @@ Table 94. DPP\_CTRL Enumeration
 | 15F                            | pix[n].srca = pix[(n & 0xfffffff0)+count].srca;                                                                | Broadcast thread 0-15 within a row to the whole row. |
 
 Note that for 64-bit input data the only legal DPP type is "DPP\_ROW\*".
+
+> **Erratum (not part of the AMD publication).** The formulas in Table 94 select lanes of the first source. On MI350 the nine integer reversed instructions listed above select lanes of the second source.
 
 # <span id="page-599-0"></span>**13.4. LDS format**
 
