@@ -11598,7 +11598,9 @@ VOP3 instructions use one of two encodings:
 
 **VOP3A** all other VALU instructions use this encoding
 
-#### **V\_NOP 384**
+> **Erratum (not part of the AMD publication).** The 5 August 2025 PDF gives every VOP1 instruction a VOP3 opcode of 384 plus its VOP1 opcode. Each VOP1 heading below uses 320 plus its VOP1 opcode. That is the encoding MI350 (gfx950) executes, and the encoding in AMD's CDNA4 XML specification and in LLVM. The PDF also assigns opcodes 450–475 to 22 unrelated VOP3-only instructions, including `V_MAD_I32_I24` (450) and `V_SAD_U16` (475). Those VOP3-only opcodes stay as printed in the PDF.
+
+#### **V\_NOP 320**
 
 Do nothing.
 
@@ -11606,7 +11608,7 @@ Do nothing.
 
 This instruction can be used to insert a single-cycle bubble in the vector ALU pipeline. For multiple cycles repeat this opcode.
 
-#### **V\_MOV\_B32 385**
+#### **V\_MOV\_B32 321**
 
 Move 32-bit data from a vector input into a vector register.
 
@@ -11622,7 +11624,7 @@ v_mov_b32 v0, -v1   // Set v0 to the negation of v1
 v_mov_b32 v0, abs(v1)   // Set v0 to the absolute value of v1
 ```
 
-#### **V\_READFIRSTLANE\_B32 386**
+#### **V\_READFIRSTLANE\_B32 322**
 
 Read the scalar value in the lowest active lane of the input vector register and store it into a scalar register.
 
@@ -11642,7 +11644,7 @@ D0.b32 = VGPR[lane][SRC0.u32]
 
 Overrides EXEC mask for the VGPR read. Input and output modifiers not supported; this is an untyped operation.
 
-#### **V\_CVT\_I32\_F64 387**
+#### **V\_CVT\_I32\_F64 323**
 
 Convert from a double-precision float input to a signed 32-bit integer value and store the result into a vector register.
 
@@ -11654,7 +11656,7 @@ Convert from a double-precision float input to a signed 32-bit integer value and
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_CVT\_F64\_I32 388**
+#### **V\_CVT\_F64\_I32 324**
 
 Convert from a signed 32-bit integer input to a double-precision float value and store the result into a vector register.
 
@@ -11664,7 +11666,7 @@ Convert from a signed 32-bit integer input to a double-precision float value and
 
 0ULP accuracy.
 
-#### **V\_CVT\_F32\_I32 389**
+#### **V\_CVT\_F32\_I32 325**
 
 Convert from a signed 32-bit integer input to a single-precision float value and store the result into a vector register.
 
@@ -11674,7 +11676,7 @@ Convert from a signed 32-bit integer input to a single-precision float value and
 
 0.5ULP accuracy.
 
-#### **V\_CVT\_F32\_U32 390**
+#### **V\_CVT\_F32\_U32 326**
 
 Convert from an unsigned 32-bit integer input to a single-precision float value and store the result into a vector register.
 
@@ -11684,7 +11686,7 @@ Convert from an unsigned 32-bit integer input to a single-precision float value 
 
 0.5ULP accuracy.
 
-#### **V\_CVT\_U32\_F32 391**
+#### **V\_CVT\_U32\_F32 327**
 
 Convert from a single-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
@@ -11696,7 +11698,7 @@ Convert from a single-precision float input to an unsigned 32-bit integer value 
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_CVT\_I32\_F32 392**
+#### **V\_CVT\_I32\_F32 328**
 
 Convert from a single-precision float input to a signed 32-bit integer value and store the result into a vector register.
 
@@ -11708,7 +11710,7 @@ Convert from a single-precision float input to a signed 32-bit integer value and
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_CVT\_F16\_F32 394**
+#### **V\_CVT\_F16\_F32 330**
 
 Convert from a single-precision float input to a half-precision float value and store the result into a vector register.
 
@@ -11718,7 +11720,7 @@ Convert from a single-precision float input to a half-precision float value and 
 
 0.5ULP accuracy, supports input modifiers and creates FP16 denormals when appropriate. Flush denorms on output if specified based on DP denorm mode. Output rounding based on DP rounding mode.
 
-#### **V\_CVT\_F32\_F16 395**
+#### **V\_CVT\_F32\_F16 331**
 
 Convert from a half-precision float input to a single-precision float value and store the result into a vector register.
 
@@ -11730,7 +11732,7 @@ D0.f32 = f16_to_f32(S0.f16)
 
 0ULP accuracy, FP16 denormal inputs are accepted. Flush denorms on input if specified based on DP denorm mode.
 
-#### **V\_CVT\_RPI\_I32\_F32 396**
+#### **V\_CVT\_RPI\_I32\_F32 332**
 
 Convert from a single-precision float input to a signed 32-bit integer value using round to nearest integer semantics (ignore the default rounding mode) and store the result into a vector register.
 
@@ -11742,7 +11744,7 @@ D0.i32 = f32_to_i32(floor(S0.f32 + 0.5F))
 
 0.5ULP accuracy, denormals are supported.
 
-#### **V\_CVT\_FLR\_I32\_F32 397**
+#### **V\_CVT\_FLR\_I32\_F32 333**
 
 Convert from a single-precision float input to a signed 32-bit integer value using round-down semantics (ignore the default rounding mode) and store the result into a vector register.
 
@@ -11752,7 +11754,7 @@ Convert from a single-precision float input to a signed 32-bit integer value usi
 
 1ULP accuracy, denormals are supported.
 
-#### **V\_CVT\_OFF\_F32\_I4 398**
+#### **V\_CVT\_OFF\_F32\_I4 334**
 
 Convert from a signed 4-bit integer input to a single-precision float value using an offset table and store the result into a vector register.
 
@@ -11765,7 +11767,7 @@ declare CVT_OFF_TABLE : 32'F[16];
 D0.f32 = CVT_OFF_TABLE[S0.u32[3 : 0]]
 ```
 
-#### **V\_CVT\_F32\_F64 399**
+#### **V\_CVT\_F32\_F64 335**
 
 Convert from a double-precision float input to a single-precision float value and store the result into a vector register.
 
@@ -11775,7 +11777,7 @@ Convert from a double-precision float input to a single-precision float value an
 
 0.5ULP accuracy, denormals are supported.
 
-#### **V\_CVT\_F64\_F32 400**
+#### **V\_CVT\_F64\_F32 336**
 
 Convert from a single-precision float input to a double-precision float value and store the result into a vector register.
 
@@ -11785,31 +11787,31 @@ Convert from a single-precision float input to a double-precision float value an
 
 0ULP accuracy, denormals are supported.
 
-#### **V\_CVT\_F32\_UBYTE0 401**
+#### **V\_CVT\_F32\_UBYTE0 337**
 
 Convert an unsigned byte in byte 0 of the input to a single-precision float value and store the result into a vector register.
 
 `D0.f32 = u32_to_f32(S0[7 : 0].u32)`
 
-#### **V\_CVT\_F32\_UBYTE1 402**
+#### **V\_CVT\_F32\_UBYTE1 338**
 
 Convert an unsigned byte in byte 1 of the input to a single-precision float value and store the result into a vector register.
 
 `D0.f32 = u32_to_f32(S0[15 : 8].u32)`
 
-#### **V\_CVT\_F32\_UBYTE2 403**
+#### **V\_CVT\_F32\_UBYTE2 339**
 
 Convert an unsigned byte in byte 2 of the input to a single-precision float value and store the result into a vector register.
 
 `D0.f32 = u32_to_f32(S0[23 : 16].u32)`
 
-#### **V\_CVT\_F32\_UBYTE3 404**
+#### **V\_CVT\_F32\_UBYTE3 340**
 
 Convert an unsigned byte in byte 3 of the input to a single-precision float value and store the result into a vector register.
 
 `D0.f32 = u32_to_f32(S0[31 : 24].u32)`
 
-#### **V\_CVT\_U32\_F64 405**
+#### **V\_CVT\_U32\_F64 341**
 
 Convert from a double-precision float input to an unsigned 32-bit integer value and store the result into a vector register.
 
@@ -11821,19 +11823,19 @@ Convert from a double-precision float input to an unsigned 32-bit integer value 
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_CVT\_F64\_U32 406**
+#### **V\_CVT\_F64\_U32 342**
 
 Convert from an unsigned 32-bit integer input to a double-precision float value and store the result into a vector register.
 
 0ULP accuracy.
 
-#### **V\_TRUNC\_F64 407**
+#### **V\_TRUNC\_F64 343**
 
 Compute the integer part of a double-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
 `D0.f64 = trunc(S0.f64)`
 
-#### **V\_CEIL\_F64 408**
+#### **V\_CEIL\_F64 344**
 
 Round the double-precision float input up to next integer and store the result in floating point format into a vector register.
 
@@ -11844,7 +11846,7 @@ if ((S0.f64 > 0.0) && (S0.f64 != D0.f64)) then
 endif
 ```
 
-#### **V\_RNDNE\_F64 409**
+#### **V\_RNDNE\_F64 345**
 
 Round the double-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
@@ -11855,7 +11857,7 @@ if (isEven(floor(S0.f64)) && (fract(S0.f64) == 0.5)) then
 endif
 ```
 
-#### **V\_FLOOR\_F64 410**
+#### **V\_FLOOR\_F64 346**
 
 Round the double-precision float input down to previous integer and store the result in floating point format into a vector register.
 
@@ -11866,7 +11868,7 @@ if ((S0.f64 < 0.0) && (S0.f64 != D0.f64)) then
 endif
 ```
 
-#### **V\_FRACT\_F32 411**
+#### **V\_FRACT\_F32 347**
 
 Compute the fractional portion of a single-precision float input and store the result in floating point format into a vector register.
 
@@ -11880,13 +11882,13 @@ This is intended to comply with the DX specification of fract where the function
 
 Obey round mode, result clamped to 0x3f7fffff.
 
-#### **V\_TRUNC\_F32 412**
+#### **V\_TRUNC\_F32 348**
 
 Compute the integer part of a single-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
 `D0.f32 = trunc(S0.f32)`
 
-#### **V\_CEIL\_F32 413**
+#### **V\_CEIL\_F32 349**
 
 Round the single-precision float input up to next integer and store the result in floating point format into a vector register.
 
@@ -11897,7 +11899,7 @@ if ((S0.f32 > 0.0F) && (S0.f32 != D0.f32)) then
 endif
 ```
 
-#### **V\_RNDNE\_F32 414**
+#### **V\_RNDNE\_F32 350**
 
 Round the single-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
@@ -11908,7 +11910,7 @@ if (isEven(64'F(floor(S0.f32))) && (fract(S0.f32) == 0.5F)) then
 endif
 ```
 
-#### **V\_FLOOR\_F32 415**
+#### **V\_FLOOR\_F32 351**
 
 Round the single-precision float input down to previous integer and store the result in floating point format into a vector register.
 
@@ -11919,7 +11921,7 @@ if ((S0.f32 < 0.0F) && (S0.f32 != D0.f32)) then
 endif
 ```
 
-#### **V\_EXP\_F32 416**
+#### **V\_EXP\_F32 352**
 
 Calculate 2 raised to the power of the single-precision float input and store the result into a vector register.
 
@@ -11937,7 +11939,7 @@ V_EXP_F32(0x80000000) => 0x3f800000        // exp(-0.0) = 1
 V_EXP_F32(0x7f800000) => 0x7f800000        // exp(+INF) = +INF
 ```
 
-#### **V\_LOG\_F32 417**
+#### **V\_LOG\_F32 353**
 
 Calculate the base 2 logarithm of the single-precision float input and store the result into a vector register.
 
@@ -11954,7 +11956,7 @@ V_LOG_F32(0x3f800000) => 0x00000000       // log(+1.0) = 0
 V_LOG_F32(0x7f800000) => 0x7f800000       // log(+INF) = +INF
 ```
 
-#### **V\_RCP\_F32 418**
+#### **V\_RCP\_F32 354**
 
 Calculate the reciprocal of the single-precision float input using IEEE rules and store the result into a vector register.
 
@@ -11974,7 +11976,7 @@ V_RCP_F32(0x00000000) => 0x7f800000       // rcp(+0.0) = +INF
 V_RCP_F32(0x7f800000) => 0x00000000       // rcp(+INF) = +0
 ```
 
-#### **V\_RCP\_IFLAG\_F32 419**
+#### **V\_RCP\_IFLAG\_F32 355**
 
 Calculate the reciprocal of the vector float input in a manner suitable for integer division and store the result into a vector register. This opcode is intended for use as part of an integer division macro.
 
@@ -11991,7 +11993,7 @@ Unsigned usage: CVT\_F32\_U32 RCP\_IFLAG\_F32 MUL\_F32 (2\*\*32 - 1) CVT\_U32\_F
 
 Signed usage: CVT\_F32\_I32 RCP\_IFLAG\_F32 MUL\_F32 (2\*\*31 - 1) CVT\_I32\_F32
 
-#### **V\_RSQ\_F32 420**
+#### **V\_RSQ\_F32 356**
 
 Calculate the reciprocal of the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12011,7 +12013,7 @@ V_RSQ_F32(0x40800000) => 0x3f000000       // rsq(+4.0) = +0.5
 V_RSQ_F32(0x7f800000) => 0x00000000       // rsq(+INF) = +0
 ```
 
-#### **V\_RCP\_F64 421**
+#### **V\_RCP\_F64 357**
 
 Calculate the reciprocal of the double-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12021,7 +12023,7 @@ Calculate the reciprocal of the double-precision float input using IEEE rules an
 
 This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
-#### **V\_RSQ\_F64 422**
+#### **V\_RSQ\_F64 358**
 
 Calculate the reciprocal of the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12031,7 +12033,7 @@ Calculate the reciprocal of the square root of the double-precision float input 
 
 This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
-#### **V\_SQRT\_F32 423**
+#### **V\_SQRT\_F32 359**
 
 Calculate the square root of the single-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12051,7 +12053,7 @@ V_SQRT_F32(0x40800000) => 0x40000000       // sqrt(+4.0) = +2.0
 V_SQRT_F32(0x7f800000) => 0x7f800000       // sqrt(+INF) = +INF
 ```
 
-#### **V\_SQRT\_F64 424**
+#### **V\_SQRT\_F64 360**
 
 Calculate the square root of the double-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12061,7 +12063,7 @@ Calculate the square root of the double-precision float input using IEEE rules a
 
 This opcode has (2\*\*29)ULP accuracy and supports denormals.
 
-#### **V\_SIN\_F32 425**
+#### **V\_SIN\_F32 361**
 
 Calculate the trigonometric sine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
@@ -12081,7 +12083,7 @@ V_SIN_F32(0x3e800000) => 0x3f800000       // sin(0.25) = 1
 V_SIN_F32(0x7f800000) => 0xffc00000       // sin(+INF) = NAN
 ```
 
-#### **V\_COS\_F32 426**
+#### **V\_COS\_F32 362**
 
 Calculate the trigonometric cosine of a single-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
@@ -12101,13 +12103,13 @@ V_COS_F32(0x3e800000) => 0x00000000       // cos(0.25) = 0
 V_COS_F32(0x7f800000) => 0xffc00000       // cos(+INF) = NAN
 ```
 
-#### **V\_NOT\_B32 427**
+#### **V\_NOT\_B32 363**
 
 Calculate bitwise negation on a vector input and store the result into a vector register.
 
 `D0.u32 = ~S0.u32`
 
-#### **V\_BFREV\_B32 428**
+#### **V\_BFREV\_B32 364**
 
 Reverse the order of bits in a vector input and store the result into a vector register.
 
@@ -12117,7 +12119,7 @@ Reverse the order of bits in a vector input and store the result into a vector r
 
 Input and output modifiers not supported.
 
-#### **V\_FFBH\_U32 429**
+#### **V\_FFBH\_U32 365**
 
 Count the number of leading "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits.
 
@@ -12145,7 +12147,7 @@ V_FFBH_U32(0x0000ffff) => 16
 V_FFBH_U32(0x00000001) => 31
 ```
 
-#### **V\_FFBL\_B32 430**
+#### **V\_FFBL\_B32 366**
 
 Count the number of trailing "0" bits before the first "1" in a vector input and store the result into a vector register. Store -1 if there are no "1" bits in the input.
 
@@ -12173,7 +12175,7 @@ V_FFBL_B32(0xffff0000) => 16
 V_FFBL_B32(0x80000000) => 31
 ```
 
-#### **V\_FFBH\_I32 431**
+#### **V\_FFBH\_I32 367**
 
 Count the number of leading bits that are the same as the sign bit of a vector input and store the result into a vector register. Store -1 if all input bits are the same.
 
@@ -12203,7 +12205,7 @@ V_FFBH_I32(0xfffffffe) => 31
 V_FFBH_I32(0xffffffff) => 0xffffffff
 ```
 
-#### **V\_FREXP\_EXP\_I32\_F64 432**
+#### **V\_FREXP\_EXP\_I32\_F64 368**
 
 Extract the exponent of a double-precision float input and store the result as a signed 32-bit integer into a vector register.
 
@@ -12219,7 +12221,7 @@ endif
 
 This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent). See also V\_FREXP\_MANT\_F64, which returns the significand. See the C library function frexp() for more information.
 
-#### **V\_FREXP\_MANT\_F64 433**
+#### **V\_FREXP\_MANT\_F64 369**
 
 Extract the binary significand, or mantissa, of a double-precision float input and store the result as a doubleprecision float into a vector register.
 
@@ -12235,7 +12237,7 @@ endif
 
 This operation satisfies the invariant S0.f64 = significand \* (2 \*\* exponent). Result range is in (-1.0,-0.5][0.5,1.0) in normal cases. See also V\_FREXP\_EXP\_I32\_F64, which returns integer exponent. See the C library function frexp() for more information.
 
-#### **V\_FRACT\_F64 434**
+#### **V\_FRACT\_F64 370**
 
 Compute the fractional portion of a double-precision float input and store the result in floating point format into a vector register.
 
@@ -12249,7 +12251,7 @@ This is intended to comply with the DX specification of fract where the function
 
 Obey round mode, result clamped to 0x3fefffffffffffff.
 
-#### **V\_FREXP\_EXP\_I32\_F32 435**
+#### **V\_FREXP\_EXP\_I32\_F32 371**
 
 Extract the exponent of a single-precision float input and store the result as a signed 32-bit integer into a vector register.
 
@@ -12265,7 +12267,7 @@ endif
 
 This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent). See also V\_FREXP\_MANT\_F32, which returns the significand. See the C library function frexp() for more information.
 
-#### **V\_FREXP\_MANT\_F32 436**
+#### **V\_FREXP\_MANT\_F32 372**
 
 Extract the binary significand, or mantissa, of a single-precision float input and store the result as a singleprecision float into a vector register.
 
@@ -12281,11 +12283,11 @@ endif
 
 This operation satisfies the invariant S0.f32 = significand \* (2 \*\* exponent). Result range is in (-1.0,-0.5][0.5,1.0) in normal cases. See also V\_FREXP\_EXP\_I32\_F32, which returns integer exponent. See the C library function frexp() for more information.
 
-#### **V\_CLREXCP 437**
+#### **V\_CLREXCP 373**
 
 Clear this wave's exception state in the vector ALU.
 
-#### **V\_MOV\_B64 440**
+#### **V\_MOV\_B64 376**
 
 Move data from a 64-bit vector input into a vector register.
 
@@ -12295,7 +12297,7 @@ Move data from a 64-bit vector input into a vector register.
 
 Floating-point modifiers are valid for this instruction if S0.u64 is a 64-bit floating point value. This instruction is suitable for negating or taking the absolute value of a floating-point value.
 
-#### **V\_CVT\_F16\_U16 441**
+#### **V\_CVT\_F16\_U16 377**
 
 Convert from an unsigned 16-bit integer input to a half-precision float value and store the result into a vector register.
 
@@ -12305,7 +12307,7 @@ Convert from an unsigned 16-bit integer input to a half-precision float value an
 
 0.5ULP accuracy, supports denormals, rounding, exception flags and saturation.
 
-#### **V\_CVT\_F16\_I16 442**
+#### **V\_CVT\_F16\_I16 378**
 
 Convert from a signed 16-bit integer input to a half-precision float value and store the result into a vector register.
 
@@ -12315,7 +12317,7 @@ Convert from a signed 16-bit integer input to a half-precision float value and s
 
 0.5ULP accuracy, supports denormals, rounding, exception flags and saturation.
 
-#### **V\_CVT\_U16\_F16 443**
+#### **V\_CVT\_U16\_F16 379**
 
 Convert from a half-precision float input to an unsigned 16-bit integer value and store the result into a vector register.
 
@@ -12327,7 +12329,7 @@ Convert from a half-precision float input to an unsigned 16-bit integer value an
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_CVT\_I16\_F16 444**
+#### **V\_CVT\_I16\_F16 380**
 
 Convert from a half-precision float input to a signed 16-bit integer value and store the result into a vector register.
 
@@ -12339,7 +12341,7 @@ Convert from a half-precision float input to a signed 16-bit integer value and s
 
 Generation of the INEXACT exception is controlled by the CLAMP bit. INEXACT exceptions are enabled for this conversion iff CLAMP == 1.
 
-#### **V\_RCP\_F16 445**
+#### **V\_RCP\_F16 381**
 
 Calculate the reciprocal of the half-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12359,7 +12361,7 @@ V_RCP_F16(0x0000) => 0x7c00        // rcp(+0.0) = +INF
 V_RCP_F16(0x7c00) => 0x0000        // rcp(+INF) = +0
 ```
 
-#### **V\_SQRT\_F16 446**
+#### **V\_SQRT\_F16 382**
 
 Calculate the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12379,7 +12381,7 @@ V_SQRT_F16(0x4400) => 0x4000       // sqrt(+4.0) = +2.0
 V_SQRT_F16(0x7c00) => 0x7c00       // sqrt(+INF) = +INF
 ```
 
-#### **V\_RSQ\_F16 447**
+#### **V\_RSQ\_F16 383**
 
 Calculate the reciprocal of the square root of the half-precision float input using IEEE rules and store the result into a vector register.
 
@@ -12399,7 +12401,7 @@ V_RSQ_F16(0x4400) => 0x3800        // rsq(+4.0) = +0.5
 V_RSQ_F16(0x7c00) => 0x0000        // rsq(+INF) = +0
 ```
 
-#### **V\_LOG\_F16 448**
+#### **V\_LOG\_F16 384**
 
 Calculate the base 2 logarithm of the half-precision float input and store the result into a vector register.
 
@@ -12416,7 +12418,7 @@ V_LOG_F16(0x3c00) => 0x0000        // log(+1.0) = 0
 V_LOG_F16(0x7c00) => 0x7c00        // log(+INF) = +INF
 ```
 
-#### **V\_EXP\_F16 449**
+#### **V\_EXP\_F16 385**
 
 Calculate 2 raised to the power of the half-precision float input and store the result into a vector register.
 
@@ -12434,7 +12436,7 @@ V_EXP_F16(0x8000) => 0x3c00        // exp(-0.0) = 1
 V_EXP_F16(0x7c00) => 0x7c00        // exp(+INF) = +INF
 ```
 
-#### **V\_FREXP\_MANT\_F16 450**
+#### **V\_FREXP\_MANT\_F16 386**
 
 Extract the binary significand, or mantissa, of a half-precision float input and store the result as a halfprecision float into a vector register.
 
@@ -12450,7 +12452,7 @@ endif
 
 This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent). Result range is in (-1.0,-0.5][0.5,1.0) in normal cases. See also V\_FREXP\_EXP\_I16\_F16, which returns integer exponent. See the C library function frexp() for more information.
 
-#### **V\_FREXP\_EXP\_I16\_F16 451**
+#### **V\_FREXP\_EXP\_I16\_F16 387**
 
 Extract the exponent of a half-precision float input and store the result as a signed 16-bit integer into a vector register.
 
@@ -12466,7 +12468,7 @@ endif
 
 This operation satisfies the invariant S0.f16 = significand \* (2 \*\* exponent). See also V\_FREXP\_MANT\_F16, which returns the significand. See the C library function frexp() for more information.
 
-#### **V\_FLOOR\_F16 452**
+#### **V\_FLOOR\_F16 388**
 
 Round the half-precision float input down to previous integer and store the result in floating point format into a vector register.
 
@@ -12477,7 +12479,7 @@ if ((S0.f16 < 16'0.0) && (S0.f16 != D0.f16)) then
 endif
 ```
 
-#### **V\_CEIL\_F16 453**
+#### **V\_CEIL\_F16 389**
 
 Round the half-precision float input up to next integer and store the result in floating point format into a vector register.
 
@@ -12488,11 +12490,11 @@ if ((S0.f16 > 16'0.0) && (S0.f16 != D0.f16)) then
 endif
 ```
 
-#### **V\_TRUNC\_F16 454**
+#### **V\_TRUNC\_F16 390**
 
 Compute the integer part of a half-precision float input using round toward zero semantics and store the result in floating point format into a vector register.
 
-#### **V\_RNDNE\_F16 455**
+#### **V\_RNDNE\_F16 391**
 
 Round the half-precision float input to the nearest even integer and store the result in floating point format into a vector register.
 
@@ -12503,7 +12505,7 @@ if (isEven(64'F(floor(S0.f16))) && (fract(S0.f16) == 16'0.5)) then
 endif
 ```
 
-#### **V\_FRACT\_F16 456**
+#### **V\_FRACT\_F16 392**
 
 Compute the fractional portion of a half-precision float input and store the result in floating point format into a vector register.
 
@@ -12515,7 +12517,7 @@ Compute the fractional portion of a half-precision float input and store the res
 
 This is intended to comply with the DX specification of fract where the function behaves like an extension of integer modulus; be aware this may differ from how fract() is defined in other domains. For example: fract(- 1.2) = 0.8 in DX.
 
-#### **V\_SIN\_F16 457**
+#### **V\_SIN\_F16 393**
 
 Calculate the trigonometric sine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
@@ -12536,7 +12538,7 @@ V_SIN_F16(0x7bff) => 0x0000        // Most positive finite FP16
 V_SIN_F16(0x7c00) => 0xfe00        // sin(+INF) = NAN
 ```
 
-#### **V\_COS\_F16 458**
+#### **V\_COS\_F16 394**
 
 Calculate the trigonometric cosine of a half-precision float value using IEEE rules and store the result into a vector register. The operand is calculated by scaling the vector input by 2 PI.
 
@@ -12557,7 +12559,7 @@ V_COS_F16(0x7bff) => 0x3c00        // Most positive finite FP16
 V_COS_F16(0x7c00) => 0xfe00        // cos(+INF) = NAN
 ```
 
-#### **V\_CVT\_NORM\_I16\_F16 461**
+#### **V\_CVT\_NORM\_I16\_F16 397**
 
 Convert from a half-precision float input to a signed normalized short and store the result into a vector register.
 
@@ -12567,13 +12569,13 @@ Convert from a half-precision float input to a signed normalized short and store
 
 0.5ULP accuracy, supports rounding, exception flags and saturation, denormals are supported.
 
-#### **V\_CVT\_NORM\_U16\_F16 462**
+#### **V\_CVT\_NORM\_U16\_F16 398**
 
 Convert from a half-precision float input to an unsigned normalized short and store the result into a vector register.
 
 0.5ULP accuracy, supports rounding, exception flags and saturation, denormals are supported.
 
-#### **V\_SAT\_PK\_U8\_I16 463**
+#### **V\_SAT\_PK\_U8\_I16 399**
 
 Given 2 signed 16-bit integer inputs, saturate each input over an unsigned 8-bit integer range, pack the resulting values into a packed 16-bit value and store the result into a vector register.
 
@@ -12596,7 +12598,7 @@ D0.b16 = tmp.b16
 
 Used for 4x16bit data packed as 4x8bit data.
 
-#### **V\_SWAP\_B32 465**
+#### **V\_SWAP\_B32 401**
 
 Swap the values in two vector registers.
 
@@ -12610,11 +12612,11 @@ S0.b32 = tmp
 
 Input and output modifiers not supported; this is an untyped operation.
 
-#### **V\_ACCVGPR\_MOV\_B32 466**
+#### **V\_ACCVGPR\_MOV\_B32 402**
 
 Move data from one accumulator register to another accumulator register.
 
-#### **V\_CVT\_F32\_FP8 468**
+#### **V\_CVT\_F32\_FP8 404**
 
 Convert from an FP8 float input to a single-precision float value and store the result into a vector register.
 
@@ -12635,7 +12637,7 @@ endif
 
 SDWA encoding allows SRC0\_SEL to control which byte of S0 is converted. Only the BYTE selects of SRC0\_SEL are legal. If this instruction is not encoded in SDWA then BYTE0 is implied.
 
-#### **V\_CVT\_F32\_BF8 469**
+#### **V\_CVT\_F32\_BF8 405**
 
 Convert from a BF8 float input to a single-precision float value and store the result into a vector register.
 
@@ -12656,7 +12658,7 @@ endif
 
 SDWA encoding allows SRC0\_SEL to control which byte of S0 is converted. Only the BYTE selects of SRC0\_SEL are legal. If this instruction is not encoded in SDWA then BYTE0 is implied.
 
-#### **V\_CVT\_PK\_F32\_FP8 470**
+#### **V\_CVT\_PK\_F32\_FP8 406**
 
 Convert from a packed 2-component FP8 float input to a packed single-precision float value and store the result into a vector register.
 
@@ -12668,7 +12670,7 @@ D0[63 : 32].f32 = fp8_to_f32(tmp[15 : 8].fp8)
 
 SDWA encoding allows SRC0\_SEL to control which word of S0 is converted. Only the WORD selects of SRC0\_SEL are legal. If this instruction is not encoded in SDWA then WORD0 is implied.
 
-#### **V\_CVT\_PK\_F32\_BF8 471**
+#### **V\_CVT\_PK\_F32\_BF8 407**
 
 Convert from a packed 2-component BF8 float input to a packed single-precision float value and store the result into a vector register.
 
@@ -12682,7 +12684,7 @@ D0[63 : 32].f32 = bf8_to_f32(tmp[15 : 8].bf8)
 
 SDWA encoding allows SRC0\_SEL to control which word of S0 is converted. Only the WORD selects of SRC0\_SEL are legal. If this instruction is not encoded in SDWA then WORD0 is implied.
 
-#### **V\_PRNG\_B32 472**
+#### **V\_PRNG\_B32 408**
 
 Generate a pseudorandom number using an LFSR (linear feedback shift register) seeded with the vector input, then store the result into a vector register.
 
@@ -12695,7 +12697,7 @@ D0.u32 = ((in << 1U) ^ (in[31] ? 197U : 0U))
 
 This function produces a sequence of pseudorandom numbers with period 2\*\*32 - 1 unless the input is zero, in which case the period is 1.
 
-#### **V\_PERMLANE16\_SWAP\_B32 473**
+#### **V\_PERMLANE16\_SWAP\_B32 409**
 
 Swap data between two vector registers. Odd rows of the first operand are swapped with even rows of the second operand (one row is 16 lanes).
 
@@ -12715,7 +12717,7 @@ ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
 This instruction is useful for BFP data conversions.
 
-#### **V\_PERMLANE32\_SWAP\_B32 474**
+#### **V\_PERMLANE32\_SWAP\_B32 410**
 
 Swap data between two vector registers. Rows 2 and 3 of the first operand are swapped with rows 0 and 1 of the second operand (one row is 16 lanes).
 
@@ -12733,7 +12735,7 @@ ABS, NEG and OMOD modifiers should all be zeroed for this instruction.
 
 This instruction is useful for BFP data conversions.
 
-#### **V\_CVT\_F32\_BF16 475**
+#### **V\_CVT\_F32\_BF16 411**
 
 Convert from a BF16 float input to a single-precision float value and store the result into a vector register.
 
@@ -22610,101 +22612,103 @@ Table 84. VOP3A Fields
 | OMOD       | [60:59]                                                                                                                                                                                   | Output Modifier: 0=none, 1=*2, 2=*4, 3=div-2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | NEG        | [63:61]                                                                                                                                                                                   | Negate input. [61] = src0, [62] = src1, [63] = src2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
+> **Erratum (not part of the AMD publication).** Each VOP1 row in this table uses 320 plus the VOP1 opcode. The 5 August 2025 PDF prints 384 plus the VOP1 opcode, so opcodes 450–475 appear on both a VOP1 instruction and a VOP3-only instruction. Section 12.11 uses the same corrected VOP1 opcodes. VOPC rows (0–255), VOP2 rows (256 plus the VOP2 opcode), and VOP3-only rows (from 450) stay as printed in the PDF.
+
 Table 85. VOP3A Opcodes
 
 | Opcode # | Name                | Opcode # | Name                         |
 |----------|---------------------|----------|------------------------------|
-| 384      | V_NOP               | 608      | V_CVT_SCALEF32_PK32_F16_FP6  |
-| 385      | V_MOV_B32           | 609      | V_CVT_SCALEF32_PK32_BF16_FP6 |
-| 386      | V_READFIRSTLANE_B32 | 610      | V_CVT_SCALEF32_PK32_F16_BF6  |
-| 387      | V_CVT_I32_F64       | 611      | V_CVT_SCALEF32_PK32_BF16_BF6 |
-| 388      | V_CVT_F64_I32       | 613      | V_ASHR_PK_I8_I32             |
-| 389      | V_CVT_F32_I32       | 614      | V_ASHR_PK_U8_I32             |
-| 390      | V_CVT_F32_U32       | 615      | V_CVT_PK_F16_F32             |
+| 320      | V_NOP               | 608      | V_CVT_SCALEF32_PK32_F16_FP6  |
+| 321      | V_MOV_B32           | 609      | V_CVT_SCALEF32_PK32_BF16_FP6 |
+| 322      | V_READFIRSTLANE_B32 | 610      | V_CVT_SCALEF32_PK32_F16_BF6  |
+| 323      | V_CVT_I32_F64       | 611      | V_CVT_SCALEF32_PK32_BF16_BF6 |
+| 324      | V_CVT_F64_I32       | 613      | V_ASHR_PK_I8_I32             |
+| 325      | V_CVT_F32_I32       | 614      | V_ASHR_PK_U8_I32             |
+| 326      | V_CVT_F32_U32       | 615      | V_CVT_PK_F16_F32             |
 
 | Opcode # | Name                | Opcode # | Name                       |
 |----------|---------------------|----------|----------------------------|
-| 391      | V_CVT_U32_F32       | 616      | V_CVT_PK_BF16_F32          |
-| 392      | V_CVT_I32_F32       | 617      | V_CVT_SCALEF32_PK_BF16_FP8 |
-| 394      | V_CVT_F16_F32       | 618      | V_CVT_SCALEF32_PK_BF16_BF8 |
-| 395      | V_CVT_F32_F16       | 640      | V_ADD_F64                  |
-| 396      | V_CVT_RPI_I32_F32   | 641      | V_MUL_F64                  |
-| 397      | V_CVT_FLR_I32_F32   | 642      | V_MIN_F64                  |
-| 398      | V_CVT_OFF_F32_I4    | 643      | V_MAX_F64                  |
-| 399      | V_CVT_F32_F64       | 644      | V_LDEXP_F64                |
-| 400      | V_CVT_F64_F32       | 645      | V_MUL_LO_U32               |
-| 401      | V_CVT_F32_UBYTE0    | 646      | V_MUL_HI_U32               |
-| 402      | V_CVT_F32_UBYTE1    | 647      | V_MUL_HI_I32               |
-| 403      | V_CVT_F32_UBYTE2    | 648      | V_LDEXP_F32                |
-| 404      | V_CVT_F32_UBYTE3    | 649      | V_READLANE_B32             |
-| 405      | V_CVT_U32_F64       | 650      | V_WRITELANE_B32            |
-| 406      | V_CVT_F64_U32       | 651      | V_BCNT_U32_B32             |
-| 407      | V_TRUNC_F64         | 652      | V_MBCNT_LO_U32_B32         |
-| 408      | V_CEIL_F64          | 653      | V_MBCNT_HI_U32_B32         |
-| 409      | V_RNDNE_F64         | 655      | V_LSHLREV_B64              |
-| 410      | V_FLOOR_F64         | 656      | V_LSHRREV_B64              |
-| 411      | V_FRACT_F32         | 657      | V_ASHRREV_I64              |
-| 412      | V_TRUNC_F32         | 658      | V_TRIG_PREOP_F64           |
-| 413      | V_CEIL_F32          | 659      | V_BFM_B32                  |
-| 414      | V_RNDNE_F32         | 660      | V_CVT_PKNORM_I16_F32       |
-| 415      | V_FLOOR_F32         | 661      | V_CVT_PKNORM_U16_F32       |
-| 416      | V_EXP_F32           | 662      | V_CVT_PKRTZ_F16_F32        |
-| 417      | V_LOG_F32           | 663      | V_CVT_PK_U16_U32           |
-| 418      | V_RCP_F32           | 664      | V_CVT_PK_I16_I32           |
-| 419      | V_RCP_IFLAG_F32     | 665      | V_CVT_PKNORM_I16_F16       |
-| 420      | V_RSQ_F32           | 666      | V_CVT_PKNORM_U16_F16       |
-| 421      | V_RCP_F64           | 668      | V_ADD_I32                  |
-| 422      | V_RSQ_F64           | 669      | V_SUB_I32                  |
-| 423      | V_SQRT_F32          | 670      | V_ADD_I16                  |
-| 424      | V_SQRT_F64          | 671      | V_SUB_I16                  |
-| 425      | V_SIN_F32           | 672      | V_PACK_B32_F16             |
-| 426      | V_COS_F32           | 673      | V_MUL_LEGACY_F32           |
-| 427      | V_NOT_B32           | 674      | V_CVT_PK_FP8_F32           |
-| 428      | V_BFREV_B32         | 675      | V_CVT_PK_BF8_F32           |
-| 429      | V_FFBH_U32          | 676      | V_CVT_SR_FP8_F32           |
-| 430      | V_FFBL_B32          | 677      | V_CVT_SR_BF8_F32           |
-| 431      | V_FFBH_I32          | 678      | V_CVT_SR_F16_F32           |
-| 432      | V_FREXP_EXP_I32_F64 | 679      | V_CVT_SR_BF16_F32          |
-| 433      | V_FREXP_MANT_F64    | 680      | V_MINIMUM3_F32             |
-| 434      | V_FRACT_F64         | 681      | V_MAXIMUM3_F32             |
-| 435      | V_FREXP_EXP_I32_F32 | 16       | V_CMP_CLASS_F32            |
-| 436      | V_FREXP_MANT_F32    | 17       | V_CMPX_CLASS_F32           |
-| 437      | V_CLREXCP           | 18       | V_CMP_CLASS_F64            |
-| 440      | V_MOV_B64           | 19       | V_CMPX_CLASS_F64           |
+| 327      | V_CVT_U32_F32       | 616      | V_CVT_PK_BF16_F32          |
+| 328      | V_CVT_I32_F32       | 617      | V_CVT_SCALEF32_PK_BF16_FP8 |
+| 330      | V_CVT_F16_F32       | 618      | V_CVT_SCALEF32_PK_BF16_BF8 |
+| 331      | V_CVT_F32_F16       | 640      | V_ADD_F64                  |
+| 332      | V_CVT_RPI_I32_F32   | 641      | V_MUL_F64                  |
+| 333      | V_CVT_FLR_I32_F32   | 642      | V_MIN_F64                  |
+| 334      | V_CVT_OFF_F32_I4    | 643      | V_MAX_F64                  |
+| 335      | V_CVT_F32_F64       | 644      | V_LDEXP_F64                |
+| 336      | V_CVT_F64_F32       | 645      | V_MUL_LO_U32               |
+| 337      | V_CVT_F32_UBYTE0    | 646      | V_MUL_HI_U32               |
+| 338      | V_CVT_F32_UBYTE1    | 647      | V_MUL_HI_I32               |
+| 339      | V_CVT_F32_UBYTE2    | 648      | V_LDEXP_F32                |
+| 340      | V_CVT_F32_UBYTE3    | 649      | V_READLANE_B32             |
+| 341      | V_CVT_U32_F64       | 650      | V_WRITELANE_B32            |
+| 342      | V_CVT_F64_U32       | 651      | V_BCNT_U32_B32             |
+| 343      | V_TRUNC_F64         | 652      | V_MBCNT_LO_U32_B32         |
+| 344      | V_CEIL_F64          | 653      | V_MBCNT_HI_U32_B32         |
+| 345      | V_RNDNE_F64         | 655      | V_LSHLREV_B64              |
+| 346      | V_FLOOR_F64         | 656      | V_LSHRREV_B64              |
+| 347      | V_FRACT_F32         | 657      | V_ASHRREV_I64              |
+| 348      | V_TRUNC_F32         | 658      | V_TRIG_PREOP_F64           |
+| 349      | V_CEIL_F32          | 659      | V_BFM_B32                  |
+| 350      | V_RNDNE_F32         | 660      | V_CVT_PKNORM_I16_F32       |
+| 351      | V_FLOOR_F32         | 661      | V_CVT_PKNORM_U16_F32       |
+| 352      | V_EXP_F32           | 662      | V_CVT_PKRTZ_F16_F32        |
+| 353      | V_LOG_F32           | 663      | V_CVT_PK_U16_U32           |
+| 354      | V_RCP_F32           | 664      | V_CVT_PK_I16_I32           |
+| 355      | V_RCP_IFLAG_F32     | 665      | V_CVT_PKNORM_I16_F16       |
+| 356      | V_RSQ_F32           | 666      | V_CVT_PKNORM_U16_F16       |
+| 357      | V_RCP_F64           | 668      | V_ADD_I32                  |
+| 358      | V_RSQ_F64           | 669      | V_SUB_I32                  |
+| 359      | V_SQRT_F32          | 670      | V_ADD_I16                  |
+| 360      | V_SQRT_F64          | 671      | V_SUB_I16                  |
+| 361      | V_SIN_F32           | 672      | V_PACK_B32_F16             |
+| 362      | V_COS_F32           | 673      | V_MUL_LEGACY_F32           |
+| 363      | V_NOT_B32           | 674      | V_CVT_PK_FP8_F32           |
+| 364      | V_BFREV_B32         | 675      | V_CVT_PK_BF8_F32           |
+| 365      | V_FFBH_U32          | 676      | V_CVT_SR_FP8_F32           |
+| 366      | V_FFBL_B32          | 677      | V_CVT_SR_BF8_F32           |
+| 367      | V_FFBH_I32          | 678      | V_CVT_SR_F16_F32           |
+| 368      | V_FREXP_EXP_I32_F64 | 679      | V_CVT_SR_BF16_F32          |
+| 369      | V_FREXP_MANT_F64    | 680      | V_MINIMUM3_F32             |
+| 370      | V_FRACT_F64         | 681      | V_MAXIMUM3_F32             |
+| 371      | V_FREXP_EXP_I32_F32 | 16       | V_CMP_CLASS_F32            |
+| 372      | V_FREXP_MANT_F32    | 17       | V_CMPX_CLASS_F32           |
+| 373      | V_CLREXCP           | 18       | V_CMP_CLASS_F64            |
+| 376      | V_MOV_B64           | 19       | V_CMPX_CLASS_F64           |
 
 | Opcode # | Name                  | Opcode # | Name             |
 |----------|-----------------------|----------|------------------|
-| 441      | V_CVT_F16_U16         | 20       | V_CMP_CLASS_F16  |
-| 442      | V_CVT_F16_I16         | 21       | V_CMPX_CLASS_F16 |
-| 443      | V_CVT_U16_F16         | 32       | V_CMP_F_F16      |
-| 444      | V_CVT_I16_F16         | 33       | V_CMP_LT_F16     |
-| 445      | V_RCP_F16             | 34       | V_CMP_EQ_F16     |
-| 446      | V_SQRT_F16            | 35       | V_CMP_LE_F16     |
-| 447      | V_RSQ_F16             | 36       | V_CMP_GT_F16     |
-| 448      | V_LOG_F16             | 37       | V_CMP_LG_F16     |
-| 449      | V_EXP_F16             | 38       | V_CMP_GE_F16     |
-| 450      | V_FREXP_MANT_F16      | 39       | V_CMP_O_F16      |
-| 451      | V_FREXP_EXP_I16_F16   | 40       | V_CMP_U_F16      |
-| 452      | V_FLOOR_F16           | 41       | V_CMP_NGE_F16    |
-| 453      | V_CEIL_F16            | 42       | V_CMP_NLG_F16    |
-| 454      | V_TRUNC_F16           | 43       | V_CMP_NGT_F16    |
-| 455      | V_RNDNE_F16           | 44       | V_CMP_NLE_F16    |
-| 456      | V_FRACT_F16           | 45       | V_CMP_NEQ_F16    |
-| 457      | V_SIN_F16             | 46       | V_CMP_NLT_F16    |
-| 458      | V_COS_F16             | 47       | V_CMP_TRU_F16    |
-| 461      | V_CVT_NORM_I16_F16    | 48       | V_CMPX_F_F16     |
-| 462      | V_CVT_NORM_U16_F16    | 49       | V_CMPX_LT_F16    |
-| 463      | V_SAT_PK_U8_I16       | 50       | V_CMPX_EQ_F16    |
-| 465      | V_SWAP_B32            | 51       | V_CMPX_LE_F16    |
-| 466      | V_ACCVGPR_MOV_B32     | 52       | V_CMPX_GT_F16    |
-| 468      | V_CVT_F32_FP8         | 53       | V_CMPX_LG_F16    |
-| 469      | V_CVT_F32_BF8         | 54       | V_CMPX_GE_F16    |
-| 470      | V_CVT_PK_F32_FP8      | 55       | V_CMPX_O_F16     |
-| 471      | V_CVT_PK_F32_BF8      | 56       | V_CMPX_U_F16     |
-| 472      | V_PRNG_B32            | 57       | V_CMPX_NGE_F16   |
-| 473      | V_PERMLANE16_SWAP_B32 | 58       | V_CMPX_NLG_F16   |
-| 474      | V_PERMLANE32_SWAP_B32 | 59       | V_CMPX_NGT_F16   |
-| 475      | V_CVT_F32_BF16        | 60       | V_CMPX_NLE_F16   |
+| 377      | V_CVT_F16_U16         | 20       | V_CMP_CLASS_F16  |
+| 378      | V_CVT_F16_I16         | 21       | V_CMPX_CLASS_F16 |
+| 379      | V_CVT_U16_F16         | 32       | V_CMP_F_F16      |
+| 380      | V_CVT_I16_F16         | 33       | V_CMP_LT_F16     |
+| 381      | V_RCP_F16             | 34       | V_CMP_EQ_F16     |
+| 382      | V_SQRT_F16            | 35       | V_CMP_LE_F16     |
+| 383      | V_RSQ_F16             | 36       | V_CMP_GT_F16     |
+| 384      | V_LOG_F16             | 37       | V_CMP_LG_F16     |
+| 385      | V_EXP_F16             | 38       | V_CMP_GE_F16     |
+| 386      | V_FREXP_MANT_F16      | 39       | V_CMP_O_F16      |
+| 387      | V_FREXP_EXP_I16_F16   | 40       | V_CMP_U_F16      |
+| 388      | V_FLOOR_F16           | 41       | V_CMP_NGE_F16    |
+| 389      | V_CEIL_F16            | 42       | V_CMP_NLG_F16    |
+| 390      | V_TRUNC_F16           | 43       | V_CMP_NGT_F16    |
+| 391      | V_RNDNE_F16           | 44       | V_CMP_NLE_F16    |
+| 392      | V_FRACT_F16           | 45       | V_CMP_NEQ_F16    |
+| 393      | V_SIN_F16             | 46       | V_CMP_NLT_F16    |
+| 394      | V_COS_F16             | 47       | V_CMP_TRU_F16    |
+| 397      | V_CVT_NORM_I16_F16    | 48       | V_CMPX_F_F16     |
+| 398      | V_CVT_NORM_U16_F16    | 49       | V_CMPX_LT_F16    |
+| 399      | V_SAT_PK_U8_I16       | 50       | V_CMPX_EQ_F16    |
+| 401      | V_SWAP_B32            | 51       | V_CMPX_LE_F16    |
+| 402      | V_ACCVGPR_MOV_B32     | 52       | V_CMPX_GT_F16    |
+| 404      | V_CVT_F32_FP8         | 53       | V_CMPX_LG_F16    |
+| 405      | V_CVT_F32_BF8         | 54       | V_CMPX_GE_F16    |
+| 406      | V_CVT_PK_F32_FP8      | 55       | V_CMPX_O_F16     |
+| 407      | V_CVT_PK_F32_BF8      | 56       | V_CMPX_U_F16     |
+| 408      | V_PRNG_B32            | 57       | V_CMPX_NGE_F16   |
+| 409      | V_PERMLANE16_SWAP_B32 | 58       | V_CMPX_NLG_F16   |
+| 410      | V_PERMLANE32_SWAP_B32 | 59       | V_CMPX_NGT_F16   |
+| 411      | V_CVT_F32_BF16        | 60       | V_CMPX_NLE_F16   |
 | 256      | V_CNDMASK_B32         | 61       | V_CMPX_NEQ_F16   |
 | 257      | V_ADD_F32             | 62       | V_CMPX_NLT_F16   |
 | 258      | V_SUB_F32             | 63       | V_CMPX_TRU_F16   |
