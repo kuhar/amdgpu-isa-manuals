@@ -2949,9 +2949,9 @@ Table 37. Scale selection for convert from F8
 |------------|---------------------------|-----------------------|--------------------------|-----------------------|
 | OPSEL[2:0] | Lane0..15 of SRC0         | Lane16..31 of SRC0    | Lane0..15 of SRC0        | Lane16..31 of SRC0    |
 | 000        | Lane0..15 of Vscale[7:0]  | ← same                | Lane0..15 of Vscale[7:0] | Lane 0..15 of         |
-| 001        | Lane16..31 of Vscale[7:0] | ← same                | Lane0..15 of Vscale[7:0] | Lane 0..15 of         |
+| 001        | Lane16..31 of Vscale[7:0] | ← same                | Lane16..31 of Vscale[7:0] | Lane 16..31 of Vscale[15:8] |
 | 010        | Lane0..15 of              |                       |                          |                       |
-|            |                           | ← same                | Lane16..31 of            |                       |
+|            |                           | ← same                | Lane0..15 of Vscale[23:16] | Lane 0..15 of Vscale[31:24] |
 | 011        | Lane16..31 of             |                       |                          |                       |
 |            |                           | ← same                | Lane16..31 of            |                       |
 | 100        | Lane0..15 of Vscale[15:8] | ← same                | reserved                 | reserved              |
@@ -2961,6 +2961,8 @@ Table 37. Scale selection for convert from F8
 |            |                           | ← same                | reserved                 | reserved              |
 | 111        | Lane16..31 of             |                       |                          |                       |
 |            |                           | ← same                | reserved                 | reserved              |
+
+> **Erratum (not part of the AMD publication).** The 27 July 2026 PDF prints Block16 rows `001` and `010` identical to rows `000` and `011`. gfx1250 uses the other lane half: row `001` is lanes 16–31 of `Vscale[7:0]` and `Vscale[15:8]`, and row `010` is lanes 0–15 of `Vscale[23:16]` and `Vscale[31:24]`. Those two Block16 cells above are corrected to that. The converted cells are truncated, so the corrected ones are written out in full. Every other row of this table, and all of Table 36, is unchanged. A later Marker regeneration of this file would restore the PDF's rows.
 
 The opcodes in this family of convert ops indicate how many values are packed into the result: PK8 or PK16.
 
